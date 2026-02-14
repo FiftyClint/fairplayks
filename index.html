@@ -343,6 +343,10 @@
     border: none;
     transition: all 0.2s;
     margin-bottom: 0.6rem;
+    -webkit-appearance: none;
+    appearance: none;
+    line-height: 1.4;
+    color: var(--cream);
   }
   .action-btn:hover { transform: translateY(-1px); }
   .btn-primary { background: var(--gold); color: var(--midnight); }
@@ -551,8 +555,8 @@
     </div>
 
     <!-- BUTTONS -->
-    <a class="action-btn btn-primary" id="btnCommittee" href="#">✉️ &nbsp;Email the Education Committee</a>
-    <a class="action-btn btn-subtle" id="btnTestimony" href="#">📄 &nbsp;Submit Official Written Testimony</a>
+    <button class="action-btn btn-primary" id="btnCommittee">✉️ &nbsp;Email the Education Committee</button>
+    <button class="action-btn btn-subtle" id="btnTestimony">📄 &nbsp;Submit Official Written Testimony</button>
     <div style="background:var(--midnight);border:1px solid rgba(200,168,78,0.1);border-radius:var(--radius);padding:0.75rem 1rem;margin-top:0.25rem;margin-bottom:0.75rem;">
       <p style="font-size:0.8rem;color:var(--muted);line-height:1.5;"><strong style="color:var(--cream);">Written testimony is the most powerful tool you have.</strong> It becomes part of the permanent legislative record. Committee members read it before they vote. Unlike a phone call or email that gets skimmed, testimony is entered into evidence and can be referenced during debate on the House floor. Submit yours to <span style="color:var(--gold);">house.ed@ks.gov</span> when a hearing is scheduled.</p>
     </div>
@@ -1108,10 +1112,8 @@ function rebuildEmail() {
 
   if (!role || !selected) {
     preview.classList.remove('show');
-    btnC.href = '#';
-    btnC.onclick = function(e) { e.preventDefault(); alert('Please select your school and role first.'); };
-    btnT.href = '#';
-    btnT.onclick = function(e) { e.preventDefault(); alert('Please select your school and role first.'); };
+    btnC.onclick = function() { alert('Please select your school and role first.'); };
+    btnT.onclick = function() { alert('Please select your school and role first.'); };
     return;
   }
 
@@ -1134,10 +1136,12 @@ function rebuildEmail() {
   document.getElementById('epSubj').textContent = content.subj;
   document.getElementById('epBody').textContent = content.body;
 
-  // Committee mailto
-  btnC.href = 'mailto:' + toEmails.join(',') + '?cc=' + encodeURIComponent(ccEmails) + '&subject=' + encodeURIComponent(content.subj) + '&body=' + encodeURIComponent(content.body);
-  btnC.onclick = function() {
-    // Silently submit to Google Form if updates checkbox is checked
+  // Build mailto URLs
+  var committeeMailto = 'mailto:' + toEmails.join(',') + '?cc=' + encodeURIComponent(ccEmails) + '&subject=' + encodeURIComponent(content.subj) + '&body=' + encodeURIComponent(content.body);
+  var testimonyMailto = 'mailto:' + TESTIMONY + '?subject=' + encodeURIComponent('Written Testimony: HB 2176 - ' + selected.n) + '&body=' + encodeURIComponent(content.body);
+
+  // Google Form submission helper
+  function submitForm() {
     if (document.getElementById('chkUpdates').checked) {
       var email = document.getElementById('userEmail').value.trim();
       var school = selected ? selected.n : '';
@@ -1147,20 +1151,18 @@ function rebuildEmail() {
         fetch(formUrl + '?' + params, {mode:'no-cors'}).catch(function(){});
       }
     }
+  }
+
+  // Committee button
+  btnC.onclick = function() {
+    submitForm();
+    window.location.href = committeeMailto;
   };
 
-  // Testimony mailto
-  btnT.href = 'mailto:' + TESTIMONY + '?subject=' + encodeURIComponent('Written Testimony: HB 2176 - ' + selected.n) + '&body=' + encodeURIComponent(content.body);
+  // Testimony button
   btnT.onclick = function() {
-    if (document.getElementById('chkUpdates').checked) {
-      var email = document.getElementById('userEmail').value.trim();
-      var school = selected ? selected.n : '';
-      if (email && email.includes('@')) {
-        var formUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSf0SsRrI4BhACbBMlU5u1GxEmKVUMELmrcvf5huNEWTBLzphw/formResponse';
-        var params = 'entry.1925266158=' + encodeURIComponent(email) + '&entry.797108717=' + encodeURIComponent(school);
-        fetch(formUrl + '?' + params, {mode:'no-cors'}).catch(function(){});
-      }
-    }
+    submitForm();
+    window.location.href = testimonyMailto;
   };
 }
 
