@@ -566,6 +566,16 @@
       <a href="https://www.kslegislature.gov/li/b2025_26/measures/hb2176/" target="_blank">Read the full text of HB 2176 →</a>
     </p>
 
+    <!-- EMAIL FALLBACK (shown after click in case mailto doesn't work) -->
+    <div id="emailFallback" style="display:none;background:var(--midnight);border:1px solid var(--gold);border-radius:var(--radius);padding:1rem;margin-bottom:0.75rem;">
+      <p style="font-size:0.85rem;font-weight:700;color:var(--cream);margin-bottom:0.5rem;">Email didn't open? Use one of these:</p>
+      <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+        <a id="gmailLink" href="#" target="_blank" style="background:#d44030;color:#fff;padding:0.5rem 1rem;border-radius:var(--radius);font-size:0.85rem;font-weight:600;text-decoration:none;">Open in Gmail</a>
+        <a id="outlookLink" href="#" target="_blank" style="background:#0078d4;color:#fff;padding:0.5rem 1rem;border-radius:var(--radius);font-size:0.85rem;font-weight:600;text-decoration:none;">Open in Outlook</a>
+        <a id="yahooLink" href="#" target="_blank" style="background:#6001d2;color:#fff;padding:0.5rem 1rem;border-radius:var(--radius);font-size:0.85rem;font-weight:600;text-decoration:none;">Open in Yahoo</a>
+      </div>
+    </div>
+
     <!-- PRINT FLYER -->
     <div class="divider">
       <button class="action-btn btn-outline" onclick="printFlyer()">🖨️ &nbsp;Print Flyers for Your School</button>
@@ -1136,10 +1146,6 @@ function rebuildEmail() {
   document.getElementById('epSubj').textContent = content.subj;
   document.getElementById('epBody').textContent = content.body;
 
-  // Build mailto URLs
-  var committeeMailto = 'mailto:' + toEmails.join(',') + '?cc=' + encodeURIComponent(ccEmails) + '&subject=' + encodeURIComponent(content.subj) + '&body=' + encodeURIComponent(content.body);
-  var testimonyMailto = 'mailto:' + TESTIMONY + '?subject=' + encodeURIComponent('Written Testimony: HB 2176 - ' + selected.n) + '&body=' + encodeURIComponent(content.body);
-
   // Google Form submission helper
   function submitForm() {
     if (document.getElementById('chkUpdates').checked) {
@@ -1153,16 +1159,50 @@ function rebuildEmail() {
     }
   }
 
+  // Open email: try mailto via hidden link, show fallback if it fails
+  function openEmail(to, cc, subj, body) {
+    var mailto = 'mailto:' + to + (cc ? '?cc=' + encodeURIComponent(cc) + '&' : '?') + 'subject=' + encodeURIComponent(subj) + '&body=' + encodeURIComponent(body);
+
+    // Try mailto via temporary anchor (most reliable cross-browser method)
+    var a = document.createElement('a');
+    a.href = mailto;
+    a.style.display = 'none';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+
+    // Show fallback options after a short delay (in case mailto silently fails)
+    setTimeout(function() {
+      var fb = document.getElementById('emailFallback');
+      // Build Gmail compose URL
+      var gmailUrl = 'https://mail.google.com/mail/?view=cm&to=' + encodeURIComponent(to) + (cc ? '&cc=' + encodeURIComponent(cc) : '') + '&su=' + encodeURIComponent(subj) + '&body=' + encodeURIComponent(body);
+      // Build Outlook web compose URL
+      var outlookUrl = 'https://outlook.live.com/mail/0/deeplink/compose?to=' + encodeURIComponent(to) + (cc ? '&cc=' + encodeURIComponent(cc) : '') + '&subject=' + encodeURIComponent(subj) + '&body=' + encodeURIComponent(body);
+      // Build Yahoo compose URL
+      var yahooUrl = 'https://compose.mail.yahoo.com/?to=' + encodeURIComponent(to) + (cc ? '&cc=' + encodeURIComponent(cc) : '') + '&subject=' + encodeURIComponent(subj) + '&body=' + encodeURIComponent(body);
+
+      document.getElementById('gmailLink').href = gmailUrl;
+      document.getElementById('outlookLink').href = outlookUrl;
+      document.getElementById('yahooLink').href = yahooUrl;
+      fb.style.display = 'block';
+      fb.scrollIntoView({behavior:'smooth', block:'nearest'});
+    }, 500);
+  }
+
   // Committee button
   btnC.onclick = function() {
     submitForm();
-    window.location.href = committeeMailto;
+    var to = toEmails.join(',');
+    var cc = ccEmails;
+    var subj = content.subj;
+    var body = content.body;
+    openEmail(to, cc, subj, body);
   };
 
   // Testimony button
   btnT.onclick = function() {
     submitForm();
-    window.location.href = testimonyMailto;
+    openEmail(TESTIMONY, '', 'Written Testimony: HB 2176 - ' + selected.n, content.body);
   };
 }
 
