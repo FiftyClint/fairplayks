@@ -1,0 +1,1310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fair Play Kansas - Support HB 2176</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800&family=Libre+Franklin:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --midnight: #0b1120;
+    --slate: #151d30;
+    --steel: #1e2a42;
+    --gold: #c8a84e;
+    --gold-bright: #e8c95a;
+    --gold-dim: rgba(200,168,78,0.15);
+    --cream: #f0ece4;
+    --muted: #7b8aa4;
+    --red: #d44030;
+    --green: #3a9e5c;
+    --radius: 6px;
+  }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Libre Franklin', sans-serif;
+    background: var(--midnight);
+    color: var(--cream);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ===== HERO ===== */
+  .hero {
+    position: relative;
+    padding: 3rem 1.5rem 2.5rem;
+    text-align: center;
+    background: linear-gradient(170deg, var(--midnight) 0%, var(--slate) 100%);
+    border-bottom: 3px solid var(--gold);
+    overflow: hidden;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(-45deg, transparent, transparent 50px, rgba(200,168,78,0.02) 50px, rgba(200,168,78,0.02) 100px);
+    pointer-events: none;
+  }
+  .hero-content { position: relative; z-index: 1; }
+  .hero h1 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: clamp(2.8rem, 8vw, 4.2rem);
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    line-height: 1.05;
+    color: var(--cream);
+  }
+  .hero h1 em { font-style: normal; color: var(--gold); }
+  .hero .tagline {
+    font-size: 1.1rem;
+    color: var(--muted);
+    margin-top: 0.6rem;
+    max-width: 520px;
+    margin-inline: auto;
+  }
+  .bill-badge {
+    display: inline-block;
+    margin-top: 1.2rem;
+    background: var(--gold);
+    color: var(--midnight);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    padding: 0.35rem 1.2rem;
+    border-radius: 3px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  /* ===== PICKER ===== */
+  .picker-section {
+    max-width: 560px;
+    margin: -1.5rem auto 0;
+    padding: 0 1.5rem;
+    position: relative;
+    z-index: 10;
+  }
+  .picker-card {
+    background: var(--steel);
+    border: 1px solid rgba(200,168,78,0.25);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  }
+  .picker-card label {
+    display: block;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 0.5rem;
+  }
+  .picker-card select {
+    width: 100%;
+    padding: 0.85rem 1rem;
+    background: var(--slate);
+    border: 1px solid rgba(200,168,78,0.2);
+    border-radius: var(--radius);
+    color: var(--cream);
+    font-family: 'Libre Franklin', sans-serif;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+  .picker-card select:focus { outline: none; border-color: var(--gold); }
+  .picker-card select option { background: var(--slate); }
+  .picker-hint {
+    text-align: center;
+    margin-top: 0.6rem;
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+
+  /* ===== REVEAL ===== */
+  .reveal-content { display: none; opacity: 0; transform: translateY(20px); }
+  .reveal-content.show { display: block; animation: slideUp 0.5s ease forwards; }
+  @keyframes slideUp { to { opacity: 1; transform: translateY(0); } }
+
+  /* ===== COMPARISON ===== */
+  .comparison-section { max-width: 640px; margin: 2rem auto; padding: 0 1.5rem; }
+  .comp-card {
+    background: var(--slate);
+    border: 1px solid rgba(200,168,78,0.15);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .comp-header {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    padding: 1rem 1.25rem;
+    background: rgba(200,168,78,0.06);
+    border-bottom: 1px solid rgba(200,168,78,0.12);
+  }
+  .comp-header .school-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .comp-header .school-name:first-child { text-align: right; color: var(--green); }
+  .comp-header .school-name:last-child { text-align: left; color: var(--red); }
+  .comp-header .vs-badge {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: 0.75rem;
+    color: var(--muted);
+    text-align: center;
+    padding: 0 0.75rem;
+    letter-spacing: 2px;
+  }
+  .comp-rows { padding: 0.5rem 0; }
+  .comp-row {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    padding: 0.6rem 1.25rem;
+    transition: background 0.15s;
+  }
+  .comp-row:hover { background: rgba(200,168,78,0.04); }
+  .comp-row .val { font-weight: 600; font-size: 1rem; }
+  .comp-row .val:first-child { text-align: right; }
+  .comp-row .val:last-child { text-align: left; }
+  .comp-row .val.hl-red { color: var(--red); }
+  .comp-row .metric {
+    text-align: center;
+    font-size: 0.75rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 0 0.5rem;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 500;
+  }
+  .comp-footer {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    padding: 1rem 1.25rem;
+    border-top: 1px solid rgba(200,168,78,0.1);
+    background: rgba(200,168,78,0.04);
+  }
+  .big-stat { text-align: center; }
+  .big-stat .num {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: 2rem;
+    color: var(--gold);
+    line-height: 1;
+  }
+  .big-stat .lbl {
+    font-size: 0.7rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 0.2rem;
+  }
+  .sport-toggle {
+    display: flex;
+    gap: 0;
+    margin-bottom: 0.5rem;
+    background: var(--midnight);
+    border-radius: var(--radius);
+    overflow: hidden;
+    border: 1px solid rgba(200,168,78,0.15);
+  }
+  .sport-btn {
+    flex: 1;
+    padding: 0.65rem 0.75rem;
+    background: transparent;
+    border: none;
+    color: var(--muted);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.2s;
+    border-right: 1px solid rgba(200,168,78,0.1);
+  }
+  .sport-btn:last-child { border-right: none; }
+  .sport-btn:hover { color: var(--cream); background: rgba(200,168,78,0.06); }
+  .sport-btn.active { background: var(--gold); color: var(--midnight); }
+  .sport-note {
+    text-align: center;
+    font-size: 0.72rem;
+    font-style: italic;
+    color: var(--muted);
+    margin-bottom: 0.75rem;
+    white-space: nowrap;
+  }
+
+  /* ===== ACTION ===== */
+  .action-section { max-width: 640px; margin: 2rem auto; padding: 0 1.5rem; }
+  .section-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 1.4rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--gold);
+    margin-bottom: 1.25rem;
+  }
+  .form-group { margin-bottom: 1rem; }
+  .form-group label {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.3rem;
+  }
+  .form-group input, .manual-input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background: var(--slate);
+    border: 1px solid rgba(200,168,78,0.2);
+    border-radius: var(--radius);
+    color: var(--cream);
+    font-family: 'Libre Franklin', sans-serif;
+    font-size: 1rem;
+    transition: border-color 0.2s;
+  }
+  .form-group input:focus, .manual-input:focus { outline: none; border-color: var(--gold); }
+  .role-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.4rem;
+    margin-bottom: 1rem;
+  }
+  .role-opt {
+    background: var(--slate);
+    border: 2px solid rgba(200,168,78,0.12);
+    border-radius: var(--radius);
+    padding: 0.45rem 0.5rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .role-opt:hover { border-color: rgba(200,168,78,0.35); }
+  .role-opt.active { border-color: var(--gold); background: var(--gold-dim); }
+  .role-opt .r-icon { font-size: 1rem; line-height: 1; }
+  .role-opt .r-text {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--muted);
+    margin-top: 0.1rem;
+  }
+  .role-opt.active .r-text { color: var(--cream); }
+  .email-preview {
+    background: var(--midnight);
+    border: 1px solid rgba(200,168,78,0.1);
+    border-radius: var(--radius);
+    padding: 1.25rem;
+    margin-bottom: 1.25rem;
+    display: none;
+    max-height: 320px;
+    overflow-y: auto;
+  }
+  .email-preview.show { display: block; }
+  .ep-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.7rem;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 0.5rem;
+  }
+  .ep-to { font-size: 0.8rem; color: var(--muted); margin-bottom: 0.35rem; line-height: 1.5; }
+  .ep-subj { font-weight: 700; font-size: 0.95rem; color: var(--cream); margin-bottom: 0.5rem; }
+  .ep-body { font-size: 0.88rem; line-height: 1.65; color: rgba(240,236,228,0.8); white-space: pre-wrap; }
+  .action-btn {
+    display: block;
+    width: 100%;
+    padding: 0.9rem;
+    border-radius: var(--radius);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+    margin-bottom: 0.6rem;
+  }
+  .action-btn:hover { transform: translateY(-1px); }
+  .btn-primary { background: var(--gold); color: var(--midnight); }
+  .btn-primary:hover { background: var(--gold-bright); }
+  .btn-outline { background: transparent; border: 2px solid var(--gold); color: var(--gold); }
+  .btn-outline:hover { background: var(--gold-dim); }
+  .btn-subtle { background: transparent; border: 2px solid var(--steel); color: var(--muted); font-size: 0.85rem; }
+  .btn-subtle:hover { border-color: var(--gold); color: var(--gold); }
+  .btn-note {
+    text-align: center;
+    font-size: 0.75rem;
+    color: var(--muted);
+    margin-top: 0.5rem;
+    line-height: 1.5;
+  }
+  .btn-note a { color: var(--gold); text-decoration: none; }
+  .chk-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    cursor: pointer;
+    margin-bottom: 0.75rem;
+  }
+  .chk-row input[type=checkbox] {
+    margin-top: 0.25rem;
+    accent-color: var(--gold);
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+  }
+  .chk-label { font-size: 0.9rem; color: var(--cream); }
+  .chk-sub { font-size: 0.78rem; color: var(--muted); margin-top: 0.15rem; }
+  .divider {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(200,168,78,0.1);
+  }
+  .rep-box {
+    background: var(--midnight);
+    border: 1px solid rgba(200,168,78,0.1);
+    border-radius: var(--radius);
+    padding: 1rem;
+    margin-bottom: 0.75rem;
+  }
+  .rep-auto { font-size: 0.9rem; color: var(--cream); }
+  .rep-auto strong { color: var(--gold); }
+  .rep-manual-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+  }
+  @media (max-width: 500px) {
+    .comp-header .school-name { font-size: 0.9rem; }
+    .comp-row .val { font-size: 0.9rem; }
+    .comp-row .metric { font-size: 0.65rem; }
+    .sport-btn { font-size: 0.65rem; padding: 0.5rem 0.35rem; letter-spacing: 0; }
+    .rep-manual-grid { grid-template-columns: 1fr; }
+  }
+  footer {
+    text-align: center;
+    padding: 2.5rem 1.5rem;
+    border-top: 1px solid rgba(200,168,78,0.08);
+    font-size: 0.75rem;
+    color: var(--muted);
+    max-width: 640px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+  footer a { color: var(--gold); text-decoration: none; }
+</style>
+<!-- Open Graph / Social Preview -->
+<meta property="og:title" content="Fair Play Kansas - Support HB 2176">
+<meta property="og:description" content="Private schools are 7% of Kansas 3A-5A membership but win 37% of state titles. HB 2176 fixes the classification system. Email the committee in 60 seconds.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://fairplayks.org">
+<meta property="og:image" content="https://fairplayks.org/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Fair Play Kansas - Support HB 2176">
+<meta name="twitter:description" content="Private schools are 7% of 3A-5A but win 37% of titles. Help fix it in 60 seconds.">
+<meta name="twitter:image" content="https://fairplayks.org/og-image.png">
+<!-- ANALYTICS: To enable Google Analytics, add these two lines ABOVE this comment:
+     1. <scrip​t async src="https://www.googletagmanager.com/gtag/js?id=YOUR-ID"></scrip​t>
+     2. <scrip​t>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','YOUR-ID');</scrip​t>
+     Replace YOUR-ID with your Google Analytics measurement ID (e.g. G-XXXXXXXXXX) -->
+</head>
+<body>
+
+<!-- URGENCY BANNER: Set HEARING_ACTIVE=true and update date/time to show -->
+<div id="urgencyBanner" style="display:none;background:linear-gradient(90deg,#d44030,#b82e20);color:#fff;text-align:center;padding:0.65rem 1rem;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:1rem;letter-spacing:1px;text-transform:uppercase;position:sticky;top:0;z-index:9999;cursor:pointer;" onclick="document.getElementById('schoolPicker').focus();document.getElementById('schoolPicker').scrollIntoView({behavior:'smooth'});">
+  <span id="urgencyText">⚠️ HEARING SCHEDULED: March 15, 2026 at 1:30 PM — Act Now</span>
+</div>
+
+
+<header class="hero">
+  <div class="hero-content">
+    <h1>Fair Play <em>Kansas</em></h1>
+    <p class="tagline">Kansas public school athletes deserve to compete on a level playing field.</p>
+    <span class="bill-badge">Support House Bill 2176</span>
+  </div>
+</header>
+
+<div class="picker-section">
+  <!-- EMAIL COUNTER -->
+  <div id="emailCounter" style="text-align:center;margin-bottom:0.75rem;display:none;">
+    <span style="font-family:'Barlow Condensed',sans-serif;font-size:1.4rem;font-weight:700;color:var(--gold);letter-spacing:1px;"><span id="counterNum">0</span></span>
+    <span style="font-family:'Barlow Condensed',sans-serif;font-size:0.85rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-left:0.35rem;">emails sent to the committee</span>
+  </div>
+  <div class="picker-card">
+    <label for="schoolPicker">Find Your School</label>
+    <select id="schoolPicker">
+      <option value="">— Select your school —</option>
+    </select>
+    <p class="picker-hint">Select your school to see the data and take action.</p>
+  </div>
+</div>
+
+<!-- ========== HIDDEN UNTIL SCHOOL SELECTED ========== -->
+<div class="reveal-content" id="revealContent">
+
+  <section class="comparison-section">
+    <p style="text-align:center;font-weight:700;font-size:0.95rem;color:var(--cream);margin-bottom:0.75rem;">State Championship Data: 2021 - 2025 (5 Years)</p>
+    <div class="sport-toggle" id="sportToggle">
+      <button class="sport-btn active" data-mode="main" onclick="setMode('main',this)">Main Sports</button>
+      <button class="sport-btn" data-mode="total" onclick="setMode('total',this)">All KSHSAA Activities</button>
+    </div>
+    <div id="sportNote" class="sport-note">Main Sports: Baseball, Boys Basketball, Girls Basketball, Football, Boys Soccer, Girls Soccer, Softball, Volleyball</div>
+    <div class="comp-card">
+      <div class="comp-header">
+        <span class="school-name" id="yourName">—</span>
+        <span class="vs-badge">VS</span>
+        <span class="school-name" id="rivalName">—</span>
+      </div>
+      <div class="comp-rows" id="compRows"></div>
+      <div class="comp-footer" id="compFooter"></div>
+    </div>
+  </section>
+
+  <section class="action-section">
+    <h2 class="section-title">Take Action in 60 Seconds</h2>
+
+    <div class="form-group">
+      <label for="userName">Your Name</label>
+      <input type="text" id="userName" placeholder="Jane Smith" autocomplete="name">
+    </div>
+    <div class="form-group">
+      <label for="userEmail">Your Email</label>
+      <input type="email" id="userEmail" placeholder="jane@email.com" autocomplete="email">
+    </div>
+
+    <label style="display:block;font-size:0.8rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.4rem;">I Am A…</label>
+    <div class="role-grid">
+      <div class="role-opt" data-role="parent" onclick="pickRole(this)">
+        <div class="r-icon">👨‍👩‍👧‍👦</div><div class="r-text">Parent</div>
+      </div>
+      <div class="role-opt" data-role="student" onclick="pickRole(this)">
+        <div class="r-icon">🎓</div><div class="r-text">Student</div>
+      </div>
+      <div class="role-opt" data-role="coach" onclick="pickRole(this)">
+        <div class="r-icon">🏟️</div><div class="r-text">Coach / Admin</div>
+      </div>
+      <div class="role-opt" data-role="taxpayer" onclick="pickRole(this)">
+        <div class="r-icon">🏛️</div><div class="r-text">Taxpayer</div>
+      </div>
+    </div>
+
+    <!-- LOCAL REP CHECKBOX + AUTO-DETECT -->
+    <div class="divider">
+      <div class="chk-row">
+        <input type="checkbox" id="chkLocalRep" checked>
+        <div>
+          <div class="chk-label"><strong>Also send to my local Kansas House representative</strong></div>
+          <div class="chk-sub">A constituent email carries 10x the weight of a non-constituent.</div>
+        </div>
+      </div>
+      <div id="repSection">
+        <div class="rep-box">
+          <div id="repAutoInfo" class="rep-auto">Select your school above to auto-detect your rep.</div>
+          <div id="repManual" style="display:none;">
+            <p style="font-size:0.8rem;color:var(--muted);margin-bottom:0.5rem;">We couldn't auto-detect your rep. <a href="https://openstates.org/find_your_legislator/" target="_blank" style="color:var(--gold);text-decoration:none;">Look up your Kansas House rep here →</a></p>
+            <div class="rep-manual-grid">
+              <input class="manual-input" type="text" id="repName" placeholder="Rep. name (e.g. Lance Neelly)">
+              <input class="manual-input" type="email" id="repEmail" placeholder="Firstname.Lastname@house.ks.gov">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- UPDATES OPT-IN -->
+    <div class="divider">
+      <div class="chk-row">
+        <input type="checkbox" id="chkUpdates" checked>
+        <div>
+          <div class="chk-label">Keep me updated on HB 2176 progress</div>
+          <div class="chk-sub">We'll only email about this bill. No spam. Unsubscribe anytime.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EMAIL PREVIEW -->
+    <div class="email-preview" id="emailPreview">
+      <div class="ep-label">Email Preview</div>
+      <div class="ep-to" id="epTo"></div>
+      <div class="ep-subj" id="epSubj"></div>
+      <div class="ep-body" id="epBody"></div>
+    </div>
+
+    <!-- BUTTONS -->
+    <a class="action-btn btn-primary" id="btnCommittee" href="#">✉️ &nbsp;Email the Education Committee</a>
+    <a class="action-btn btn-subtle" id="btnTestimony" href="#">📄 &nbsp;Submit Official Written Testimony</a>
+    <div style="background:var(--midnight);border:1px solid rgba(200,168,78,0.1);border-radius:var(--radius);padding:0.75rem 1rem;margin-top:0.25rem;margin-bottom:0.75rem;">
+      <p style="font-size:0.8rem;color:var(--muted);line-height:1.5;"><strong style="color:var(--cream);">Written testimony is the most powerful tool you have.</strong> It becomes part of the permanent legislative record. Committee members read it before they vote. Unlike a phone call or email that gets skimmed, testimony is entered into evidence and can be referenced during debate on the House floor. Submit yours to <span style="color:var(--gold);">house.ed@ks.gov</span> when a hearing is scheduled.</p>
+    </div>
+
+    <p class="btn-note">
+      Clicking opens your default email app (Gmail, Outlook, Apple Mail) with everything pre-filled. You just hit Send.<br>
+      <a href="https://www.kslegislature.gov/li/b2025_26/measures/hb2176/" target="_blank">Read the full text of HB 2176 →</a>
+    </p>
+
+    <!-- PRINT FLYER -->
+    <div class="divider">
+      <button class="action-btn btn-outline" onclick="printFlyer()">🖨️ &nbsp;Print Flyers for Your School</button>
+      <p class="btn-note">Generates a one-page flyer with your school's data. Tape it to the concession stand.</p>
+    </div>
+
+    <!-- SHARE BUTTONS -->
+    <div class="divider" style="text-align:center;">
+      <p style="font-family:'Barlow Condensed',sans-serif;font-size:1rem;font-weight:700;color:var(--cream);text-transform:uppercase;letter-spacing:1px;margin-bottom:0.65rem;">Spread the Word</p>
+      <div style="display:flex;gap:0.5rem;justify-content:center;flex-wrap:wrap;">
+        <a onclick="shareFB()" class="share-btn" style="background:#1877f2;color:#fff;padding:0.5rem 1.1rem;border-radius:var(--radius);font-size:0.85rem;font-weight:600;cursor:pointer;text-decoration:none;display:inline-block;">Share on Facebook</a>
+        <a onclick="shareX()" class="share-btn" style="background:#0f1419;color:#fff;padding:0.5rem 1.1rem;border-radius:var(--radius);font-size:0.85rem;font-weight:600;cursor:pointer;text-decoration:none;display:inline-block;border:1px solid #333;">Share on X</a>
+        <a onclick="copyLink()" id="copyBtn" class="share-btn" style="background:var(--steel);color:var(--cream);padding:0.5rem 1.1rem;border-radius:var(--radius);font-size:0.85rem;font-weight:600;cursor:pointer;text-decoration:none;display:inline-block;border:1px solid rgba(200,168,78,0.2);">📋 Copy Link</a>
+      </div>
+      <p class="btn-note" style="margin-top:0.5rem;">One share from a coach's page reaches hundreds of parents overnight.</p>
+    </div>
+
+    <!-- COACH/AD DISTRIBUTION KIT -->
+    <div class="divider" style="background:var(--midnight);border:1px solid rgba(200,168,78,0.15);border-radius:var(--radius);padding:1rem;">
+      <p style="font-family:'Barlow Condensed',sans-serif;font-size:1.05rem;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:1px;margin-bottom:0.5rem;">📨 Coach & AD Forwarding Kit</p>
+      <p style="font-size:0.85rem;color:var(--muted);line-height:1.5;margin-bottom:0.75rem;">Copy this pre-written email and forward it to your parent email list, booster club, or team group chat. One coach email = 200 parents reached.</p>
+      <button onclick="copyCoachEmail()" class="action-btn btn-outline" style="font-size:0.85rem;padding:0.6rem 1.25rem;">📋 &nbsp;Copy Forwarding Email</button>
+      <p id="coachCopyConfirm" style="font-size:0.8rem;color:var(--green);margin-top:0.4rem;display:none;">✓ Copied to clipboard! Paste into your email.</p>
+    </div>
+
+    <!-- FAQ / OBJECTIONS -->
+    <div class="divider">
+      <p style="font-family:'Barlow Condensed',sans-serif;font-size:1.05rem;font-weight:700;color:var(--cream);text-transform:uppercase;letter-spacing:1px;margin-bottom:0.75rem;">Common Questions</p>
+      
+      <div class="faq-item" style="border:1px solid rgba(200,168,78,0.1);border-radius:var(--radius);margin-bottom:0.5rem;overflow:hidden;">
+        <div onclick="toggleFaq(this)" style="padding:0.7rem 1rem;cursor:pointer;display:flex;justify-content:space-between;align-items:center;background:var(--steel);">
+          <span style="font-weight:600;font-size:0.9rem;color:var(--cream);">Doesn't this punish private schools?</span>
+          <span class="faq-arrow" style="color:var(--gold);font-size:0.8rem;transition:transform 0.2s;">▼</span>
+        </div>
+        <div class="faq-body" style="display:none;padding:0.7rem 1rem;font-size:0.85rem;color:var(--muted);line-height:1.6;background:var(--midnight);">No. HB 2176 does not ban, fine, or restrict any school. It applies a multiplier to schools that consistently win titles, moving them to a higher classification where competition is more balanced. Missouri has used this exact system since 2003. Private schools still play — they just play against comparable competition.</div>
+      </div>
+
+      <div class="faq-item" style="border:1px solid rgba(200,168,78,0.1);border-radius:var(--radius);margin-bottom:0.5rem;overflow:hidden;">
+        <div onclick="toggleFaq(this)" style="padding:0.7rem 1rem;cursor:pointer;display:flex;justify-content:space-between;align-items:center;background:var(--steel);">
+          <span style="font-weight:600;font-size:0.9rem;color:var(--cream);">What about small private schools that don't win anything?</span>
+          <span class="faq-arrow" style="color:var(--gold);font-size:0.8rem;transition:transform 0.2s;">▼</span>
+        </div>
+        <div class="faq-body" style="display:none;padding:0.7rem 1rem;font-size:0.85rem;color:var(--muted);line-height:1.6;background:var(--midnight);">The Success Multiplier only affects schools that consistently win state championships. A small private school with zero titles would not be reclassified. The multiplier is merit-based — it targets the competitive advantage, not the institution type.</div>
+      </div>
+
+      <div class="faq-item" style="border:1px solid rgba(200,168,78,0.1);border-radius:var(--radius);margin-bottom:0.5rem;overflow:hidden;">
+        <div onclick="toggleFaq(this)" style="padding:0.7rem 1rem;cursor:pointer;display:flex;justify-content:space-between;align-items:center;background:var(--steel);">
+          <span style="font-weight:600;font-size:0.9rem;color:var(--cream);">Isn't this just about winning trophies?</span>
+          <span class="faq-arrow" style="color:var(--gold);font-size:0.8rem;transition:transform 0.2s;">▼</span>
+        </div>
+        <div class="faq-body" style="display:none;padding:0.7rem 1rem;font-size:0.85rem;color:var(--muted);line-height:1.6;background:var(--midnight);">No. When small public schools consistently lose early in the postseason, it affects participation, funding, and community support. Coaches lose players. Programs shrink. In contact sports, mismatched talent pools create real safety concerns. Fair classification protects the entire ecosystem of high school athletics.</div>
+      </div>
+
+      <div class="faq-item" style="border:1px solid rgba(200,168,78,0.1);border-radius:var(--radius);margin-bottom:0.5rem;overflow:hidden;">
+        <div onclick="toggleFaq(this)" style="padding:0.7rem 1rem;cursor:pointer;display:flex;justify-content:space-between;align-items:center;background:var(--steel);">
+          <span style="font-weight:600;font-size:0.9rem;color:var(--cream);">Does any other state do this?</span>
+          <span class="faq-arrow" style="color:var(--gold);font-size:0.8rem;transition:transform 0.2s;">▼</span>
+        </div>
+        <div class="faq-body" style="display:none;padding:0.7rem 1rem;font-size:0.85rem;color:var(--muted);line-height:1.6;background:var(--midnight);">Yes. Missouri (MSHSAA) has used a Success Multiplier since 2003. Schools that win titles have their enrollment multiplied for classification purposes, moving them up to a level that matches their actual competitiveness. Texas, Ohio, and other states use separate playoff brackets. This is not radical — Kansas is behind the curve.</div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>Data: KSHSAA championship records (2021–2025) &amp; U.S. Census ACS estimates.</p>
+    <p style="margin-top:0.35rem;">Official written testimony can be submitted to <a href="mailto:house.ed@ks.gov">house.ed@ks.gov</a> when a hearing is scheduled. It is entered into the legislative record and reviewed by committee members before they vote.</p>
+    <p style="margin-top:0.5rem;">Built by Kansas parents who want a fair fight. Not affiliated with KSHSAA or any political party.</p>
+  </footer>
+</div>
+
+<script>
+// ================================================================
+// DATA
+// ================================================================
+const DATA=[
+{n:"Bishop Miege HS",cls:"4A",enr:661,priv:true,pool:"632,276",distPop:"N/A",frl:"N/A",tuition:"$13,650",mainT:20,totalT:23},
+{n:"St. Thomas Aquinas HS",cls:"4A/5A",enr:863,priv:true,pool:"632,276",distPop:"N/A",frl:"N/A",tuition:"$15,500",mainT:16,totalT:22},
+{n:"Andale HS",cls:"3A/4A",enr:417,priv:false,pool:"7,025",distPop:"10,035",frl:"12.5%",tuition:"$0",mainT:6,totalT:17},
+{n:"Blue Valley Southwest HS",cls:"5A",enr:1119,priv:false,pool:"26,804",distPop:"134,020",frl:"8.5%",tuition:"$0",mainT:5,totalT:21},
+{n:"McPherson HS",cls:"4A",enr:673,priv:false,pool:"15,407",distPop:"15,407",frl:"35.6%",tuition:"$0",mainT:5,totalT:14},
+{n:"Bishop Carroll HS",cls:"5A",enr:1163,priv:true,pool:"536,081",distPop:"N/A",frl:"N/A",tuition:"$8,080",mainT:4,totalT:9},
+{n:"Hesston HS",cls:"3A",enr:294,priv:false,pool:"4,392",distPop:"4,392",frl:"22.8%",tuition:"$0",mainT:4,totalT:8},
+{n:"Kapaun Mt. Carmel HS",cls:"5A",enr:900,priv:true,pool:"536,081",distPop:"N/A",frl:"N/A",tuition:"$9,600",mainT:3,totalT:17},
+{n:"Wamego HS",cls:"4A",enr:492,priv:false,pool:"7,849",distPop:"7,849",frl:"29.5%",tuition:"$0",mainT:3,totalT:11},
+{n:"Seaman HS",cls:"5A",enr:1102,priv:false,pool:"20,284",distPop:"20,284",frl:"32.4%",tuition:"$0",mainT:3,totalT:5},
+{n:"Heritage Christian Academy",cls:"3A",enr:169,priv:true,pool:"632,276",distPop:"N/A",frl:"N/A",tuition:"$12,729",mainT:3,totalT:4},
+{n:"Frontenac HS",cls:"3A",enr:280,priv:false,pool:"3,874",distPop:"3,874",frl:"42.8%",tuition:"$0",mainT:3,totalT:3},
+{n:"Cheney HS",cls:"3A",enr:236,priv:false,pool:"3,897",distPop:"3,897",frl:"18.5%",tuition:"$0",mainT:3,totalT:3},
+{n:"Wichita Collegiate HS",cls:"3A",enr:260,priv:true,pool:"536,081",distPop:"N/A",frl:"N/A",tuition:"$25,350",mainT:2,totalT:23},
+{n:"Rock Creek HS",cls:"4A",enr:439,priv:false,pool:"6,263",distPop:"6,263",frl:"18.4%",tuition:"$0",mainT:2,totalT:5},
+{n:"Silver Lake HS",cls:"3A",enr:227,priv:false,pool:"3,177",distPop:"3,177",frl:"22.4%",tuition:"$0",mainT:2,totalT:5},
+{n:"Maize South HS",cls:"5A",enr:1110,priv:false,pool:"42,316",distPop:"42,316",frl:"16.8%",tuition:"$0",mainT:2,totalT:3},
+{n:"Valley Center HS",cls:"5A",enr:1044,priv:false,pool:"15,338",distPop:"15,338",frl:"28.1%",tuition:"$0",mainT:2,totalT:2},
+{n:"Goodland HS",cls:"3A",enr:257,priv:false,pool:"5,400",distPop:"5,400",frl:"52.4%",tuition:"$0",mainT:2,totalT:2},
+{n:"Halstead HS",cls:"3A",enr:227,priv:false,pool:"5,049",distPop:"5,049",frl:"35.2%",tuition:"$0",mainT:2,totalT:2},
+{n:"Andover HS",cls:"5A",enr:991,priv:false,pool:"14,192",distPop:"28,383",frl:"18.2%",tuition:"$0",mainT:1,totalT:13},
+{n:"St. James Academy",cls:"5A",enr:1001,priv:true,pool:"632,276",distPop:"N/A",frl:"N/A",tuition:"$16,850",mainT:1,totalT:11},
+{n:"Hayden HS",cls:"3A/4A",enr:349,priv:true,pool:"177,942",distPop:"N/A",frl:"N/A",tuition:"$9,960",mainT:1,totalT:11},
+{n:"Eudora HS",cls:"4A",enr:579,priv:false,pool:"7,722",distPop:"7,722",frl:"26.4%",tuition:"$0",mainT:1,totalT:7},
+{n:"Andover Central HS",cls:"5A",enr:872,priv:false,pool:"14,192",distPop:"28,383",frl:"18.2%",tuition:"$0",mainT:1,totalT:6},
+{n:"Wichita-Trinity Academy",cls:"3A",enr:254,priv:true,pool:"536,081",distPop:"N/A",frl:"N/A",tuition:"$14,975",mainT:1,totalT:5},
+{n:"Rose Hill HS",cls:"4A",enr:504,priv:false,pool:"8,667",distPop:"8,667",frl:"24.8%",tuition:"$0",mainT:1,totalT:3},
+{n:"Salina-Central HS",cls:"5A",enr:923,priv:false,pool:"24,052",distPop:"48,104",frl:"54.2%",tuition:"$0",mainT:1,totalT:2},
+{n:"Wellington HS",cls:"4A",enr:640,priv:false,pool:"8,823",distPop:"8,823",frl:"52.4%",tuition:"$0",mainT:1,totalT:2},
+{n:"Lansing HS",cls:"4A/5A",enr:840,priv:false,pool:"14,247",distPop:"14,247",frl:"22.1%",tuition:"$0",mainT:1,totalT:1},
+{n:"Fort Scott HS",cls:"4A",enr:549,priv:false,pool:"11,398",distPop:"11,398",frl:"60.1%",tuition:"$0",mainT:1,totalT:1},
+{n:"Hugoton HS",cls:"3A/4A",enr:308,priv:false,pool:"4,794",distPop:"4,794",frl:"58.2%",tuition:"$0",mainT:1,totalT:1},
+{n:"Wellsville HS",cls:"3A",enr:261,priv:false,pool:"4,635",distPop:"4,635",frl:"28.5%",tuition:"$0",mainT:1,totalT:1},
+{n:"Buhler HS",cls:"4A",enr:657,priv:false,pool:"12,616",distPop:"12,616",frl:"25.4%",tuition:"$0",mainT:0,totalT:6},
+{n:"Southeast of Saline HS",cls:"3A",enr:217,priv:false,pool:"2,932",distPop:"2,932",frl:"24.5%",tuition:"$0",mainT:0,totalT:6},
+{n:"Norton Community HS",cls:"3A",enr:181,priv:false,pool:"4,772",distPop:"4,772",frl:"42.5%",tuition:"$0",mainT:0,totalT:6},
+{n:"Goddard HS",cls:"5A",enr:942,priv:false,pool:"15,200",distPop:"30,400",frl:"17.3%",tuition:"$0",mainT:0,totalT:4},
+{n:"Sumner Academy",cls:"4A/5A",enr:854,priv:false,pool:"23,535",distPop:"117,677",frl:"78.5%",tuition:"$0",mainT:0,totalT:4},
+{n:"Independence HS",cls:"4A",enr:543,priv:false,pool:"11,550",distPop:"11,550",frl:"65.2%",tuition:"$0",mainT:0,totalT:4},
+{n:"Chanute HS",cls:"4A",enr:503,priv:false,pool:"10,623",distPop:"10,623",frl:"54.2%",tuition:"$0",mainT:0,totalT:4},
+{n:"Tonganoxie HS",cls:"4A",enr:627,priv:false,pool:"11,583",distPop:"11,583",frl:"24.1%",tuition:"$0",mainT:0,totalT:3},
+{n:"Holcomb HS",cls:"3A",enr:266,priv:false,pool:"3,549",distPop:"3,549",frl:"48.5%",tuition:"$0",mainT:0,totalT:3},
+{n:"Smoky Valley HS",cls:"3A",enr:246,priv:false,pool:"6,666",distPop:"6,666",frl:"31.2%",tuition:"$0",mainT:0,totalT:3},
+{n:"Great Bend HS",cls:"4A/5A",enr:878,priv:false,pool:"17,500",distPop:"17,500",frl:"58.4%",tuition:"$0",mainT:0,totalT:2},
+{n:"Ottawa HS",cls:"4A",enr:680,priv:false,pool:"14,496",distPop:"14,496",frl:"45.2%",tuition:"$0",mainT:0,totalT:2},
+{n:"Paola HS",cls:"4A",enr:602,priv:false,pool:"12,219",distPop:"12,219",frl:"34.2%",tuition:"$0",mainT:0,totalT:2},
+{n:"Spring Hill HS",cls:"5A",enr:1120,priv:false,pool:"21,822",distPop:"21,822",frl:"12.4%",tuition:"$0",mainT:0,totalT:1},
+{n:"Topeka West HS",cls:"5A",enr:1120,priv:false,pool:"31,457",distPop:"94,372",frl:"76.4%",tuition:"$0",mainT:0,totalT:1},
+{n:"Shawnee Heights HS",cls:"5A",enr:1085,priv:false,pool:"21,548",distPop:"21,548",frl:"31.7%",tuition:"$0",mainT:0,totalT:1},
+{n:"Salina-South HS",cls:"5A",enr:1039,priv:false,pool:"24,052",distPop:"48,104",frl:"54.2%",tuition:"$0",mainT:0,totalT:1},
+{n:"De Soto HS",cls:"5A",enr:995,priv:false,pool:"37,968",distPop:"37,968",frl:"14.6%",tuition:"$0",mainT:0,totalT:1},
+{n:"Pittsburg HS",cls:"5A",enr:978,priv:false,pool:"23,243",distPop:"23,243",frl:"61.5%",tuition:"$0",mainT:0,totalT:1},
+{n:"Newton HS",cls:"5A",enr:953,priv:false,pool:"20,500",distPop:"20,500",frl:"52.4%",tuition:"$0",mainT:0,totalT:1},
+{n:"Piper HS",cls:"5A",enr:952,priv:false,pool:"15,847",distPop:"15,847",frl:"28.9%",tuition:"$0",mainT:0,totalT:1},
+{n:"Parsons HS",cls:"3A/4A",enr:389,priv:false,pool:"8,846",distPop:"8,846",frl:"68.5%",tuition:"$0",mainT:0,totalT:1},
+{n:"Augusta HS",cls:"4A",enr:548,priv:false,pool:"12,370",distPop:"12,370",frl:"36.4%",tuition:"$0",mainT:0,totalT:1},
+{n:"Louisburg HS",cls:"4A",enr:555,priv:false,pool:"8,773",distPop:"8,773",frl:"16.5%",tuition:"$0",mainT:0,totalT:1},
+{n:"Baldwin HS",cls:"3A/4A",enr:432,priv:false,pool:"8,716",distPop:"8,716",frl:"28.2%",tuition:"$0",mainT:0,totalT:1},
+{n:"Pratt HS",cls:"3A/4A",enr:324,priv:false,pool:"8,011",distPop:"8,011",frl:"48.5%",tuition:"$0",mainT:0,totalT:1},
+{n:"Santa Fe Trail HS",cls:"3A/4A",enr:316,priv:false,pool:"5,584",distPop:"5,584",frl:"38.2%",tuition:"$0",mainT:0,totalT:1},
+{n:"Prairie View HS",cls:"3A",enr:247,priv:false,pool:"5,930",distPop:"5,930",frl:"46.8%",tuition:"$0",mainT:0,totalT:1},
+{n:"Nickerson HS",cls:"3A",enr:236,priv:false,pool:"4,900",distPop:"4,900",frl:"48.2%",tuition:"$0",mainT:0,totalT:1},
+{n:"Beloit HS",cls:"3A",enr:231,priv:false,pool:"4,308",distPop:"4,308",frl:"42.5%",tuition:"$0",mainT:0,totalT:1},
+{n:"Council Grove HS",cls:"3A",enr:228,priv:false,pool:"4,914",distPop:"4,914",frl:"46.5%",tuition:"$0",mainT:0,totalT:1},
+{n:"Ellsworth HS",cls:"3A",enr:203,priv:false,pool:"4,400",distPop:"4,400",frl:"38.5%",tuition:"$0",mainT:0,totalT:1},
+{n:"JC Harmon HS",cls:"5A",enr:1283,priv:false,pool:"23,535",distPop:"117,677",frl:"78.5%",tuition:"$0",mainT:0,totalT:0},
+{n:"Kansas City-Washington HS",cls:"5A",enr:1255,priv:false,pool:"23,535",distPop:"117,677",frl:"78.5%",tuition:"$0",mainT:0,totalT:0},
+{n:"Leavenworth HS",cls:"5A",enr:1168,priv:false,pool:"27,606",distPop:"27,606",frl:"53.1%",tuition:"$0",mainT:0,totalT:0},
+{n:"Emporia HS",cls:"5A",enr:1158,priv:false,pool:"25,835",distPop:"25,835",frl:"63.2%",tuition:"$0",mainT:0,totalT:0},
+{n:"Hutchinson HS",cls:"5A",enr:1157,priv:false,pool:"30,917",distPop:"30,917",frl:"64.8%",tuition:"$0",mainT:0,totalT:0},
+{n:"Hays HS",cls:"5A",enr:1114,priv:false,pool:"25,219",distPop:"25,219",frl:"38.2%",tuition:"$0",mainT:0,totalT:0},
+{n:"Turner HS",cls:"5A",enr:1057,priv:false,pool:"19,195",distPop:"19,195",frl:"71.5%",tuition:"$0",mainT:0,totalT:0},
+{n:"Eisenhower HS",cls:"5A",enr:967,priv:false,pool:"15,200",distPop:"30,400",frl:"17.3%",tuition:"$0",mainT:0,totalT:0},
+{n:"Basehor-Linwood HS",cls:"5A",enr:906,priv:false,pool:"15,747",distPop:"15,747",frl:"18.5%",tuition:"$0",mainT:0,totalT:0},
+{n:"Arkansas City HS",cls:"4A/5A",enr:881,priv:false,pool:"15,433",distPop:"15,433",frl:"62.8%",tuition:"$0",mainT:0,totalT:0},
+{n:"Highland Park HS",cls:"4A/5A",enr:850,priv:false,pool:"31,457",distPop:"94,372",frl:"76.4%",tuition:"$0",mainT:0,totalT:0},
+{n:"FL Schlagle HS",cls:"4A/5A",enr:829,priv:false,pool:"23,535",distPop:"117,677",frl:"78.5%",tuition:"$0",mainT:0,totalT:0},
+{n:"Bonner Springs HS",cls:"4A/5A",enr:814,priv:false,pool:"14,661",distPop:"14,661",frl:"48.5%",tuition:"$0",mainT:0,totalT:0},
+{n:"Winfield HS",cls:"4A",enr:599,priv:false,pool:"14,075",distPop:"14,075",frl:"55.8%",tuition:"$0",mainT:0,totalT:0},
+{n:"El Dorado HS",cls:"4A",enr:456,priv:false,pool:"14,212",distPop:"14,212",frl:"58.5%",tuition:"$0",mainT:0,totalT:0},
+{n:"Field Kindley HS",cls:"4A",enr:521,priv:false,pool:"11,632",distPop:"11,632",frl:"68.4%",tuition:"$0",mainT:0,totalT:0},
+{n:"Atchison HS",cls:"3A/4A",enr:400,priv:false,pool:"11,489",distPop:"11,489",frl:"62.4%",tuition:"$0",mainT:0,totalT:0},
+{n:"Circle HS",cls:"4A",enr:614,priv:false,pool:"10,643",distPop:"10,643",frl:"28.5%",tuition:"$0",mainT:0,totalT:0},
+{n:"Mulvane HS",cls:"4A",enr:564,priv:false,pool:"9,306",distPop:"9,306",frl:"38.2%",tuition:"$0",mainT:0,totalT:0},
+{n:"Abilene HS",cls:"4A",enr:467,priv:false,pool:"8,707",distPop:"8,707",frl:"42.1%",tuition:"$0",mainT:0,totalT:0},
+{n:"Ulysses HS",cls:"4A",enr:428,priv:false,pool:"7,270",distPop:"7,270",frl:"65.8%",tuition:"$0",mainT:0,totalT:0},
+{n:"Labette County HS",cls:"4A",enr:456,priv:false,pool:"7,710",distPop:"7,710",frl:"55.2%",tuition:"$0",mainT:0,totalT:0},
+{n:"Concordia HS",cls:"3A/4A",enr:355,priv:false,pool:"6,651",distPop:"6,651",frl:"51.5%",tuition:"$0",mainT:0,totalT:0},
+{n:"Clearwater HS",cls:"3A/4A",enr:383,priv:false,pool:"6,167",distPop:"6,167",frl:"24.5%",tuition:"$0",mainT:0,totalT:0},
+{n:"Chapman HS",cls:"3A/4A",enr:366,priv:false,pool:"5,598",distPop:"5,598",frl:"35.2%",tuition:"$0",mainT:0,totalT:0},
+{n:"Clay Center Community HS",cls:"3A/4A",enr:311,priv:false,pool:"7,870",distPop:"7,870",frl:"42.5%",tuition:"$0",mainT:0,totalT:0},
+{n:"Holton HS",cls:"3A",enr:301,priv:false,pool:"5,861",distPop:"5,861",frl:"44.5%",tuition:"$0",mainT:0,totalT:0},
+{n:"Iola HS",cls:"3A",enr:299,priv:false,pool:"5,396",distPop:"5,396",frl:"61.5%",tuition:"$0",mainT:0,totalT:0},
+{n:"Scott Community HS",cls:"3A",enr:292,priv:false,pool:"5,071",distPop:"5,071",frl:"38.5%",tuition:"$0",mainT:0,totalT:0},
+{n:"Anderson County HS",cls:"3A",enr:287,priv:false,pool:"6,805",distPop:"6,805",frl:"52.4%",tuition:"$0",mainT:0,totalT:0},
+{n:"Bishop Ward HS",cls:"3A",enr:284,priv:true,pool:"169,418",distPop:"N/A",frl:"N/A",tuition:"$9,800",mainT:0,totalT:0},
+{n:"Columbus HS",cls:"3A",enr:278,priv:false,pool:"6,122",distPop:"6,122",frl:"60.2%",tuition:"$0",mainT:0,totalT:0},
+{n:"Osawatomie HS",cls:"3A",enr:278,priv:false,pool:"6,326",distPop:"6,326",frl:"48.5%",tuition:"$0",mainT:0,totalT:0},
+{n:"Colby HS",cls:"3A",enr:275,priv:false,pool:"6,100",distPop:"6,100",frl:"36.8%",tuition:"$0",mainT:0,totalT:0},
+{n:"Girard HS",cls:"3A",enr:272,priv:false,pool:"5,235",distPop:"5,235",frl:"45.2%",tuition:"$0",mainT:0,totalT:0},
+{n:"Jefferson West HS",cls:"3A",enr:270,priv:false,pool:"4,864",distPop:"4,864",frl:"32.4%",tuition:"$0",mainT:0,totalT:0},
+{n:"Hiawatha HS",cls:"3A",enr:249,priv:false,pool:"5,689",distPop:"5,689",frl:"48.5%",tuition:"$0",mainT:0,totalT:0},
+{n:"Burlington HS",cls:"3A",enr:247,priv:false,pool:"4,154",distPop:"4,154",frl:"35.2%",tuition:"$0",mainT:0,totalT:0},
+{n:"Nemaha Central HS",cls:"3A",enr:247,priv:false,pool:"4,384",distPop:"4,384",frl:"24.5%",tuition:"$0",mainT:0,totalT:0},
+{n:"Perry-Lecompton HS",cls:"3A",enr:244,priv:false,pool:"6,279",distPop:"6,279",frl:"28.4%",tuition:"$0",mainT:0,totalT:0},
+{n:"Marysville HS",cls:"3A",enr:243,priv:false,pool:"3,447",distPop:"3,447",frl:"34.5%",tuition:"$0",mainT:0,totalT:0},
+{n:"Larned HS",cls:"3A",enr:242,priv:false,pool:"5,400",distPop:"5,400",frl:"56.8%",tuition:"$0",mainT:0,totalT:0},
+{n:"Baxter Springs HS",cls:"3A",enr:236,priv:false,pool:"4,501",distPop:"4,501",frl:"62.4%",tuition:"$0",mainT:0,totalT:0},
+{n:"Haven HS",cls:"3A",enr:232,priv:false,pool:"6,293",distPop:"6,293",frl:"36.5%",tuition:"$0",mainT:0,totalT:0},
+{n:"Hoisington HS",cls:"3A",enr:230,priv:false,pool:"3,238",distPop:"3,238",frl:"38.2%",tuition:"$0",mainT:0,totalT:0},
+{n:"Galena HS",cls:"3A",enr:226,priv:false,pool:"3,253",distPop:"3,253",frl:"64.5%",tuition:"$0",mainT:0,totalT:0},
+{n:"Royal Valley HS",cls:"3A",enr:226,priv:false,pool:"4,091",distPop:"4,091",frl:"44.5%",tuition:"$0",mainT:0,totalT:0},
+{n:"Riley County HS",cls:"3A",enr:224,priv:false,pool:"4,939",distPop:"4,939",frl:"28.5%",tuition:"$0",mainT:0,totalT:0},
+{n:"Lyons HS",cls:"3A",enr:221,priv:false,pool:"4,027",distPop:"4,027",frl:"62.5%",tuition:"$0",mainT:0,totalT:0},
+{n:"Neodesha HS",cls:"3A",enr:221,priv:false,pool:"3,272",distPop:"3,272",frl:"60.5%",tuition:"$0",mainT:0,totalT:0},
+{n:"Caney Valley HS",cls:"3A",enr:219,priv:false,pool:"3,504",distPop:"3,504",frl:"58.5%",tuition:"$0",mainT:0,totalT:0},
+{n:"Sabetha HS",cls:"3A",enr:218,priv:false,pool:"6,149",distPop:"6,149",frl:"28.5%",tuition:"$0",mainT:0,totalT:0},
+{n:"Russell HS",cls:"3A",enr:213,priv:false,pool:"5,568",distPop:"5,568",frl:"54.5%",tuition:"$0",mainT:0,totalT:0},
+{n:"Minneapolis HS",cls:"3A",enr:206,priv:false,pool:"3,046",distPop:"3,046",frl:"42.5%",tuition:"$0",mainT:0,totalT:0},
+{n:"Chaparral HS",cls:"3A",enr:204,priv:false,pool:"4,699",distPop:"4,699",frl:"48.5%",tuition:"$0",mainT:0,totalT:0},
+{n:"Fredonia HS",cls:"3A",enr:204,priv:false,pool:"3,968",distPop:"3,968",frl:"62.5%",tuition:"$0",mainT:0,totalT:0},
+{n:"Osage City HS",cls:"3A",enr:202,priv:false,pool:"3,604",distPop:"3,604",frl:"44.2%",tuition:"$0",mainT:0,totalT:0},
+{n:"Maranatha Christian Academy",cls:"3A",enr:200,priv:true,pool:"632,276",distPop:"N/A",frl:"N/A",tuition:"$12,600",mainT:0,totalT:0},
+{n:"Riverton HS",cls:"3A",enr:199,priv:false,pool:"3,757",distPop:"3,757",frl:"56.5%",tuition:"$0",mainT:0,totalT:0},
+{n:"Cherryvale HS",cls:"3A",enr:195,priv:false,pool:"4,090",distPop:"4,090",frl:"61.5%",tuition:"$0",mainT:0,totalT:0},
+{n:"Lakin HS",cls:"3A",enr:191,priv:false,pool:"2,709",distPop:"2,709",frl:"52.5%",tuition:"$0",mainT:0,totalT:0},
+{n:"West Franklin HS",cls:"3A",enr:191,priv:false,pool:"4,974",distPop:"4,974",frl:"45.5%",tuition:"$0",mainT:0,totalT:0},
+{n:"Kingman HS",cls:"3A",enr:186,priv:false,pool:"4,800",distPop:"4,800",frl:"38.5%",tuition:"$0",mainT:0,totalT:0},
+{n:"Pleasant Ridge HS",cls:"3A",enr:183,priv:false,pool:"3,264",distPop:"3,264",frl:"32.5%",tuition:"$0",mainT:0,totalT:0},
+{n:"Garden Plain HS",cls:"3A",enr:180,priv:false,pool:"3,011",distPop:"10,035",frl:"12.5%",tuition:"$0",mainT:0,totalT:0},
+{n:"Cimarron HS",cls:"3A",enr:174,priv:false,pool:"2,777",distPop:"2,777",frl:"48.5%",tuition:"$0",mainT:0,totalT:0},
+{n:"Oskaloosa HS",cls:"3A",enr:174,priv:false,pool:"3,600",distPop:"3,600",frl:"38.5%",tuition:"$0",mainT:0,totalT:0},
+{n:"Phillipsburg HS",cls:"3A",enr:174,priv:false,pool:"2,921",distPop:"2,921",frl:"42.5%",tuition:"$0",mainT:0,totalT:0},
+{n:"Riverside HS",cls:"3A",enr:174,priv:false,pool:"3,206",distPop:"3,206",frl:"48.5%",tuition:"$0",mainT:0,totalT:0},
+{n:"Southwestern Heights HS",cls:"3A",enr:170,priv:false,pool:"3,219",distPop:"3,219",frl:"62.5%",tuition:"$0",mainT:0,totalT:0},
+{n:"Jayhawk Linn HS",cls:"3A",enr:169,priv:false,pool:"3,187",distPop:"3,187",frl:"54.5%",tuition:"$0",mainT:0,totalT:0},
+];
+
+const RIVALS = {"5A":"St. Thomas Aquinas HS","4A":"Bishop Miege HS","3A":"Wichita Collegiate HS","4A/5A":"St. Thomas Aquinas HS","3A/4A":"Bishop Miege HS"};
+
+const COMMITTEE = [
+  "Susan.Estes@house.ks.gov","Kyle.McNorton@house.ks.gov","Jerry.Stogsdill@house.ks.gov",
+  "Sherri.Brantley@house.ks.gov","Shawn.Chauncey@house.ks.gov","Linda.Featherston@house.ks.gov",
+  "Jason.Goetz@house.ks.gov","Scott.Hill@house.ks.gov","Steve.Huebert@house.ks.gov",
+  "Silas.Miller@house.ks.gov","Lon.Pishny@house.ks.gov","Louis.Ruiz@house.ks.gov",
+  "Rebecca.Schmoe@house.ks.gov","Mark.Schreiber@house.ks.gov","Megan.Steele@house.ks.gov",
+  "Valdenia.Winn@house.ks.gov","Dawn.Wolf@house.ks.gov"
+];
+const SPONSOR = "Samantha.Poetter@house.ks.gov";
+const TESTIMONY = "house.ed@ks.gov";
+
+// ================================================================
+// REP MAP: school name -> {rep, email, dist}
+// ================================================================
+const REP_MAP = {
+  "Abilene HS":{rep:"Rep. Greg Wilson",email:"greg.wilson@house.ks.gov",dist:70},
+  "Andale HS":{rep:"Rep. Joe Seiwert",email:"joe.seiwert@house.ks.gov",dist:101},
+  "Anderson County HS":{rep:"Rep. Fred Gardner",email:"fred.gardner@house.ks.gov",dist:9},
+  "Andover Central HS":{rep:"Rep. Susan Humphries",email:"susan.humphries@house.ks.gov",dist:99},
+  "Andover HS":{rep:"Rep. Susan Humphries",email:"susan.humphries@house.ks.gov",dist:99},
+  "Arkansas City HS":{rep:"Rep. Bill Rhiley",email:"bill.rhiley@house.ks.gov",dist:80},
+  "Atchison HS":{rep:"Rep. Allen Reavis",email:"allen.reavis@house.ks.gov",dist:63},
+  "Augusta HS":{rep:"Rep. Kristey Williams",email:"kristey.williams@house.ks.gov",dist:77},
+  "Baldwin HS":{rep:"Rep. Courtney Sappington",email:"Courtney.Sappington@house.ks.gov",dist:5},
+  "Basehor-Linwood HS":{rep:"Rep. Tim Johnson",email:"timothy.johnson@house.ks.gov",dist:38},
+  "Baxter Springs HS":{rep:"Rep. Dale Helwig",email:"dale.helwig@house.ks.gov",dist:1},
+  "Beloit HS":{rep:"Rep. Dawn Wolf",email:"dawn.wolf@house.ks.gov",dist:107},
+  "Blue Valley Southwest HS":{rep:"Rep. Sean Tarwater",email:"sean.tarwater@house.ks.gov",dist:8},
+  "Bonner Springs HS":{rep:"Rep. Carolyn Caiharr",email:"carolyn.caiharr@house.ks.gov",dist:33},
+  "Buhler HS":{rep:"Rep. Paul Waggoner",email:"paul.waggoner@house.ks.gov",dist:104},
+  "Burlington HS":{rep:"Rep. Brad Barrett",email:"brad.barrett@house.ks.gov",dist:76},
+  "Caney Valley HS":{rep:"Rep. Doug Blex",email:"doug.blex@house.ks.gov",dist:12},
+  "Chanute HS":{rep:"Rep. Dan Goddard",email:"dan.goddard@house.ks.gov",dist:7},
+  "Chaparral HS":{rep:"Rep. Kyle Hoffman",email:"kyle.hoffman@house.ks.gov",dist:116},
+  "Chapman HS":{rep:"Rep. Greg Wilson",email:"greg.wilson@house.ks.gov",dist:70},
+  "Cheney HS":{rep:"Rep. Brian Bergkamp",email:"brian.bergkamp@house.ks.gov",dist:93},
+  "Cherryvale HS":{rep:"Rep. Ron Bryce",email:"ron.bryce@house.ks.gov",dist:11},
+  "Cimarron HS":{rep:"Rep. Gary White",email:"gary.white@house.ks.gov",dist:115},
+  "Circle HS":{rep:"Rep. Will Carpenter",email:"will.carpenter@house.ks.gov",dist:75},
+  "Clay Center Community HS":{rep:"Rep. Lewis Bloom",email:"lewis.bloom@house.ks.gov",dist:64},
+  "Clearwater HS":{rep:"Rep. Brian Bergkamp",email:"brian.bergkamp@house.ks.gov",dist:93},
+  "Colby HS":{rep:"Rep. Adam Smith",email:"adam.smith@house.ks.gov",dist:120},
+  "Columbus HS":{rep:"Rep. Dale Helwig",email:"dale.helwig@house.ks.gov",dist:1},
+  "Concordia HS":{rep:"Rep. Dawn Wolf",email:"dawn.wolf@house.ks.gov",dist:107},
+  "Council Grove HS":{rep:"Rep. Nathan Butler",email:"nate.butler@house.ks.gov",dist:70},
+  "De Soto HS":{rep:"Rep. Adam Turk",email:"adam.turk@house.ks.gov",dist:117},
+  "Eisenhower HS":{rep:"Rep. Joe Seiwert",email:"joe.seiwert@house.ks.gov",dist:101},
+  "El Dorado HS":{rep:"Rep. Will Carpenter",email:"will.carpenter@house.ks.gov",dist:75},
+  "Ellsworth HS":{rep:"Rep. Troy Waymaster",email:"troy.waymaster@house.ks.gov",dist:109},
+  "Emporia HS":{rep:"Rep. Mark Schreiber",email:"mark.schreiber@house.ks.gov",dist:60},
+  "Eudora HS":{rep:"Rep. Adam Turk",email:"adam.turk@house.ks.gov",dist:117},
+  "FL Schlagle HS":{rep:"Rep. Wanda Brownlee Paige",email:"wanda.brownleepaige@house.ks.gov",dist:35},
+  "Field Kindley HS":{rep:"Rep. Ron Bryce",email:"ron.bryce@house.ks.gov",dist:11},
+  "Fort Scott HS":{rep:"Rep. Rick James",email:"rick.james@house.ks.gov",dist:4},
+  "Fredonia HS":{rep:"Rep. Duane Droge",email:"duane.droge@house.ks.gov",dist:13},
+  "Frontenac HS":{rep:"Rep. Kenneth Collins",email:"kenneth.collins@house.ks.gov",dist:2},
+  "Galena HS":{rep:"Rep. Dale Helwig",email:"dale.helwig@house.ks.gov",dist:1},
+  "Garden Plain HS":{rep:"Rep. Joe Seiwert",email:"joe.seiwert@house.ks.gov",dist:101},
+  "Girard HS":{rep:"Rep. Kenneth Collins",email:"kenneth.collins@house.ks.gov",dist:2},
+  "Goddard HS":{rep:"Rep. Joe Seiwert",email:"joe.seiwert@house.ks.gov",dist:101},
+  "Goodland HS":{rep:"Rep. Adam Smith",email:"adam.smith@house.ks.gov",dist:120},
+  "Great Bend HS":{rep:"Rep. Sherri Brantley",email:"sherri.brantley@house.ks.gov",dist:112},
+  "Halstead HS":{rep:"Rep. Mike King",email:"mike.king@house.ks.gov",dist:74},
+  "Haven HS":{rep:"Rep. Abi Boatman",email:"abi.boatman@house.ks.gov",dist:86},
+  "Hays HS":{rep:"Rep. Barbara Wasinger",email:"barbara.wasinger@house.ks.gov",dist:111},
+  "Hesston HS":{rep:"Rep. Mike King",email:"mike.king@house.ks.gov",dist:74},
+  "Hiawatha HS":{rep:"Rep. Sean Willcott",email:"sean.willcott@house.ks.gov",dist:62},
+  "Highland Park HS":{rep:"Rep. Alexis Simmons",email:"alexis.simmons@house.ks.gov",dist:58},
+  "Hoisington HS":{rep:"Rep. Sherri Brantley",email:"sherri.brantley@house.ks.gov",dist:112},
+  "Holcomb HS":{rep:"Rep. Lon Pishny",email:"lon.pishny@house.ks.gov",dist:122},
+  "Holton HS":{rep:"Rep. Francis Awerkamp",email:"francis.awerkamp@house.ks.gov",dist:62},
+  "Hugoton HS":{rep:"Rep. Martin Long",email:"martin.long@house.ks.gov",dist:124},
+  "Hutchinson HS":{rep:"Rep. Kyler Sweely",email:"kyler.sweely@house.ks.gov",dist:102},
+  "Independence HS":{rep:"Rep. Ron Bryce",email:"ron.bryce@house.ks.gov",dist:11},
+  "Iola HS":{rep:"Rep. Fred Gardner",email:"fred.gardner@house.ks.gov",dist:7},
+  "JC Harmon HS":{rep:"Rep. Louis Ruiz",email:"louis.ruiz@house.ks.gov",dist:37},
+  "Jayhawk Linn HS":{rep:"Rep. Ricky James",email:"rick.james@house.ks.gov",dist:4},
+  "Jefferson West HS":{rep:"Rep. Ronald Ellis",email:"ronald.ellis@house.ks.gov",dist:47},
+  "Kansas City-Washington HS":{rep:"Rep. Lynn Melton",email:"lynn.melton@house.ks.gov",dist:36},
+  "Kingman HS":{rep:"Rep. Kevin Schwertfeger",email:"kevin.schwertfeger@house.ks.gov",dist:114},
+  "Labette County HS":{rep:"Rep. Dan Goddard",email:"dan.goddard@house.ks.gov",dist:7},
+  "Lakin HS":{rep:"Rep. Lon Pishny",email:"lon.pishny@house.ks.gov",dist:122},
+  "Lansing HS":{rep:"Rep. David Buehler",email:"david.buehler@house.ks.gov",dist:40},
+  "Larned HS":{rep:"Rep. Brett Fairchild",email:"brett.fairchild@house.ks.gov",dist:113},
+  "Leavenworth HS":{rep:"Rep. Tim Johnson",email:"timothy.johnson@house.ks.gov",dist:38},
+  "Louisburg HS":{rep:"Rep. Samantha Poetter",email:"samantha.poetter@house.ks.gov",dist:6},
+  "Lyons HS":{rep:"Rep. Brett Fairchild",email:"brett.fairchild@house.ks.gov",dist:113},
+  "Maize South HS":{rep:"Rep. Nick Hoheisel",email:"nick.hoheisel@house.ks.gov",dist:100},
+  "Marysville HS":{rep:"Rep. Lisa Moser",email:"lisa.moser@house.ks.gov",dist:106},
+  "McPherson HS":{rep:"Rep. Rick Wilborn",email:"rick.wilborn@house.ks.gov",dist:73},
+  "Minneapolis HS":{rep:"Rep. Dawn Wolf",email:"dawn.wolf@house.ks.gov",dist:107},
+  "Mulvane HS":{rep:"Rep. Leah Howell",email:"leah.howell@house.ks.gov",dist:78},
+  "Nemaha Central HS":{rep:"Rep. Sean Willcott",email:"sean.willcott@house.ks.gov",dist:62},
+  "Neodesha HS":{rep:"Rep. Duane Droge",email:"duane.droge@house.ks.gov",dist:13},
+  "Newton HS":{rep:"Rep. Avery Anderson",email:"avery.anderson@house.ks.gov",dist:72},
+  "Nickerson HS":{rep:"Rep. Kevin Schwertfeger",email:"kevin.schwertfeger@house.ks.gov",dist:104},
+  "Norton Community HS":{rep:"Rep. Ken Rahjes",email:"ken.rahjes@house.ks.gov",dist:110},
+  "Osage City HS":{rep:"Rep. Brad Barrett",email:"brad.barrett@house.ks.gov",dist:76},
+  "Osawatomie HS":{rep:"Rep. Courtney Sappington",email:"courtney.Sappington@house.ks.gov",dist:5},
+  "Oskaloosa HS":{rep:"Rep. Ronald Ellis",email:"ronald.ellis@house.ks.gov",dist:47},
+  "Ottawa HS":{rep:"Rep. Rebecca Schmoe",email:"rebecca.schmoe@house.ks.gov",dist:59},
+  "Paola HS":{rep:"Rep. Samantha Poetter",email:"samantha.poetter@house.ks.gov",dist:6},
+  "Parsons HS":{rep:"Rep. Dan Goddard",email:"dan.goddard@house.ks.gov",dist:7},
+  "Perry-Lecompton HS":{rep:"Rep. Ronald Ellis",email:"ronald.ellis@house.ks.gov",dist:47},
+  "Phillipsburg HS":{rep:"Rep. Ken Rahjes",email:"ken.rahjes@house.ks.gov",dist:110},
+  "Piper HS":{rep:"Rep. Lynn Melton",email:"lynn.melton@house.ks.gov",dist:38},
+  "Pittsburg HS":{rep:"Rep. Chuck Smith",email:"chuck.smith@house.ks.gov",dist:3},
+  "Pleasant Ridge HS":{rep:"Rep. Pat Proctor",email:"pat.proctor@house.ks.gov",dist:41},
+  "Prairie View HS":{rep:"Rep. Fred Gardner",email:"fred.gardner@house.ks.gov",dist:5},
+  "Pratt HS":{rep:"Rep. Kyle Hoffman",email:"kyle.hoffman@house.ks.gov",dist:114},
+  "Riley County HS":{rep:"Rep. Lewis Bloom",email:"lewis.bloom@house.ks.gov",dist:64},
+  "Riverside HS":{rep:"Rep. Allen Reavis",email:"allen.reavis@house.ks.gov",dist:63},
+  "Riverton HS":{rep:"Rep. Dale Helwig",email:"dale.helwig@house.ks.gov",dist:1},
+  "Rock Creek HS":{rep:"Rep. Francis Awerkamp",email:"francis.awerkamp@house.ks.gov",dist:61},
+  "Rose Hill HS":{rep:"Rep. Kristey Williams",email:"kristey.williams@house.ks.gov",dist:77},
+  "Royal Valley HS":{rep:"Rep. Ronald Ellis",email:"ronald.ellis@house.ks.gov",dist:47},
+  "Russell HS":{rep:"Rep. Troy Waymaster",email:"troy.waymaster@house.ks.gov",dist:109},
+  "Sabetha HS":{rep:"Rep. Sean Willcott",email:"sean.willcott@house.ks.gov",dist:62},
+  "Salina-Central HS":{rep:"Rep. Steven Howe",email:"steven.howe@house.ks.gov",dist:71},
+  "Salina-South HS":{rep:"Rep. Clarke Sanders",email:"clarke.sanders@house.ks.gov",dist:69},
+  "Santa Fe Trail HS":{rep:"Rep. Gary White",email:"gary.white@house.ks.gov",dist:76},
+  "Scott Community HS":{rep:"Rep. Jim Minnix",email:"jim.minnix@house.ks.gov",dist:118},
+  "Seaman HS":{rep:"Rep. Kyle McNorton",email:"kyle.mcnorton@house.ks.gov",dist:50},
+  "Shawnee Heights HS":{rep:"Rep. Ken Corbet",email:"ken.corbet@house.ks.gov",dist:54},
+  "Silver Lake HS":{rep:"Rep. Kyle McNorton",email:"kyle.mcnorton@house.ks.gov",dist:50},
+  "Smoky Valley HS":{rep:"Rep. Rick Wilborn",email:"rick.wilborn@house.ks.gov",dist:73},
+  "Southeast of Saline HS":{rep:"Rep. Clarke Sanders",email:"clarke.sanders@house.ks.gov",dist:69},
+  "Southwestern Heights HS":{rep:"Rep. Shannon Francis",email:"shannon.francis@house.ks.gov",dist:125},
+  "Spring Hill HS":{rep:"Rep. Chip VanHouden",email:"chip.vanhouden@house.ks.gov",dist:26},
+  "Sumner Academy":{rep:"Rep. Valdenia Winn",email:"valdenia.winn@house.ks.gov",dist:34},
+  "Tonganoxie HS":{rep:"Rep. Lance Neelly",email:"lance.neelly@house.ks.gov",dist:42},
+  "Topeka West HS":{rep:"Rep. Kirk Haskins",email:"kirk.haskins@house.ks.gov",dist:53},
+  "Turner HS":{rep:"Rep. Melissa Oropeza",email:"melissa.oropeza@house.ks.gov",dist:37},
+  "Ulysses HS":{rep:"Rep. Martin Long",email:"martin.long@house.ks.gov",dist:124},
+  "Valley Center HS":{rep:"Rep. Steve Huebert",email:"steve.huebert@house.ks.gov",dist:90},
+  "Wamego HS":{rep:"Rep. Megan Steele",email:"megan.steele@house.ks.gov",dist:61},
+  "Wellington HS":{rep:"Rep. Bill Rhiley",email:"bill.rhiley@house.ks.gov",dist:80},
+  "Wellsville HS":{rep:"Rep. Courtney Sappington",email:"Courtney.Sappington@house.ks.gov",dist:5},
+  "West Franklin HS":{rep:"Rep. Rebecca Schmoe",email:"rebecca.schmoe@house.ks.gov",dist:59},
+  "Winfield HS":{rep:"Rep. Webster Roth",email:"webster.roth@house.ks.gov",dist:79},
+};
+
+// ================================================================
+// STATE
+// ================================================================
+let selected = null, rival = null, mode = 'main', role = null;
+
+// ================================================================
+// POPULATE DROPDOWN (public schools only)
+// ================================================================
+const picker = document.getElementById('schoolPicker');
+// Group schools: 4A/5A goes in 5A group, 3A/4A goes in 4A group
+function classGroup(cls) {
+  if (cls === '5A' || cls === '4A/5A') return '5A';
+  if (cls === '4A' || cls === '3A/4A') return '4A';
+  return '3A';
+}
+['5A','4A','3A'].forEach(grpCls => {
+  const grp = document.createElement('optgroup');
+  grp.label = 'Class ' + grpCls;
+  DATA.filter(s => classGroup(s.cls) === grpCls && !s.priv).sort((a,b) => a.n.localeCompare(b.n)).forEach(s => {
+    const o = document.createElement('option');
+    o.value = s.n;
+    o.textContent = s.n;
+    grp.appendChild(o);
+  });
+  picker.appendChild(grp);
+});
+
+// ================================================================
+// SCHOOL SELECTION
+// ================================================================
+picker.addEventListener('change', function() {
+  if (!this.value) {
+    document.getElementById('revealContent').classList.remove('show');
+    selected = null;
+    return;
+  }
+  selected = DATA.find(s => s.n === this.value);
+  rival = DATA.find(s => s.n === RIVALS[selected.cls]);
+  document.getElementById('revealContent').classList.add('show');
+  renderComparison();
+  updateRepDisplay();
+  rebuildEmail();
+  setTimeout(() => {
+    document.querySelector('.comparison-section').scrollIntoView({behavior:'smooth',block:'start'});
+  }, 100);
+});
+
+// ================================================================
+// SPORT MODE TOGGLE
+// ================================================================
+function setMode(m, btn) {
+  mode = m;
+  document.querySelectorAll('.sport-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('sportNote').style.display = m === 'main' ? 'block' : 'none';
+  renderComparison();
+  rebuildEmail();
+}
+
+// ================================================================
+// RENDER COMPARISON
+// ================================================================
+function renderComparison() {
+  if (!selected || !rival) return;
+  const s = selected, r = rival;
+  document.getElementById('yourName').textContent = s.n.replace(' HS','');
+  document.getElementById('rivalName').textContent = r.n.replace(' HS','');
+
+  const yourT = mode === 'main' ? s.mainT : s.totalT;
+  const rivalT = mode === 'main' ? r.mainT : r.totalT;
+  const tLabel = mode === 'main' ? 'Main Sport Titles' : 'All KSHSAA Activity Titles';
+
+  const rows = [
+    [s.cls, 'Classification', r.cls, false],
+    [s.enr.toLocaleString(), 'Enrollment', r.enr.toLocaleString(), false],
+    [s.distPop, 'District Pop.', r.distPop, true],
+    [s.pool, 'Talent Pool', r.pool, true],
+    [s.tuition, 'Annual Tuition', r.tuition, true],
+    [s.frl, 'Free/Reduced Lunch', r.frl, false],
+    [String(yourT), tLabel, String(rivalT), true],
+  ];
+
+  let html = '';
+  rows.forEach(([l, m, rv, hl]) => {
+    html += '<div class="comp-row"><div class="val">' + l + '</div><div class="metric">' + m + '</div><div class="val' + (hl ? ' hl-red' : '') + '">' + rv + '</div></div>';
+  });
+  document.getElementById('compRows').innerHTML = html;
+
+  const poolYou = parseInt(s.pool.replace(/,/g,''));
+  const poolRival = parseInt(r.pool.replace(/,/g,''));
+  const poolRatio = poolYou > 0 ? Math.round(poolRival / poolYou) : '∞';
+  const titleRatio = yourT > 0 ? Math.round(rivalT / yourT) : rivalT;
+
+  let fHtml = '';
+  if (titleRatio > 0) fHtml += '<div class="big-stat"><div class="num">' + titleRatio + 'x</div><div class="lbl">More ' + (mode==='main'?'Main Sport':'KSHSAA Activity') + ' Titles</div></div>';
+  fHtml += '<div class="big-stat"><div class="num">' + poolRatio + 'x</div><div class="lbl">Larger Talent Pool</div></div>';
+  fHtml += '<div class="big-stat"><div class="num">Same</div><div class="lbl">Classification</div></div>';
+  document.getElementById('compFooter').innerHTML = fHtml;
+}
+
+// ================================================================
+// ROLE SELECTION
+// ================================================================
+function pickRole(el) {
+  document.querySelectorAll('.role-opt').forEach(r => r.classList.remove('active'));
+  el.classList.add('active');
+  role = el.dataset.role;
+  rebuildEmail();
+}
+
+// ================================================================
+// REP AUTO-DETECT
+// ================================================================
+function updateRepDisplay() {
+  if (!selected) return;
+  const auto = REP_MAP[selected.n];
+  const autoEl = document.getElementById('repAutoInfo');
+  const manEl = document.getElementById('repManual');
+  if (auto) {
+    autoEl.innerHTML = '✓ <strong>' + auto.rep + '</strong> — District ' + auto.dist + '<br><span style="font-size:0.8rem;color:var(--muted);">' + auto.email + '</span>';
+    autoEl.style.display = 'block';
+    manEl.style.display = 'none';
+  } else {
+    autoEl.style.display = 'none';
+    manEl.style.display = 'block';
+  }
+}
+
+function getRepInfo() {
+  if (!selected) return null;
+  const auto = REP_MAP[selected.n];
+  if (auto) return auto;
+  const n = document.getElementById('repName').value.trim();
+  const e = document.getElementById('repEmail').value.trim();
+  if (n && e) return {rep:n, email:e, dist:'?'};
+  return null;
+}
+
+// ================================================================
+// EMAIL TEMPLATES
+// ================================================================
+function getEmailContent(r, name, school, s, rv) {
+  const tm = mode === 'main' ? 'main sport' : 'KSHSAA activity';
+  const yT = mode === 'main' ? s.mainT : s.totalT;
+  const rT = mode === 'main' ? rv.mainT : rv.totalT;
+
+  // Build greeting based on whether local rep is CC'd
+  const includeRep = document.getElementById('chkLocalRep').checked;
+  const rep = getRepInfo();
+  let greeting = 'Dear Members of the House Education Committee,';
+  if (includeRep && rep && rep.rep) {
+    const repLast = rep.rep.replace('Rep. ','');
+    greeting = 'Dear Representative ' + repLast + ' and Members of the House Education Committee,';
+  }
+
+  const data = rv.n + ' (' + rv.cls + ', enrollment ' + rv.enr.toLocaleString() + ') draws from a talent pool of ' + rv.pool + ' while ' + school + ' (enrollment ' + s.enr.toLocaleString() + ') draws from just ' + s.pool + '. Despite competing in the same classification, ' + rv.n + ' has won ' + rT + ' ' + tm + ' state titles since 2021 compared to ' + school + "'s " + yT + '. This is not a coaching gap. It is a structural advantage built on selective enrollment.';
+
+  const t = {
+    parent: {
+      subj: 'Support HB 2176 - Fair Play for ' + school + ' Student-Athletes',
+      body: greeting + '\n\nMy name is ' + name + ', and I am a parent at ' + school + '. I am writing to urge you to schedule a hearing and vote on House Bill 2176.\n\n' + data + '\n\nPrivate schools represent less than 7% of 3A-5A membership, yet capture nearly 37% of all state championships. HB 2176 proposes a common-sense "Success Multiplier" - a proven system already used in Missouri - to ensure schools are classified based on their actual competitive advantage, not just headcount. It does not ban or punish anyone. It levels the playing field.\n\nPlease bring HB 2176 to a hearing and give Kansas families a fair fight.\n\nRespectfully,\n' + name + '\n' + school
+    },
+    student: {
+      subj: 'A ' + school + ' Student-Athlete Asking for Fair Play - Support HB 2176',
+      body: greeting + '\n\nMy name is ' + name + ', and I am a student-athlete at ' + school + '. I am writing to ask you to support House Bill 2176.\n\nI train year-round. I show up early, stay late, and push myself every day. But under the current system, I compete in the same classification as private schools that can recruit from an entire metro area.\n\n' + data + '\n\nI am not asking for a trophy I did not earn. I am asking for a fair chance to compete against schools that play by the same rules we do. HB 2176 applies a Success Multiplier so schools are classified based on their actual competitive advantage. Missouri already does this, and it works.\n\nPlease give students like me a fair shot. Bring HB 2176 to a vote.\n\nRespectfully,\n' + name + '\nStudent-Athlete, ' + school
+    },
+    coach: {
+      subj: 'HB 2176 - Safety & Competitive Integrity for ' + school,
+      body: greeting + '\n\nMy name is ' + name + ', and I am a coach/administrator at ' + school + '. I am writing to request an immediate hearing on House Bill 2176.\n\nI see the impact of classification imbalances firsthand. When a community school plays a private school drawing from a metro talent pool of 600,000+, it creates safety concerns in contact sports and demoralizes participation across all programs.\n\n' + data + '\n\nWe are not asking to ban private schools. We are asking for a Success Multiplier, a proven system used in Missouri, to move dominant programs into a classification that matches their actual competitive ability.\n\nHB 2176 protects the integrity of Kansas high school sports. Please vote YES.\n\nRespectfully,\n' + name + '\n' + school
+    },
+    taxpayer: {
+      subj: 'Protect Public School Investments - Support HB 2176',
+      body: greeting + '\n\nMy name is ' + name + ', and I am a taxpayer in the ' + school + ' community. I am writing to ask you to advance House Bill 2176.\n\nOur community invests millions in our public schools. Under the current KSHSAA classification system, those investments are undermined when our teams are forced to compete against regional private select programs operating under fundamentally different rules.\n\n' + data + '\n\nHB 2176 fixes this by implementing a Success Multiplier that ensures schools with selective enrollment advantages play in a higher classification. Missouri already uses this system successfully. This is a common-sense fix.\n\nPlease bring it to a vote.\n\nRespectfully,\n' + name + '\n' + school
+    }
+  };
+  return t[r] || null;
+}
+
+// ================================================================
+// REBUILD EMAIL (called on every change)
+// ================================================================
+function rebuildEmail() {
+  const name = document.getElementById('userName').value.trim() || '[Your Name]';
+  const preview = document.getElementById('emailPreview');
+  const btnC = document.getElementById('btnCommittee');
+  const btnT = document.getElementById('btnTestimony');
+
+  if (!role || !selected) {
+    preview.classList.remove('show');
+    btnC.href = '#';
+    btnC.onclick = function(e) { e.preventDefault(); alert('Please select your school and role first.'); };
+    btnT.href = '#';
+    btnT.onclick = function(e) { e.preventDefault(); alert('Please select your school and role first.'); };
+    return;
+  }
+
+  const content = getEmailContent(role, name, selected.n, selected, rival);
+  if (!content) return;
+
+  // Build TO list: committee + optionally local rep. CC: always sponsor.
+  const includeRep = document.getElementById('chkLocalRep').checked;
+  const rep = getRepInfo();
+  let toEmails = COMMITTEE.slice();
+  if (includeRep && rep && rep.email) toEmails.push(rep.email);
+  let ccEmails = SPONSOR;
+
+  // Preview
+  preview.classList.add('show');
+  let toHtml = '<strong>To:</strong> House Education Committee (17 members)';
+  if (includeRep && rep) toHtml += ' + ' + rep.rep + ' (Your Rep, Dist. ' + rep.dist + ')';
+  toHtml += '<br><strong>CC:</strong> Rep. Poetter Parshall (Bill Sponsor)';
+  document.getElementById('epTo').innerHTML = toHtml;
+  document.getElementById('epSubj').textContent = content.subj;
+  document.getElementById('epBody').textContent = content.body;
+
+  // Committee mailto
+  btnC.href = 'mailto:' + toEmails.join(',') + '?cc=' + encodeURIComponent(ccEmails) + '&subject=' + encodeURIComponent(content.subj) + '&body=' + encodeURIComponent(content.body);
+  btnC.onclick = function() {
+    // Silently submit to Google Form if updates checkbox is checked
+    if (document.getElementById('chkUpdates').checked) {
+      var email = document.getElementById('userEmail').value.trim();
+      var school = selected ? selected.n : '';
+      if (email && email.includes('@')) {
+        var formUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSf0SsRrI4BhACbBMlU5u1GxEmKVUMELmrcvf5huNEWTBLzphw/formResponse';
+        var params = 'entry.1925266158=' + encodeURIComponent(email) + '&entry.797108717=' + encodeURIComponent(school);
+        fetch(formUrl + '?' + params, {mode:'no-cors'}).catch(function(){});
+      }
+    }
+  };
+
+  // Testimony mailto
+  btnT.href = 'mailto:' + TESTIMONY + '?subject=' + encodeURIComponent('Written Testimony: HB 2176 - ' + selected.n) + '&body=' + encodeURIComponent(content.body);
+  btnT.onclick = function() {
+    if (document.getElementById('chkUpdates').checked) {
+      var email = document.getElementById('userEmail').value.trim();
+      var school = selected ? selected.n : '';
+      if (email && email.includes('@')) {
+        var formUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSf0SsRrI4BhACbBMlU5u1GxEmKVUMELmrcvf5huNEWTBLzphw/formResponse';
+        var params = 'entry.1925266158=' + encodeURIComponent(email) + '&entry.797108717=' + encodeURIComponent(school);
+        fetch(formUrl + '?' + params, {mode:'no-cors'}).catch(function(){});
+      }
+    }
+  };
+}
+
+// ================================================================
+// EVENT LISTENERS
+// ================================================================
+document.getElementById('userName').addEventListener('input', rebuildEmail);
+document.getElementById('userEmail').addEventListener('input', rebuildEmail);
+document.getElementById('repName').addEventListener('input', rebuildEmail);
+document.getElementById('repEmail').addEventListener('input', rebuildEmail);
+document.getElementById('chkLocalRep').addEventListener('change', function() {
+  document.getElementById('repSection').style.display = this.checked ? 'block' : 'none';
+  rebuildEmail();
+});
+document.getElementById('chkUpdates').addEventListener('change', rebuildEmail);
+
+// ================================================================
+// PRINT FLYER
+// ================================================================
+function printFlyer() {
+  if (!selected || !rival) { alert('Please select a school first.'); return; }
+  const s = selected, r = rival;
+  const yT = mode === 'main' ? s.mainT : s.totalT;
+  const rT = mode === 'main' ? r.mainT : r.totalT;
+  const tLabel = mode === 'main' ? 'Main Sport Titles' : 'All KSHSAA Activity Titles';
+  const poolYou = parseInt(s.pool.replace(/,/g,''));
+  const poolRival = parseInt(r.pool.replace(/,/g,''));
+  const poolRatio = poolYou > 0 ? Math.round(poolRival / poolYou) : '∞';
+  const tRatio = yT > 0 ? Math.round(rT / yT) + 'x' : rT + '-0';
+
+  const html = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Fair Play Flyer - ' + s.n + '</title><style>@import url("https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Libre+Franklin:wght@400;600;700&display=swap");*{margin:0;padding:0;box-sizing:border-box}@page{size:letter;margin:.5in}body{font-family:"Libre Franklin",sans-serif;color:#0b1120;width:7.5in;margin:0 auto}.hdr{text-align:center;border-bottom:4px solid #c8a84e;padding-bottom:1rem;margin-bottom:1.25rem}.hdr h1{font-family:"Barlow Condensed",sans-serif;font-size:2.8rem;font-weight:800;text-transform:uppercase;letter-spacing:3px}.hdr h1 em{font-style:normal;color:#c8a84e}.hdr p{font-size:1rem;color:#555;margin-top:.3rem}.badge{display:inline-block;background:#c8a84e;color:#0b1120;font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:.85rem;padding:.25rem 1rem;margin-top:.75rem;letter-spacing:2px;text-transform:uppercase}.vs{display:grid;grid-template-columns:1fr auto 1fr;border:2px solid #e0ddd5;border-radius:8px;padding:1rem 1.25rem;margin:1.25rem 0}.vs .ch{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:1.15rem;text-transform:uppercase;letter-spacing:1px;padding-bottom:.5rem;border-bottom:1px solid #e0ddd5}.vs .ch:first-child{text-align:right;color:#2d7a3e}.vs .ch:nth-child(2){text-align:center;color:#999;font-size:.7rem}.vs .ch:last-child{text-align:left;color:#c23b22}.vr{display:contents}.vr .v{padding:.4rem 0;font-weight:600;font-size:.95rem}.vr .v:first-child{text-align:right}.vr .v:last-child{text-align:left}.vr .m{text-align:center;font-size:.7rem;color:#888;text-transform:uppercase;letter-spacing:1px;font-family:"Barlow Condensed",sans-serif;padding:.4rem .5rem}.stats{display:flex;justify-content:center;gap:2.5rem;margin:1.25rem 0;padding:1rem;background:#f5f3ee;border-radius:8px}.st{text-align:center}.st .n{font-family:"Barlow Condensed",sans-serif;font-weight:800;font-size:2.2rem;color:#c8a84e;line-height:1}.st .l{font-size:.7rem;color:#888;text-transform:uppercase;letter-spacing:1px;margin-top:.15rem}.sn{text-align:center;font-size:.8rem;font-style:italic;color:#999;margin-top:.5rem}.cta{text-align:center;margin:1.5rem 0 1rem}.cta h2{font-family:"Barlow Condensed",sans-serif;font-size:1.6rem;font-weight:700;text-transform:uppercase;letter-spacing:2px}.cta p{font-size:1rem;color:#555;margin-top:.5rem;line-height:1.5}.cta .url{display:inline-block;margin-top:.75rem;background:#0b1120;color:#c8a84e;font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:1.1rem;padding:.5rem 1.5rem;border-radius:4px;letter-spacing:2px}.ft{text-align:center;font-size:.7rem;color:#aaa;margin-top:1.5rem;padding-top:.75rem;border-top:1px solid #e0ddd5}</style></head><body><div class="hdr"><h1>Fair Play <em>Kansas</em></h1><p>Our student-athletes deserve a level playing field.</p><div class="badge">Support House Bill 2176</div></div><p class="yr" style="text-align:center;font-weight:700;font-size:.95rem;margin:.75rem 0 .25rem">State Championship Data: 2021 - 2025 (5 Years)</p><div class="vs"><div class="ch">' + s.n.replace(' HS','') + '</div><div class="ch">VS</div><div class="ch">' + r.n.replace(' HS','') + '</div><div class="vr"><div class="v">Class ' + s.cls + '</div><div class="m">Classification</div><div class="v">Class ' + r.cls + '</div></div><div class="vr"><div class="v">' + s.enr.toLocaleString() + '</div><div class="m">Enrollment</div><div class="v">' + r.enr.toLocaleString() + '</div></div><div class="vr"><div class="v">' + s.distPop + '</div><div class="m">District Pop.</div><div class="v">' + r.distPop + '</div></div><div class="vr"><div class="v">' + s.pool + '</div><div class="m">Talent Pool</div><div class="v">' + r.pool + '</div></div><div class="vr"><div class="v">' + s.tuition + '</div><div class="m">Tuition</div><div class="v">' + r.tuition + '</div></div><div class="vr"><div class="v">' + yT + '</div><div class="m">' + tLabel + '</div><div class="v">' + rT + '</div></div></div>' + (mode==='main' ? '<p class="sn">Main Sports: Baseball, Boys Basketball, Girls Basketball, Football, Boys Soccer, Girls Soccer, Softball, Volleyball</p>' : '') + '<div class="stats">' + (rT > 0 ? '<div class="st"><div class="n">' + tRatio + '</div><div class="l">More Titles</div></div>' : '') + '<div class="st"><div class="n">' + poolRatio + 'x</div><div class="l">Larger Talent Pool</div></div><div class="st"><div class="n">Same</div><div class="l">Classification</div></div></div><div class="cta"><h2>This is not fair. Help fix it.</h2><p>HB 2176 creates a Success Multiplier so private schools compete in a classification that matches their actual advantage. Missouri already does this.</p><p>Visit the link below to email the Kansas House Education Committee in 60 seconds.</p><div style="margin-top:1rem;"><img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://fairplayks.org&format=png" alt="QR Code" style="width:130px;height:130px;display:block;margin:0 auto;border:3px solid #0b1120;border-radius:6px;"><div class="url" style="margin-top:.5rem;display:block;">fairplayks.org</div></div></div><div class="ft">Data: KSHSAA championship records (2021-2025). Not affiliated with KSHSAA or any political party.</div></body></html>';
+
+  // Use Blob URL to avoid popup blockers
+  var blob = new Blob([html], {type: 'text/html'});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.target = '_blank';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(function(){ URL.revokeObjectURL(url); }, 10000);
+}
+
+
+// ================================================================
+// CONFIG: Set these when events occur
+// ================================================================
+const HEARING_ACTIVE = false; // Set to true when hearing is scheduled
+const HEARING_TEXT = '⚠️ HEARING SCHEDULED: March 15, 2026 at 1:30 PM — Act Now';
+const EMAIL_COUNT = 0; // Update this manually, or connect to Google Sheets (see below)
+const SITE_URL = 'https://fairplayks.org';
+
+// Show urgency banner if active
+if (HEARING_ACTIVE) {
+  document.getElementById('urgencyBanner').style.display = 'block';
+  document.getElementById('urgencyText').textContent = HEARING_TEXT;
+}
+
+// Email counter display
+(function() {
+  const el = document.getElementById('counterNum');
+  if (EMAIL_COUNT > 0) {
+    document.getElementById('emailCounter').style.display = 'block';
+    // Animate counter
+    let current = 0;
+    const step = Math.max(1, Math.floor(EMAIL_COUNT / 40));
+    const interval = setInterval(function() {
+      current += step;
+      if (current >= EMAIL_COUNT) { current = EMAIL_COUNT; clearInterval(interval); }
+      el.textContent = current.toLocaleString();
+    }, 30);
+  }
+})();
+
+// ================================================================
+// SOCIAL SHARING
+// ================================================================
+function shareFB() {
+  window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(SITE_URL), '_blank', 'width=600,height=400');
+}
+function shareX() {
+  const text = 'Private schools are 7% of Kansas 3A-5A but win 37% of state titles. HB 2176 fixes the classification system. Email the committee in 60 seconds:';
+  window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(text) + '&url=' + encodeURIComponent(SITE_URL), '_blank', 'width=600,height=400');
+}
+function copyLink() {
+  navigator.clipboard.writeText(SITE_URL).then(function() {
+    const btn = document.getElementById('copyBtn');
+    btn.textContent = '✓ Copied!';
+    setTimeout(function() { btn.textContent = '📋 Copy Link'; }, 2000);
+  });
+}
+
+// ================================================================
+// COACH FORWARDING EMAIL
+// ================================================================
+function copyCoachEmail() {
+  const school = selected ? selected.n : '[Your School]';
+  const email = `Subject: 60 Seconds to Help Our Student-Athletes — Please Read
+
+Hi [Team/Booster Club],
+
+I'm reaching out about something that directly affects our athletes at ${school}.
+
+Right now, Kansas private schools make up just 7% of 3A-5A membership but win 37% of state championships. They draw from talent pools of 600,000+ while our kids compete from a community of a few thousand. Despite this massive advantage, they play in the SAME classification as us.
+
+House Bill 2176 would fix this with a "Success Multiplier" — the same proven system Missouri has used since 2003. It doesn't ban or punish anyone. It simply moves dominant programs to a classification that matches their actual competitive ability.
+
+You can email the entire Kansas House Education Committee in literally 60 seconds:
+
+👉 ${SITE_URL}
+
+Select ${school}, pick your role, and the email writes itself. It takes less time than tying your shoes.
+
+Every email matters. Committee members track constituent volume. If they see 500 emails from parents across Kansas, this bill gets a hearing. If they see 5, it dies in committee.
+
+Please forward this to anyone who cares about fair competition for our kids.
+
+Thank you,
+[Your Name]`;
+
+  navigator.clipboard.writeText(email).then(function() {
+    document.getElementById('coachCopyConfirm').style.display = 'block';
+    setTimeout(function() { document.getElementById('coachCopyConfirm').style.display = 'none'; }, 3000);
+  });
+}
+
+// ================================================================
+// FAQ ACCORDION
+// ================================================================
+function toggleFaq(header) {
+  const body = header.nextElementSibling;
+  const arrow = header.querySelector('.faq-arrow');
+  if (body.style.display === 'none') {
+    body.style.display = 'block';
+    arrow.style.transform = 'rotate(180deg)';
+  } else {
+    body.style.display = 'none';
+    arrow.style.transform = 'rotate(0deg)';
+  }
+}
+
+// Init
+rebuildEmail();
+</script>
+</body>
+</html>
