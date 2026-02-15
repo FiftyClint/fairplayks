@@ -403,6 +403,7 @@
     .comp-row .val { font-size: 0.9rem; }
     .comp-row .metric { font-size: 0.65rem; }
     .sport-btn { font-size: 0.65rem; padding: 0.5rem 0.35rem; letter-spacing: 0; }
+    .sport-note { white-space: normal; }
     .rep-manual-grid { grid-template-columns: 1fr; }
   }
   footer {
@@ -556,13 +557,9 @@
 
     <!-- BUTTONS -->
     <button class="action-btn btn-primary" id="btnCommittee">✉️ &nbsp;Email the Education Committee</button>
-    <button class="action-btn btn-subtle" id="btnTestimony">📄 &nbsp;Submit Official Written Testimony</button>
-    <div style="background:var(--midnight);border:1px solid rgba(200,168,78,0.1);border-radius:var(--radius);padding:0.75rem 1rem;margin-top:0.25rem;margin-bottom:0.75rem;">
-      <p style="font-size:0.8rem;color:var(--muted);line-height:1.5;"><strong style="color:var(--cream);">Written testimony is the most powerful tool you have.</strong> It becomes part of the permanent legislative record. Committee members read it before they vote. Unlike a phone call or email that gets skimmed, testimony is entered into evidence and can be referenced during debate on the House floor. Submit yours to <span style="color:var(--gold);">house.ed@ks.gov</span> when a hearing is scheduled.</p>
-    </div>
 
     <p class="btn-note">
-      Clicking opens your default email app (Gmail, Outlook, Apple Mail) with everything pre-filled. You just hit Send.<br>
+      Clicking opens your email app with everything pre-filled — recipients, subject, and body. You just hit Send.<br>
       <a href="https://www.kslegislature.gov/li/b2025_26/measures/hb2176/" target="_blank">Read the full text of HB 2176 →</a>
     </p>
 
@@ -573,6 +570,22 @@
         <a id="gmailLink" href="#" target="_blank" style="background:#d44030;color:#fff;padding:0.5rem 1rem;border-radius:var(--radius);font-size:0.85rem;font-weight:600;text-decoration:none;">Open in Gmail</a>
         <a id="outlookLink" href="#" target="_blank" style="background:#0078d4;color:#fff;padding:0.5rem 1rem;border-radius:var(--radius);font-size:0.85rem;font-weight:600;text-decoration:none;">Open in Outlook</a>
         <a id="yahooLink" href="#" target="_blank" style="background:#6001d2;color:#fff;padding:0.5rem 1rem;border-radius:var(--radius);font-size:0.85rem;font-weight:600;text-decoration:none;">Open in Yahoo</a>
+      </div>
+    </div>
+
+    <div id="testimonyBox" style="background:var(--midnight);border:1px solid rgba(200,168,78,0.25);border-radius:var(--radius);padding:1rem;margin-bottom:0.75rem;cursor:pointer;transition:border-color 0.2s;" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='rgba(200,168,78,0.25)'">
+      <p style="font-size:0.85rem;font-weight:700;color:var(--cream);margin-bottom:0.35rem;">📄 Want even more impact? Submit official written testimony.</p>
+      <p style="font-size:0.78rem;color:var(--muted);line-height:1.5;">Clicking below will download your letter as a PDF and open an email to the committee. Attach the PDF and hit send. Testimony must be in PDF format to be entered into the official legislative record.</p>
+      <button id="btnTestimony" class="action-btn btn-outline" style="margin-top:0.6rem;font-size:0.85rem;padding:0.65rem 1.25rem;">📎 &nbsp;Download PDF & Email Testimony</button>
+    </div>
+
+    <!-- TESTIMONY POPUP -->
+    <div id="testimonyPopup" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);z-index:9999;align-items:center;justify-content:center;">
+      <div style="background:var(--midnight);border:2px solid var(--gold);border-radius:var(--radius);padding:1.5rem;max-width:420px;margin:1rem;text-align:center;">
+        <p style="font-size:1.1rem;font-weight:700;color:var(--cream);margin-bottom:0.75rem;">✅ PDF Downloaded!</p>
+        <p style="font-size:0.9rem;color:var(--muted);line-height:1.6;margin-bottom:0.75rem;">Your email is opening now. <strong style="color:var(--gold);">Attach the PDF you just downloaded</strong> before hitting send.</p>
+        <p style="font-size:0.8rem;color:var(--muted);line-height:1.5;margin-bottom:1rem;">The PDF must be attached for it to count as official testimony in the legislative record.</p>
+        <button onclick="document.getElementById('testimonyPopup').style.display='none'" style="background:var(--gold);color:var(--midnight);border:none;padding:0.6rem 1.5rem;border-radius:var(--radius);font-weight:700;font-size:0.9rem;cursor:pointer;">Got it</button>
       </div>
     </div>
 
@@ -641,11 +654,12 @@
 
   <footer>
     <p>Data: KSHSAA championship records (2021–2025) &amp; U.S. Census ACS estimates.</p>
-    <p style="margin-top:0.35rem;">Official written testimony can be submitted to <a href="mailto:house.ed@ks.gov">house.ed@ks.gov</a> when a hearing is scheduled. It is entered into the legislative record and reviewed by committee members before they vote.</p>
+    <p style="margin-top:0.35rem;">Official written testimony can be submitted as a PDF to <span style="color:var(--gold);">house.ed@ks.gov</span> and <span style="color:var(--gold);">H.Education@house.ks.gov</span>.</p>
     <p style="margin-top:0.5rem;">Built by Kansas parents who want a fair fight. Not affiliated with KSHSAA or any political party.</p>
   </footer>
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.2/jspdf.umd.min.js"></script>
 <script>
 // ================================================================
 // DATA
@@ -800,7 +814,6 @@ const COMMITTEE = [
   "Valdenia.Winn@house.ks.gov","Dawn.Wolf@house.ks.gov"
 ];
 const SPONSOR = "Samantha.Poetter@house.ks.gov";
-const TESTIMONY = "house.ed@ks.gov";
 
 // ================================================================
 // REP MAP: school name -> {rep, email, dist}
@@ -1092,20 +1105,20 @@ function getEmailContent(r, name, school, s, rv) {
 
   const t = {
     parent: {
-      subj: 'Support HB 2176 - Fair Play for ' + school + ' Student-Athletes',
-      body: greeting + '\n\nMy name is ' + name + ', and I am a parent at ' + school + '. I am writing to urge you to schedule a hearing and vote on House Bill 2176.\n\n' + data + '\n\nPrivate schools represent less than 7% of 3A-5A membership, yet capture nearly 37% of all state championships. HB 2176 proposes a common-sense "Success Multiplier" - a proven system already used in Missouri - to ensure schools are classified based on their actual competitive advantage, not just headcount. It does not ban or punish anyone. It levels the playing field.\n\nPlease bring HB 2176 to a hearing and give Kansas families a fair fight.\n\nRespectfully,\n' + name + '\n' + school
+      subj: 'Proponent Testimony - HB 2176 - Fair Play for ' + school + ' Student-Athletes',
+      body: greeting + '\n\nPOSITION: PROPONENT — I SUPPORT HB 2176\n\nMy name is ' + name + ', and I am a parent at ' + school + '. I am writing in support of House Bill 2176 and urge you to schedule a hearing and vote YES.\n\n' + data + '\n\nPrivate schools represent less than 7% of 3A-5A membership, yet capture nearly 37% of all state championships. HB 2176 proposes a common-sense "Success Multiplier" - a proven system already used in Missouri - to ensure schools are classified based on their actual competitive advantage, not just headcount. It does not ban or punish anyone. It levels the playing field.\n\nI support HB 2176. Please bring it to a hearing and give Kansas families a fair fight.\n\nRespectfully,\n' + name + '\n' + school
     },
     student: {
-      subj: 'A ' + school + ' Student-Athlete Asking for Fair Play - Support HB 2176',
-      body: greeting + '\n\nMy name is ' + name + ', and I am a student-athlete at ' + school + '. I am writing to ask you to support House Bill 2176.\n\nI train year-round. I show up early, stay late, and push myself every day. But under the current system, I compete in the same classification as private schools that can recruit from an entire metro area.\n\n' + data + '\n\nI am not asking for a trophy I did not earn. I am asking for a fair chance to compete against schools that play by the same rules we do. HB 2176 applies a Success Multiplier so schools are classified based on their actual competitive advantage. Missouri already does this, and it works.\n\nPlease give students like me a fair shot. Bring HB 2176 to a vote.\n\nRespectfully,\n' + name + '\nStudent-Athlete, ' + school
+      subj: 'Proponent Testimony - HB 2176 - A ' + school + ' Student-Athlete Asking for Fair Play',
+      body: greeting + '\n\nPOSITION: PROPONENT — I SUPPORT HB 2176\n\nMy name is ' + name + ', and I am a student-athlete at ' + school + '. I am writing in support of House Bill 2176.\n\nI train year-round. I show up early, stay late, and push myself every day. But under the current system, I compete in the same classification as private schools that can recruit from an entire metro area.\n\n' + data + '\n\nI am not asking for a trophy I did not earn. I am asking for a fair chance to compete against schools that play by the same rules we do. HB 2176 applies a Success Multiplier so schools are classified based on their actual competitive advantage. Missouri already does this, and it works.\n\nI support HB 2176. Please give students like me a fair shot and bring it to a vote.\n\nRespectfully,\n' + name + '\nStudent-Athlete, ' + school
     },
     coach: {
-      subj: 'HB 2176 - Safety & Competitive Integrity for ' + school,
-      body: greeting + '\n\nMy name is ' + name + ', and I am a coach/administrator at ' + school + '. I am writing to request an immediate hearing on House Bill 2176.\n\nI see the impact of classification imbalances firsthand. When a community school plays a private school drawing from a metro talent pool of 600,000+, it creates safety concerns in contact sports and demoralizes participation across all programs.\n\n' + data + '\n\nWe are not asking to ban private schools. We are asking for a Success Multiplier, a proven system used in Missouri, to move dominant programs into a classification that matches their actual competitive ability.\n\nHB 2176 protects the integrity of Kansas high school sports. Please vote YES.\n\nRespectfully,\n' + name + '\n' + school
+      subj: 'Proponent Testimony - HB 2176 - Safety & Competitive Integrity for ' + school,
+      body: greeting + '\n\nPOSITION: PROPONENT — I SUPPORT HB 2176\n\nMy name is ' + name + ', and I am a coach/administrator at ' + school + '. I am writing in support of House Bill 2176 and request an immediate hearing.\n\nI see the impact of classification imbalances firsthand. When a community school plays a private school drawing from a metro talent pool of 600,000+, it creates safety concerns in contact sports and demoralizes participation across all programs.\n\n' + data + '\n\nWe are not asking to ban private schools. We are asking for a Success Multiplier, a proven system used in Missouri, to move dominant programs into a classification that matches their actual competitive ability.\n\nI support HB 2176. It protects the integrity of Kansas high school sports. Please vote YES.\n\nRespectfully,\n' + name + '\n' + school
     },
     taxpayer: {
-      subj: 'Protect Public School Investments - Support HB 2176',
-      body: greeting + '\n\nMy name is ' + name + ', and I am a taxpayer in the ' + school + ' community. I am writing to ask you to advance House Bill 2176.\n\nOur community invests millions in our public schools. Under the current KSHSAA classification system, those investments are undermined when our teams are forced to compete against regional private select programs operating under fundamentally different rules.\n\n' + data + '\n\nHB 2176 fixes this by implementing a Success Multiplier that ensures schools with selective enrollment advantages play in a higher classification. Missouri already uses this system successfully. This is a common-sense fix.\n\nPlease bring it to a vote.\n\nRespectfully,\n' + name + '\n' + school
+      subj: 'Proponent Testimony - HB 2176 - Protect Public School Investments',
+      body: greeting + '\n\nPOSITION: PROPONENT — I SUPPORT HB 2176\n\nMy name is ' + name + ', and I am a taxpayer in the ' + school + ' community. I am writing in support of House Bill 2176.\n\nOur community invests millions in our public schools. Under the current KSHSAA classification system, those investments are undermined when our teams are forced to compete against regional private select programs operating under fundamentally different rules.\n\n' + data + '\n\nHB 2176 fixes this by implementing a Success Multiplier that ensures schools with selective enrollment advantages play in a higher classification. Missouri already uses this system successfully. This is a common-sense fix.\n\nI support HB 2176. Please bring it to a vote.\n\nRespectfully,\n' + name + '\n' + school
     }
   };
   return t[r] || null;
@@ -1118,12 +1131,10 @@ function rebuildEmail() {
   const name = document.getElementById('userName').value.trim() || '[Your Name]';
   const preview = document.getElementById('emailPreview');
   const btnC = document.getElementById('btnCommittee');
-  const btnT = document.getElementById('btnTestimony');
 
   if (!role || !selected) {
     preview.classList.remove('show');
     btnC.onclick = function() { alert('Please select your school and role first.'); };
-    btnT.onclick = function() { alert('Please select your school and role first.'); };
     return;
   }
 
@@ -1199,11 +1210,87 @@ function rebuildEmail() {
     openEmail(to, cc, subj, body);
   };
 
-  // Testimony button
-  btnT.onclick = function() {
-    submitForm();
-    openEmail(TESTIMONY, '', 'Written Testimony: HB 2176 - ' + selected.n, content.body);
-  };
+  // Testimony button — generate PDF + open email
+  var btnT = document.getElementById('btnTestimony');
+  if (btnT) {
+    btnT.onclick = function() {
+      if (!role || !selected) {
+        alert('Please select your school and role first.');
+        return;
+      }
+      submitForm();
+
+      // Generate PDF using jsPDF
+      try {
+        var jsPDF = window.jspdf.jsPDF;
+        var doc = new jsPDF();
+        var margin = 20;
+        var pageWidth = doc.internal.pageSize.getWidth() - margin * 2;
+        var y = 25;
+
+        // Header
+        doc.setFontSize(11);
+        doc.setFont('helvetica', 'bold');
+        doc.text('WRITTEN TESTIMONY — HOUSE BILL 2176', margin, y);
+        y += 7;
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(10);
+        doc.text('House Committee on Education', margin, y);
+        y += 5;
+        doc.text('Kansas State Legislature', margin, y);
+        y += 5;
+        doc.text('Date: ' + new Date().toLocaleDateString('en-US', {year:'numeric',month:'long',day:'numeric'}), margin, y);
+        y += 10;
+
+        // Position
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(11);
+        doc.text('POSITION: PROPONENT — I SUPPORT HB 2176', margin, y);
+        y += 10;
+
+        // Body
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(10);
+        var bodyLines = doc.splitTextToSize(content.body, pageWidth);
+        for (var i = 0; i < bodyLines.length; i++) {
+          if (y > 270) {
+            doc.addPage();
+            y = 25;
+          }
+          doc.text(bodyLines[i], margin, y);
+          y += 5;
+        }
+
+        // Footer
+        y += 5;
+        if (y > 270) { doc.addPage(); y = 25; }
+        doc.setFontSize(8);
+        doc.setTextColor(128);
+        doc.text('Generated via fairplayks.org — Data: KSHSAA championship records (2021-2025)', margin, y);
+
+        // Download
+        doc.save('HB2176_Testimony_' + selected.n.replace(/[^a-zA-Z0-9]/g,'_') + '.pdf');
+      } catch(e) {
+        console.error('PDF generation failed:', e);
+        alert('PDF generation failed. Please try again.');
+        return;
+      }
+
+      // Show popup
+      var popup = document.getElementById('testimonyPopup');
+      popup.style.display = 'flex';
+
+      // Open email to testimony addresses + committee CC chair
+      var testimonyTo = 'house.ed@ks.gov,H.Education@house.ks.gov';
+      var testimonyCc = 'Susan.Estes@house.ks.gov';
+      var testimonySubj = content.subj;
+      var testimonyBody = 'Please find my written testimony in support of HB 2176 attached as a PDF.\n\n' + content.body;
+
+      setTimeout(function() {
+        openEmail(testimonyTo, testimonyCc, testimonySubj, testimonyBody);
+      }, 1000);
+    };
+  }
 }
 
 // ================================================================
@@ -1253,7 +1340,8 @@ function printFlyer() {
 // ================================================================
 const HEARING_ACTIVE = false; // Set to true when hearing is scheduled
 const HEARING_TEXT = '⚠️ HEARING SCHEDULED: March 15, 2026 at 1:30 PM — Act Now';
-const EMAIL_COUNT = 0; // Update this manually, or connect to Google Sheets (see below)
+const EMAIL_COUNT = 0; // Fallback if fetch fails
+const COUNTER_URL = 'https://script.google.com/macros/s/AKfycbyNqnJ4jEOonT8MrpcSrg7z53E6YZM8uKm3BJAlRYszJyCVV-VeYojQ-DREODJGurHm/exec'; // Paste your Google Apps Script URL here (see setup instructions)
 const SITE_URL = 'https://fairplayks.org';
 
 // Show urgency banner if active
@@ -1262,19 +1350,32 @@ if (HEARING_ACTIVE) {
   document.getElementById('urgencyText').textContent = HEARING_TEXT;
 }
 
-// Email counter display
+// Email counter display — fetches live count from Google Sheet
 (function() {
-  const el = document.getElementById('counterNum');
-  if (EMAIL_COUNT > 0) {
-    document.getElementById('emailCounter').style.display = 'block';
-    // Animate counter
-    let current = 0;
-    const step = Math.max(1, Math.floor(EMAIL_COUNT / 40));
-    const interval = setInterval(function() {
-      current += step;
-      if (current >= EMAIL_COUNT) { current = EMAIL_COUNT; clearInterval(interval); }
-      el.textContent = current.toLocaleString();
-    }, 30);
+  var el = document.getElementById('counterNum');
+  var counterEl = document.getElementById('emailCounter');
+
+  function showCount(count) {
+    if (count > 0) {
+      counterEl.style.display = 'block';
+      var current = 0;
+      var step = Math.max(1, Math.floor(count / 40));
+      var interval = setInterval(function() {
+        current += step;
+        if (current >= count) { current = count; clearInterval(interval); }
+        el.textContent = current.toLocaleString();
+      }, 30);
+    }
+  }
+
+  // Try to fetch live count from Google Apps Script
+  if (COUNTER_URL) {
+    fetch(COUNTER_URL)
+      .then(function(r) { return r.json(); })
+      .then(function(data) { showCount(data.count || 0); })
+      .catch(function() { showCount(EMAIL_COUNT); });
+  } else {
+    showCount(EMAIL_COUNT);
   }
 })();
 
