@@ -517,8 +517,8 @@
       <div class="chk-row">
         <input type="checkbox" id="chkLocalRep" checked>
         <div>
-          <div class="chk-label"><strong>Also send to my local Kansas House representative</strong></div>
-          <div class="chk-sub">A constituent email carries 10x the weight of a non-constituent.</div>
+          <div class="chk-label"><strong>Also send to my local House rep and Senator</strong></div>
+          <div class="chk-sub">A constituent email carries 10× the weight of a non-constituent.</div>
         </div>
       </div>
       <div id="repSection">
@@ -653,12 +653,12 @@
 
   <footer>
     <p>Data: KSHSAA championship records (2021–2025) &amp; U.S. Census ACS estimates.</p>
-    <p style="margin-top:0.35rem;">Official written testimony can be submitted as a PDF to <span style="color:var(--gold);">house.ed@ks.gov</span>, <span style="color:var(--gold);">H.Education@house.ks.gov</span>, and <span style="color:var(--gold);">S.Education@senate.ks.gov</span>.</p>
+    <p style="margin-top:0.35rem;">Official written testimony can be submitted as a PDF to <span style="color:var(--gold);"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="543c3b2127317a3130143f277a333b22">[email&#160;protected]</a></span>, <span style="color:var(--gold);"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="10583e557465737164797f7e50787f6563753e7b633e777f66">[email&#160;protected]</a></span>, and <span style="color:var(--gold);"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="5b08751e3f2e383a2f3234351b283e353a2f3e753028753c342d">[email&#160;protected]</a></span>.</p>
     <p style="margin-top:0.5rem;">Built by Kansas parents who want a fair fight. Not affiliated with KSHSAA or any political party.</p>
   </footer>
 </div>
 
-<script src="https://unpkg.com/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://unpkg.com/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 <script>if(!window.jspdf){document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"><\/script>')}</script>
 <script>
 // ================================================================
@@ -823,131 +823,131 @@ const SPONSOR = "Samantha.Poetter@house.ks.gov";
 // REP MAP: school name -> {rep, email, dist}
 // ================================================================
 const REP_MAP = {
-  "Abilene HS":{rep:"Rep. Greg Wilson",email:"greg.wilson@house.ks.gov",dist:70},
-  "Andale HS":{rep:"Rep. Joe Seiwert",email:"joe.seiwert@house.ks.gov",dist:101},
-  "Anderson County HS":{rep:"Rep. Fred Gardner",email:"fred.gardner@house.ks.gov",dist:9},
-  "Andover Central HS":{rep:"Rep. Susan Humphries",email:"susan.humphries@house.ks.gov",dist:99},
-  "Andover HS":{rep:"Rep. Susan Humphries",email:"susan.humphries@house.ks.gov",dist:99},
-  "Arkansas City HS":{rep:"Rep. Bill Rhiley",email:"bill.rhiley@house.ks.gov",dist:80},
+  "Abilene HS":{rep:"Rep. Greg Wilson",email:"greg.wilson@house.ks.gov",dist:70,sen:"Sen. Kellie Warren",senEmail:"Kellie.Warren@senate.ks.gov",senDist:24},
+  "Andale HS":{rep:"Rep. Joe Seiwert",email:"joe.seiwert@house.ks.gov",dist:101,sen:"Sen. Kellie Warren",senEmail:"Kellie.Warren@senate.ks.gov",senDist:26},
+  "Anderson County HS":{rep:"Rep. Fred Gardner",email:"fred.gardner@house.ks.gov",dist:9,sen:"Sen. Rick Kloos",senEmail:"Rick.Kloos@senate.ks.gov",senDist:12},
+  "Andover Central HS":{rep:"Rep. Susan Humphries",email:"susan.humphries@house.ks.gov",dist:99,sen:"Sen. Pat Pettey",senEmail:"Pat.Pettey@senate.ks.gov",senDist:16},
+  "Andover HS":{rep:"Rep. Susan Humphries",email:"susan.humphries@house.ks.gov",dist:99,sen:"Sen. Pat Pettey",senEmail:"Pat.Pettey@senate.ks.gov",senDist:16},
+  "Arkansas City HS":{rep:"Rep. Bill Rhiley",email:"bill.rhiley@house.ks.gov",dist:80,sen:"Sen. Kellie Warren",senEmail:"Kellie.Warren@senate.ks.gov",senDist:32},
   "Atchison HS":{rep:"Rep. Allen Reavis",email:"allen.reavis@house.ks.gov",dist:63},
-  "Augusta HS":{rep:"Rep. Kristey Williams",email:"kristey.williams@house.ks.gov",dist:77},
-  "Baldwin HS":{rep:"Rep. Courtney Sappington",email:"Courtney.Sappington@house.ks.gov",dist:5},
-  "Basehor-Linwood HS":{rep:"Rep. Tim Johnson",email:"timothy.johnson@house.ks.gov",dist:38},
-  "Baxter Springs HS":{rep:"Rep. Dale Helwig",email:"dale.helwig@house.ks.gov",dist:1},
-  "Beloit HS":{rep:"Rep. Dawn Wolf",email:"dawn.wolf@house.ks.gov",dist:107},
-  "Blue Valley Southwest HS":{rep:"Rep. Sean Tarwater",email:"sean.tarwater@house.ks.gov",dist:8},
-  "Bonner Springs HS":{rep:"Rep. Carolyn Caiharr",email:"carolyn.caiharr@house.ks.gov",dist:33},
-  "Buhler HS":{rep:"Rep. Paul Waggoner",email:"paul.waggoner@house.ks.gov",dist:104},
-  "Burlington HS":{rep:"Rep. Brad Barrett",email:"brad.barrett@house.ks.gov",dist:76},
-  "Caney Valley HS":{rep:"Rep. Doug Blex",email:"doug.blex@house.ks.gov",dist:12},
-  "Chanute HS":{rep:"Rep. Dan Goddard",email:"dan.goddard@house.ks.gov",dist:7},
-  "Chaparral HS":{rep:"Rep. Kyle Hoffman",email:"kyle.hoffman@house.ks.gov",dist:116},
-  "Chapman HS":{rep:"Rep. Greg Wilson",email:"greg.wilson@house.ks.gov",dist:70},
-  "Cheney HS":{rep:"Rep. Brian Bergkamp",email:"brian.bergkamp@house.ks.gov",dist:93},
-  "Cherryvale HS":{rep:"Rep. Ron Bryce",email:"ron.bryce@house.ks.gov",dist:11},
+  "Augusta HS":{rep:"Rep. Kristey Williams",email:"kristey.williams@house.ks.gov",dist:77,sen:"Sen. Kellie Warren",senEmail:"Kellie.Warren@senate.ks.gov",senDist:32},
+  "Baldwin HS":{rep:"Rep. Courtney Sappington",email:"Courtney.Sappington@house.ks.gov",dist:5,sen:"Sen. Rick Kloos",senEmail:"Rick.Kloos@senate.ks.gov",senDist:9},
+  "Basehor-Linwood HS":{rep:"Rep. Tim Johnson",email:"timothy.johnson@house.ks.gov",dist:38,sen:"Sen. Rick Kloos",senEmail:"Rick.Kloos@senate.ks.gov",senDist:5},
+  "Baxter Springs HS":{rep:"Rep. Dale Helwig",email:"dale.helwig@house.ks.gov",dist:1,sen:"Sen. Rick Kloos",senEmail:"Rick.Kloos@senate.ks.gov",senDist:13},
+  "Beloit HS":{rep:"Rep. Dawn Wolf",email:"dawn.wolf@house.ks.gov",dist:107,sen:"Sen. Kellie Warren",senEmail:"Kellie.Warren@senate.ks.gov",senDist:36},
+  "Blue Valley Southwest HS":{rep:"Rep. Sean Tarwater",email:"sean.tarwater@house.ks.gov",dist:8,sen:"Sen. Kellie Warren",senEmail:"Kellie.Warren@senate.ks.gov",senDist:35},
+  "Bonner Springs HS":{rep:"Rep. Carolyn Caiharr",email:"carolyn.caiharr@house.ks.gov",dist:33,sen:"Sen. Rick Kloos",senEmail:"Rick.Kloos@senate.ks.gov",senDist:9},
+  "Buhler HS":{rep:"Rep. Paul Waggoner",email:"paul.waggoner@house.ks.gov",dist:104,sen:"Sen. Kellie Warren",senEmail:"Kellie.Warren@senate.ks.gov",senDist:34},
+  "Burlington HS":{rep:"Rep. Brad Barrett",email:"brad.barrett@house.ks.gov",dist:76,sen:"Sen. Rick Kloos",senEmail:"Rick.Kloos@senate.ks.gov",senDist:12},
+  "Caney Valley HS":{rep:"Rep. Doug Blex",email:"doug.blex@house.ks.gov",dist:12,sen:"Sen. Pat Pettey",senEmail:"Pat.Pettey@senate.ks.gov",senDist:15},
+  "Chaparral HS":{rep:"Rep. Kyle Hoffman",email:"kyle.hoffman@house.ks.gov",dist:116,sen:"Sen. Kellie Warren",senEmail:"Kellie.Warren@senate.ks.gov",senDist:32},
+  "Chapman HS":{rep:"Rep. Greg Wilson",email:"greg.wilson@house.ks.gov",dist:70,sen:"Sen. Kellie Warren",senEmail:"Kellie.Warren@senate.ks.gov",senDist:24},
+  "Chanute HS":{rep:"Rep. Dan Goddard",email:"dan.goddard@house.ks.gov",dist:7,sen:"Sen. Pat Pettey",senEmail:"Pat.Pettey@senate.ks.gov",senDist:15},
+  "Cheney HS":{rep:"Rep. Brian Bergkamp",email:"brian.bergkamp@house.ks.gov",dist:93,sen:"Sen. Kellie Warren",senEmail:"Kellie.Warren@senate.ks.gov",senDist:26},
+  "Cherryvale HS":{rep:"Rep. Ron Bryce",email:"ron.bryce@house.ks.gov",dist:11,sen:"Sen. Pat Pettey",senEmail:"Pat.Pettey@senate.ks.gov",senDist:15},
   "Cimarron HS":{rep:"Rep. Gary White",email:"gary.white@house.ks.gov",dist:115},
-  "Circle HS":{rep:"Rep. Will Carpenter",email:"will.carpenter@house.ks.gov",dist:75},
-  "Clay Center Community HS":{rep:"Rep. Lewis Bloom",email:"lewis.bloom@house.ks.gov",dist:64},
-  "Clearwater HS":{rep:"Rep. Brian Bergkamp",email:"brian.bergkamp@house.ks.gov",dist:93},
-  "Colby HS":{rep:"Rep. Adam Smith",email:"adam.smith@house.ks.gov",dist:120},
-  "Columbus HS":{rep:"Rep. Dale Helwig",email:"dale.helwig@house.ks.gov",dist:1},
-  "Concordia HS":{rep:"Rep. Dawn Wolf",email:"dawn.wolf@house.ks.gov",dist:107},
-  "Council Grove HS":{rep:"Rep. Nathan Butler",email:"nate.butler@house.ks.gov",dist:70},
-  "De Soto HS":{rep:"Rep. Adam Turk",email:"adam.turk@house.ks.gov",dist:117},
-  "Eisenhower HS":{rep:"Rep. Joe Seiwert",email:"joe.seiwert@house.ks.gov",dist:101},
-  "El Dorado HS":{rep:"Rep. Will Carpenter",email:"will.carpenter@house.ks.gov",dist:75},
-  "Ellsworth HS":{rep:"Rep. Troy Waymaster",email:"troy.waymaster@house.ks.gov",dist:109},
-  "Emporia HS":{rep:"Rep. Mark Schreiber",email:"mark.schreiber@house.ks.gov",dist:60},
-  "Eudora HS":{rep:"Rep. Adam Turk",email:"adam.turk@house.ks.gov",dist:117},
-  "FL Schlagle HS":{rep:"Rep. Wanda Brownlee Paige",email:"wanda.brownleepaige@house.ks.gov",dist:35},
-  "Field Kindley HS":{rep:"Rep. Ron Bryce",email:"ron.bryce@house.ks.gov",dist:11},
-  "Fort Scott HS":{rep:"Rep. Rick James",email:"rick.james@house.ks.gov",dist:4},
-  "Fredonia HS":{rep:"Rep. Duane Droge",email:"duane.droge@house.ks.gov",dist:13},
-  "Frontenac HS":{rep:"Rep. Kenneth Collins",email:"kenneth.collins@house.ks.gov",dist:2},
-  "Galena HS":{rep:"Rep. Dale Helwig",email:"dale.helwig@house.ks.gov",dist:1},
-  "Garden Plain HS":{rep:"Rep. Joe Seiwert",email:"joe.seiwert@house.ks.gov",dist:101},
-  "Girard HS":{rep:"Rep. Kenneth Collins",email:"kenneth.collins@house.ks.gov",dist:2},
-  "Goddard HS":{rep:"Rep. Joe Seiwert",email:"joe.seiwert@house.ks.gov",dist:101},
-  "Goodland HS":{rep:"Rep. Adam Smith",email:"adam.smith@house.ks.gov",dist:120},
-  "Great Bend HS":{rep:"Rep. Sherri Brantley",email:"sherri.brantley@house.ks.gov",dist:112},
-  "Halstead HS":{rep:"Rep. Mike King",email:"mike.king@house.ks.gov",dist:74},
-  "Haven HS":{rep:"Rep. Abi Boatman",email:"abi.boatman@house.ks.gov",dist:86},
-  "Hays HS":{rep:"Rep. Barbara Wasinger",email:"barbara.wasinger@house.ks.gov",dist:111},
-  "Hesston HS":{rep:"Rep. Mike King",email:"mike.king@house.ks.gov",dist:74},
+  "Circle HS":{rep:"Rep. Will Carpenter",email:"will.carpenter@house.ks.gov",dist:75,sen:"Sen. Rick Kloos",senEmail:"Rick.Kloos@senate.ks.gov",senDist:14},
+  "Clay Center Community HS":{rep:"Rep. Lewis Bloom",email:"lewis.bloom@house.ks.gov",dist:64,sen:"Sen. Kellie Warren",senEmail:"Kellie.Warren@senate.ks.gov",senDist:36},
+  "Clearwater HS":{rep:"Rep. Brian Bergkamp",email:"brian.bergkamp@house.ks.gov",dist:93,sen:"Sen. Kellie Warren",senEmail:"Kellie.Warren@senate.ks.gov",senDist:26},
+  "Colby HS":{rep:"Rep. Adam Smith",email:"adam.smith@house.ks.gov",dist:120,sen:"Sen. Kellie Warren",senEmail:"Kellie.Warren@senate.ks.gov",senDist:40},
+  "Columbus HS":{rep:"Rep. Dale Helwig",email:"dale.helwig@house.ks.gov",dist:1,sen:"Sen. Rick Kloos",senEmail:"Rick.Kloos@senate.ks.gov",senDist:13},
+  "Concordia HS":{rep:"Rep. Dawn Wolf",email:"dawn.wolf@house.ks.gov",dist:107,sen:"Sen. Kellie Warren",senEmail:"Kellie.Warren@senate.ks.gov",senDist:36},
+  "Council Grove HS":{rep:"Rep. Nathan Butler",email:"nate.butler@house.ks.gov",dist:70,sen:"Sen. Pat Pettey",senEmail:"Pat.Pettey@senate.ks.gov",senDist:17},
+  "De Soto HS":{rep:"Rep. Adam Turk",email:"adam.turk@house.ks.gov",dist:117,sen:"Sen. Rick Kloos",senEmail:"Rick.Kloos@senate.ks.gov",senDist:9},
+  "Eisenhower HS":{rep:"Rep. Joe Seiwert",email:"joe.seiwert@house.ks.gov",dist:101,sen:"Sen. Kellie Warren",senEmail:"Kellie.Warren@senate.ks.gov",senDist:26},
+  "El Dorado HS":{rep:"Rep. Will Carpenter",email:"will.carpenter@house.ks.gov",dist:75,sen:"Sen. Rick Kloos",senEmail:"Rick.Kloos@senate.ks.gov",senDist:14},
+  "Ellsworth HS":{rep:"Rep. Troy Waymaster",email:"troy.waymaster@house.ks.gov",dist:109,sen:"Sen. Kellie Warren",senEmail:"Kellie.Warren@senate.ks.gov",senDist:33},
+  "Emporia HS":{rep:"Rep. Mark Schreiber",email:"mark.schreiber@house.ks.gov",dist:60,sen:"Sen. Pat Pettey",senEmail:"Pat.Pettey@senate.ks.gov",senDist:17},
+  "Eudora HS":{rep:"Rep. Adam Turk",email:"adam.turk@house.ks.gov",dist:117,sen:"Sen. Rick Kloos",senEmail:"Rick.Kloos@senate.ks.gov",senDist:9},
+  "FL Schlagle HS":{rep:"Rep. Wanda Brownlee Paige",email:"wanda.brownleepaige@house.ks.gov",dist:35,sen:"Sen. Rick Kloos",senEmail:"Rick.Kloos@senate.ks.gov",senDist:4},
+  "Field Kindley HS":{rep:"Rep. Ron Bryce",email:"ron.bryce@house.ks.gov",dist:11,sen:"Sen. Pat Pettey",senEmail:"Pat.Pettey@senate.ks.gov",senDist:15},
+  "Fort Scott HS":{rep:"Rep. Rick James",email:"rick.james@house.ks.gov",dist:4,sen:"Sen. Rick Kloos",senEmail:"Rick.Kloos@senate.ks.gov",senDist:13},
+  "Fredonia HS":{rep:"Rep. Duane Droge",email:"duane.droge@house.ks.gov",dist:13,sen:"Sen. Rick Kloos",senEmail:"Rick.Kloos@senate.ks.gov",senDist:12},
+  "Frontenac HS":{rep:"Rep. Kenneth Collins",email:"kenneth.collins@house.ks.gov",dist:2,sen:"Sen. Rick Kloos",senEmail:"Rick.Kloos@senate.ks.gov",senDist:13},
+  "Galena HS":{rep:"Rep. Dale Helwig",email:"dale.helwig@house.ks.gov",dist:1,sen:"Sen. Rick Kloos",senEmail:"Rick.Kloos@senate.ks.gov",senDist:13},
+  "Garden Plain HS":{rep:"Rep. Joe Seiwert",email:"joe.seiwert@house.ks.gov",dist:101,sen:"Sen. Kellie Warren",senEmail:"Kellie.Warren@senate.ks.gov",senDist:26},
+  "Girard HS":{rep:"Rep. Kenneth Collins",email:"kenneth.collins@house.ks.gov",dist:2,sen:"Sen. Rick Kloos",senEmail:"Rick.Kloos@senate.ks.gov",senDist:13},
+  "Goddard HS":{rep:"Rep. Joe Seiwert",email:"joe.seiwert@house.ks.gov",dist:101,sen:"Sen. Kellie Warren",senEmail:"Kellie.Warren@senate.ks.gov",senDist:26},
+  "Goodland HS":{rep:"Rep. Adam Smith",email:"adam.smith@house.ks.gov",dist:120,sen:"Sen. Kellie Warren",senEmail:"Kellie.Warren@senate.ks.gov",senDist:40},
+  "Great Bend HS":{rep:"Rep. Sherri Brantley",email:"sherri.brantley@house.ks.gov",dist:112,sen:"Sen. Kellie Warren",senEmail:"Kellie.Warren@senate.ks.gov",senDist:33},
+  "Halstead HS":{rep:"Rep. Mike King",email:"mike.king@house.ks.gov",dist:74,sen:"Sen. Kellie Warren",senEmail:"Kellie.Warren@senate.ks.gov",senDist:31},
+  "Haven HS":{rep:"Rep. Abi Boatman",email:"abi.boatman@house.ks.gov",dist:86,sen:"Sen. Kellie Warren",senEmail:"Kellie.Warren@senate.ks.gov",senDist:25},
+  "Hays HS":{rep:"Rep. Barbara Wasinger",email:"barbara.wasinger@house.ks.gov",dist:111,sen:"Sen. Kellie Warren",senEmail:"Kellie.Warren@senate.ks.gov",senDist:40},
+  "Hesston HS":{rep:"Rep. Mike King",email:"mike.king@house.ks.gov",dist:74,sen:"Sen. Kellie Warren",senEmail:"Kellie.Warren@senate.ks.gov",senDist:31},
   "Hiawatha HS":{rep:"Rep. Sean Willcott",email:"sean.willcott@house.ks.gov",dist:62},
-  "Highland Park HS":{rep:"Rep. Alexis Simmons",email:"alexis.simmons@house.ks.gov",dist:58},
-  "Hoisington HS":{rep:"Rep. Sherri Brantley",email:"sherri.brantley@house.ks.gov",dist:112},
+  "Highland Park HS":{rep:"Rep. Alexis Simmons",email:"alexis.simmons@house.ks.gov",dist:58,sen:"Sen. Tim Shallenburger",senEmail:"Tim.Shallenburger@senate.ks.gov",senDist:19},
+  "Hoisington HS":{rep:"Rep. Sherri Brantley",email:"sherri.brantley@house.ks.gov",dist:112,sen:"Sen. Kellie Warren",senEmail:"Kellie.Warren@senate.ks.gov",senDist:33},
   "Holcomb HS":{rep:"Rep. Lon Pishny",email:"lon.pishny@house.ks.gov",dist:122},
   "Holton HS":{rep:"Rep. Francis Awerkamp",email:"francis.awerkamp@house.ks.gov",dist:62},
   "Hugoton HS":{rep:"Rep. Martin Long",email:"martin.long@house.ks.gov",dist:124},
-  "Hutchinson HS":{rep:"Rep. Kyler Sweely",email:"kyler.sweely@house.ks.gov",dist:102},
-  "Independence HS":{rep:"Rep. Ron Bryce",email:"ron.bryce@house.ks.gov",dist:11},
-  "Iola HS":{rep:"Rep. Fred Gardner",email:"fred.gardner@house.ks.gov",dist:7},
-  "JC Harmon HS":{rep:"Rep. Louis Ruiz",email:"louis.ruiz@house.ks.gov",dist:37},
-  "Jayhawk Linn HS":{rep:"Rep. Ricky James",email:"rick.james@house.ks.gov",dist:4},
-  "Jefferson West HS":{rep:"Rep. Ronald Ellis",email:"ronald.ellis@house.ks.gov",dist:47},
-  "Kansas City-Washington HS":{rep:"Rep. Lynn Melton",email:"lynn.melton@house.ks.gov",dist:36},
-  "Kingman HS":{rep:"Rep. Kevin Schwertfeger",email:"kevin.schwertfeger@house.ks.gov",dist:114},
-  "Labette County HS":{rep:"Rep. Dan Goddard",email:"dan.goddard@house.ks.gov",dist:7},
-  "Lakin HS":{rep:"Rep. Lon Pishny",email:"lon.pishny@house.ks.gov",dist:122},
-  "Lansing HS":{rep:"Rep. David Buehler",email:"david.buehler@house.ks.gov",dist:40},
-  "Larned HS":{rep:"Rep. Brett Fairchild",email:"brett.fairchild@house.ks.gov",dist:113},
-  "Leavenworth HS":{rep:"Rep. Tim Johnson",email:"timothy.johnson@house.ks.gov",dist:38},
-  "Louisburg HS":{rep:"Rep. Samantha Poetter",email:"samantha.poetter@house.ks.gov",dist:6},
-  "Lyons HS":{rep:"Rep. Brett Fairchild",email:"brett.fairchild@house.ks.gov",dist:113},
-  "Maize South HS":{rep:"Rep. Nick Hoheisel",email:"nick.hoheisel@house.ks.gov",dist:100},
-  "Marysville HS":{rep:"Rep. Lisa Moser",email:"lisa.moser@house.ks.gov",dist:106},
-  "McPherson HS":{rep:"Rep. Rick Wilborn",email:"rick.wilborn@house.ks.gov",dist:73},
-  "Minneapolis HS":{rep:"Rep. Dawn Wolf",email:"dawn.wolf@house.ks.gov",dist:107},
-  "Mulvane HS":{rep:"Rep. Leah Howell",email:"leah.howell@house.ks.gov",dist:78},
+  "Hutchinson HS":{rep:"Rep. Kyler Sweely",email:"kyler.sweely@house.ks.gov",dist:102,sen:"Sen. Kellie Warren",senEmail:"Kellie.Warren@senate.ks.gov",senDist:34},
+  "Independence HS":{rep:"Rep. Ron Bryce",email:"ron.bryce@house.ks.gov",dist:11,sen:"Sen. Pat Pettey",senEmail:"Pat.Pettey@senate.ks.gov",senDist:15},
+  "Iola HS":{rep:"Rep. Fred Gardner",email:"fred.gardner@house.ks.gov",dist:7,sen:"Sen. Rick Kloos",senEmail:"Rick.Kloos@senate.ks.gov",senDist:12},
+  "JC Harmon HS":{rep:"Rep. Louis Ruiz",email:"louis.ruiz@house.ks.gov",dist:37,sen:"Sen. Rick Kloos",senEmail:"Rick.Kloos@senate.ks.gov",senDist:6},
+  "Jayhawk Linn HS":{rep:"Rep. Ricky James",email:"rick.james@house.ks.gov",dist:4,sen:"Sen. Rick Kloos",senEmail:"Rick.Kloos@senate.ks.gov",senDist:12},
+  "Jefferson West HS":{rep:"Rep. Ronald Ellis",email:"ronald.ellis@house.ks.gov",dist:47,sen:"Sen. Pat Pettey",senEmail:"Pat.Pettey@senate.ks.gov",senDist:18},
+  "Kansas City-Washington HS":{rep:"Rep. Lynn Melton",email:"lynn.melton@house.ks.gov",dist:36,sen:"Sen. Rick Kloos",senEmail:"Rick.Kloos@senate.ks.gov",senDist:4},
+  "Kingman HS":{rep:"Rep. Kevin Schwertfeger",email:"kevin.schwertfeger@house.ks.gov",dist:114,sen:"Sen. Kellie Warren",senEmail:"Kellie.Warren@senate.ks.gov",senDist:34},
+  "Labette County HS":{rep:"Rep. Dan Goddard",email:"dan.goddard@house.ks.gov",dist:7,sen:"Sen. Pat Pettey",senEmail:"Pat.Pettey@senate.ks.gov",senDist:15},
+  "Lakin HS":{rep:"Rep. Lon Pishny",email:"lon.pishny@house.ks.gov",dist:122,sen:"Sen. Kellie Warren",senEmail:"Kellie.Warren@senate.ks.gov",senDist:39},
+  "Lansing HS":{rep:"Rep. David Buehler",email:"david.buehler@house.ks.gov",dist:40,sen:"Sen. Rick Kloos",senEmail:"Rick.Kloos@senate.ks.gov",senDist:5},
+  "Larned HS":{rep:"Rep. Brett Fairchild",email:"brett.fairchild@house.ks.gov",dist:113,sen:"Sen. Kellie Warren",senEmail:"Kellie.Warren@senate.ks.gov",senDist:33},
+  "Leavenworth HS":{rep:"Rep. Tim Johnson",email:"timothy.johnson@house.ks.gov",dist:38,sen:"Sen. Rick Kloos",senEmail:"Rick.Kloos@senate.ks.gov",senDist:5},
+  "Louisburg HS":{rep:"Rep. Samantha Poetter",email:"samantha.poetter@house.ks.gov",dist:6,sen:"Sen. Kellie Warren",senEmail:"Kellie.Warren@senate.ks.gov",senDist:37},
+  "Lyons HS":{rep:"Rep. Brett Fairchild",email:"brett.fairchild@house.ks.gov",dist:113,sen:"Sen. Kellie Warren",senEmail:"Kellie.Warren@senate.ks.gov",senDist:33},
+  "Maize South HS":{rep:"Rep. Nick Hoheisel",email:"nick.hoheisel@house.ks.gov",dist:100,sen:"Sen. Kellie Warren",senEmail:"Kellie.Warren@senate.ks.gov",senDist:26},
+  "Marysville HS":{rep:"Rep. Lisa Moser",email:"lisa.moser@house.ks.gov",dist:106,sen:"Sen. Kellie Warren",senEmail:"Kellie.Warren@senate.ks.gov",senDist:36},
+  "McPherson HS":{rep:"Rep. Rick Wilborn",email:"rick.wilborn@house.ks.gov",dist:73,sen:"Sen. Rick Kloos",senEmail:"Rick.Kloos@senate.ks.gov",senDist:14},
+  "Minneapolis HS":{rep:"Rep. Dawn Wolf",email:"dawn.wolf@house.ks.gov",dist:107,sen:"Sen. Kellie Warren",senEmail:"Kellie.Warren@senate.ks.gov",senDist:36},
+  "Mulvane HS":{rep:"Rep. Leah Howell",email:"leah.howell@house.ks.gov",dist:78,sen:"Sen. Kellie Warren",senEmail:"Kellie.Warren@senate.ks.gov",senDist:30},
   "Nemaha Central HS":{rep:"Rep. Sean Willcott",email:"sean.willcott@house.ks.gov",dist:62},
-  "Neodesha HS":{rep:"Rep. Duane Droge",email:"duane.droge@house.ks.gov",dist:13},
-  "Newton HS":{rep:"Rep. Avery Anderson",email:"avery.anderson@house.ks.gov",dist:72},
-  "Nickerson HS":{rep:"Rep. Kevin Schwertfeger",email:"kevin.schwertfeger@house.ks.gov",dist:104},
-  "Norton Community HS":{rep:"Rep. Ken Rahjes",email:"ken.rahjes@house.ks.gov",dist:110},
-  "Osage City HS":{rep:"Rep. Brad Barrett",email:"brad.barrett@house.ks.gov",dist:76},
-  "Osawatomie HS":{rep:"Rep. Courtney Sappington",email:"courtney.Sappington@house.ks.gov",dist:5},
-  "Oskaloosa HS":{rep:"Rep. Ronald Ellis",email:"ronald.ellis@house.ks.gov",dist:47},
-  "Ottawa HS":{rep:"Rep. Rebecca Schmoe",email:"rebecca.schmoe@house.ks.gov",dist:59},
-  "Paola HS":{rep:"Rep. Samantha Poetter",email:"samantha.poetter@house.ks.gov",dist:6},
-  "Parsons HS":{rep:"Rep. Dan Goddard",email:"dan.goddard@house.ks.gov",dist:7},
-  "Perry-Lecompton HS":{rep:"Rep. Ronald Ellis",email:"ronald.ellis@house.ks.gov",dist:47},
-  "Phillipsburg HS":{rep:"Rep. Ken Rahjes",email:"ken.rahjes@house.ks.gov",dist:110},
-  "Piper HS":{rep:"Rep. Lynn Melton",email:"lynn.melton@house.ks.gov",dist:38},
-  "Pittsburg HS":{rep:"Rep. Chuck Smith",email:"chuck.smith@house.ks.gov",dist:3},
+  "Neodesha HS":{rep:"Rep. Duane Droge",email:"duane.droge@house.ks.gov",dist:13,sen:"Sen. Rick Kloos",senEmail:"Rick.Kloos@senate.ks.gov",senDist:12},
+  "Newton HS":{rep:"Rep. Avery Anderson",email:"avery.anderson@house.ks.gov",dist:72,sen:"Sen. Kellie Warren",senEmail:"Kellie.Warren@senate.ks.gov",senDist:31},
+  "Nickerson HS":{rep:"Rep. Kevin Schwertfeger",email:"kevin.schwertfeger@house.ks.gov",dist:104,sen:"Sen. Kellie Warren",senEmail:"Kellie.Warren@senate.ks.gov",senDist:34},
+  "Norton Community HS":{rep:"Rep. Ken Rahjes",email:"ken.rahjes@house.ks.gov",dist:110,sen:"Sen. Kellie Warren",senEmail:"Kellie.Warren@senate.ks.gov",senDist:40},
+  "Osage City HS":{rep:"Rep. Brad Barrett",email:"brad.barrett@house.ks.gov",dist:76,sen:"Sen. Rick Kloos",senEmail:"Rick.Kloos@senate.ks.gov",senDist:3},
+  "Osawatomie HS":{rep:"Rep. Courtney Sappington",email:"courtney.Sappington@house.ks.gov",dist:5,sen:"Sen. Rick Kloos",senEmail:"Rick.Kloos@senate.ks.gov",senDist:12},
+  "Oskaloosa HS":{rep:"Rep. Ronald Ellis",email:"ronald.ellis@house.ks.gov",dist:47,sen:"Sen. Pat Pettey",senEmail:"Pat.Pettey@senate.ks.gov",senDist:18},
+  "Ottawa HS":{rep:"Rep. Rebecca Schmoe",email:"rebecca.schmoe@house.ks.gov",dist:59,sen:"Sen. Rick Kloos",senEmail:"Rick.Kloos@senate.ks.gov",senDist:3},
+  "Paola HS":{rep:"Rep. Samantha Poetter",email:"samantha.poetter@house.ks.gov",dist:6,sen:"Sen. Rick Kloos",senEmail:"Rick.Kloos@senate.ks.gov",senDist:12},
+  "Parsons HS":{rep:"Rep. Dan Goddard",email:"dan.goddard@house.ks.gov",dist:7,sen:"Sen. Pat Pettey",senEmail:"Pat.Pettey@senate.ks.gov",senDist:15},
+  "Perry-Lecompton HS":{rep:"Rep. Ronald Ellis",email:"ronald.ellis@house.ks.gov",dist:47,sen:"Sen. Pat Pettey",senEmail:"Pat.Pettey@senate.ks.gov",senDist:18},
+  "Phillipsburg HS":{rep:"Rep. Ken Rahjes",email:"ken.rahjes@house.ks.gov",dist:110,sen:"Sen. Kellie Warren",senEmail:"Kellie.Warren@senate.ks.gov",senDist:36},
+  "Piper HS":{rep:"Rep. Lynn Melton",email:"lynn.melton@house.ks.gov",dist:38,sen:"Sen. Rick Kloos",senEmail:"Rick.Kloos@senate.ks.gov",senDist:5},
+  "Pittsburg HS":{rep:"Rep. Chuck Smith",email:"chuck.smith@house.ks.gov",dist:3,sen:"Sen. Rick Kloos",senEmail:"Rick.Kloos@senate.ks.gov",senDist:13},
   "Pleasant Ridge HS":{rep:"Rep. Pat Proctor",email:"pat.proctor@house.ks.gov",dist:41},
-  "Prairie View HS":{rep:"Rep. Fred Gardner",email:"fred.gardner@house.ks.gov",dist:5},
-  "Pratt HS":{rep:"Rep. Kyle Hoffman",email:"kyle.hoffman@house.ks.gov",dist:114},
-  "Riley County HS":{rep:"Rep. Lewis Bloom",email:"lewis.bloom@house.ks.gov",dist:64},
+  "Prairie View HS":{rep:"Rep. Fred Gardner",email:"fred.gardner@house.ks.gov",dist:5,sen:"Sen. Rick Kloos",senEmail:"Rick.Kloos@senate.ks.gov",senDist:12},
+  "Pratt HS":{rep:"Rep. Kyle Hoffman",email:"kyle.hoffman@house.ks.gov",dist:114,sen:"Sen. Kellie Warren",senEmail:"Kellie.Warren@senate.ks.gov",senDist:33},
+  "Riley County HS":{rep:"Rep. Lewis Bloom",email:"lewis.bloom@house.ks.gov",dist:64,sen:"Sen. Tim Shallenburger",senEmail:"Tim.Shallenburger@senate.ks.gov",senDist:22},
   "Riverside HS":{rep:"Rep. Allen Reavis",email:"allen.reavis@house.ks.gov",dist:63},
-  "Riverton HS":{rep:"Rep. Dale Helwig",email:"dale.helwig@house.ks.gov",dist:1},
-  "Rock Creek HS":{rep:"Rep. Francis Awerkamp",email:"francis.awerkamp@house.ks.gov",dist:61},
-  "Rose Hill HS":{rep:"Rep. Kristey Williams",email:"kristey.williams@house.ks.gov",dist:77},
+  "Riverton HS":{rep:"Rep. Dale Helwig",email:"dale.helwig@house.ks.gov",dist:1,sen:"Sen. Rick Kloos",senEmail:"Rick.Kloos@senate.ks.gov",senDist:13},
+  "Rock Creek HS":{rep:"Rep. Francis Awerkamp",email:"francis.awerkamp@house.ks.gov",dist:61,sen:"Sen. Pat Pettey",senEmail:"Pat.Pettey@senate.ks.gov",senDist:18},
+  "Rose Hill HS":{rep:"Rep. Kristey Williams",email:"kristey.williams@house.ks.gov",dist:77,sen:"Sen. Pat Pettey",senEmail:"Pat.Pettey@senate.ks.gov",senDist:16},
   "Royal Valley HS":{rep:"Rep. Ronald Ellis",email:"ronald.ellis@house.ks.gov",dist:47},
-  "Russell HS":{rep:"Rep. Troy Waymaster",email:"troy.waymaster@house.ks.gov",dist:109},
+  "Russell HS":{rep:"Rep. Troy Waymaster",email:"troy.waymaster@house.ks.gov",dist:109,sen:"Sen. Kellie Warren",senEmail:"Kellie.Warren@senate.ks.gov",senDist:36},
   "Sabetha HS":{rep:"Rep. Sean Willcott",email:"sean.willcott@house.ks.gov",dist:62},
-  "Salina-Central HS":{rep:"Rep. Steven Howe",email:"steven.howe@house.ks.gov",dist:71},
-  "Salina-South HS":{rep:"Rep. Clarke Sanders",email:"clarke.sanders@house.ks.gov",dist:69},
+  "Salina-Central HS":{rep:"Rep. Steven Howe",email:"steven.howe@house.ks.gov",dist:71,sen:"Sen. Kellie Warren",senEmail:"Kellie.Warren@senate.ks.gov",senDist:24},
+  "Salina-South HS":{rep:"Rep. Clarke Sanders",email:"clarke.sanders@house.ks.gov",dist:69,sen:"Sen. Kellie Warren",senEmail:"Kellie.Warren@senate.ks.gov",senDist:24},
   "Santa Fe Trail HS":{rep:"Rep. Gary White",email:"gary.white@house.ks.gov",dist:76},
-  "Scott Community HS":{rep:"Rep. Jim Minnix",email:"jim.minnix@house.ks.gov",dist:118},
-  "Seaman HS":{rep:"Rep. Kyle McNorton",email:"kyle.mcnorton@house.ks.gov",dist:50},
-  "Shawnee Heights HS":{rep:"Rep. Ken Corbet",email:"ken.corbet@house.ks.gov",dist:54},
-  "Silver Lake HS":{rep:"Rep. Kyle McNorton",email:"kyle.mcnorton@house.ks.gov",dist:50},
-  "Smoky Valley HS":{rep:"Rep. Rick Wilborn",email:"rick.wilborn@house.ks.gov",dist:73},
-  "Southeast of Saline HS":{rep:"Rep. Clarke Sanders",email:"clarke.sanders@house.ks.gov",dist:69},
+  "Scott Community HS":{rep:"Rep. Jim Minnix",email:"jim.minnix@house.ks.gov",dist:118,sen:"Sen. Kellie Warren",senEmail:"Kellie.Warren@senate.ks.gov",senDist:39},
+  "Seaman HS":{rep:"Rep. Kyle McNorton",email:"kyle.mcnorton@house.ks.gov",dist:50,sen:"Sen. Pat Pettey",senEmail:"Pat.Pettey@senate.ks.gov",senDist:18},
+  "Shawnee Heights HS":{rep:"Rep. Ken Corbet",email:"ken.corbet@house.ks.gov",dist:54,sen:"Sen. Rick Kloos",senEmail:"Rick.Kloos@senate.ks.gov",senDist:3},
+  "Silver Lake HS":{rep:"Rep. Kyle McNorton",email:"kyle.mcnorton@house.ks.gov",dist:50,sen:"Sen. Pat Pettey",senEmail:"Pat.Pettey@senate.ks.gov",senDist:18},
+  "Smoky Valley HS":{rep:"Rep. Rick Wilborn",email:"rick.wilborn@house.ks.gov",dist:73,sen:"Sen. Rick Kloos",senEmail:"Rick.Kloos@senate.ks.gov",senDist:14},
+  "Southeast of Saline HS":{rep:"Rep. Clarke Sanders",email:"clarke.sanders@house.ks.gov",dist:69,sen:"Sen. Kellie Warren",senEmail:"Kellie.Warren@senate.ks.gov",senDist:24},
   "Southwestern Heights HS":{rep:"Rep. Shannon Francis",email:"shannon.francis@house.ks.gov",dist:125},
-  "Spring Hill HS":{rep:"Rep. Chip VanHouden",email:"chip.vanhouden@house.ks.gov",dist:26},
-  "Sumner Academy":{rep:"Rep. Valdenia Winn",email:"valdenia.winn@house.ks.gov",dist:34},
-  "Tonganoxie HS":{rep:"Rep. Lance Neelly",email:"lance.neelly@house.ks.gov",dist:42},
-  "Topeka West HS":{rep:"Rep. Kirk Haskins",email:"kirk.haskins@house.ks.gov",dist:53},
-  "Turner HS":{rep:"Rep. Melissa Oropeza",email:"melissa.oropeza@house.ks.gov",dist:37},
-  "Ulysses HS":{rep:"Rep. Martin Long",email:"martin.long@house.ks.gov",dist:124},
-  "Valley Center HS":{rep:"Rep. Steve Huebert",email:"steve.huebert@house.ks.gov",dist:90},
-  "Wamego HS":{rep:"Rep. Megan Steele",email:"megan.steele@house.ks.gov",dist:61},
-  "Wellington HS":{rep:"Rep. Bill Rhiley",email:"bill.rhiley@house.ks.gov",dist:80},
-  "Wellsville HS":{rep:"Rep. Courtney Sappington",email:"Courtney.Sappington@house.ks.gov",dist:5},
-  "West Franklin HS":{rep:"Rep. Rebecca Schmoe",email:"rebecca.schmoe@house.ks.gov",dist:59},
-  "Winfield HS":{rep:"Rep. Webster Roth",email:"webster.roth@house.ks.gov",dist:79},
+  "Spring Hill HS":{rep:"Rep. Chip VanHouden",email:"chip.vanhouden@house.ks.gov",dist:26,sen:"Sen. Kellie Warren",senEmail:"Kellie.Warren@senate.ks.gov",senDist:23},
+  "Sumner Academy":{rep:"Rep. Valdenia Winn",email:"valdenia.winn@house.ks.gov",dist:34,sen:"Sen. Rick Kloos",senEmail:"Rick.Kloos@senate.ks.gov",senDist:4},
+  "Tonganoxie HS":{rep:"Rep. Lance Neelly",email:"lance.neelly@house.ks.gov",dist:42,sen:"Sen. Rick Kloos",senEmail:"Rick.Kloos@senate.ks.gov",senDist:9},
+  "Topeka West HS":{rep:"Rep. Kirk Haskins",email:"kirk.haskins@house.ks.gov",dist:53,sen:"Sen. Tim Shallenburger",senEmail:"Tim.Shallenburger@senate.ks.gov",senDist:20},
+  "Turner HS":{rep:"Rep. Melissa Oropeza",email:"melissa.oropeza@house.ks.gov",dist:37,sen:"Sen. Rick Kloos",senEmail:"Rick.Kloos@senate.ks.gov",senDist:6},
+  "Ulysses HS":{rep:"Rep. Martin Long",email:"martin.long@house.ks.gov",dist:124,sen:"Sen. Kellie Warren",senEmail:"Kellie.Warren@senate.ks.gov",senDist:39},
+  "Valley Center HS":{rep:"Rep. Steve Huebert",email:"steve.huebert@house.ks.gov",dist:90,sen:"Sen. Kellie Warren",senEmail:"Kellie.Warren@senate.ks.gov",senDist:31},
+  "Wamego HS":{rep:"Rep. Megan Steele",email:"megan.steele@house.ks.gov",dist:61,sen:"Sen. Pat Pettey",senEmail:"Pat.Pettey@senate.ks.gov",senDist:18},
+  "Wellington HS":{rep:"Rep. Bill Rhiley",email:"bill.rhiley@house.ks.gov",dist:80,sen:"Sen. Kellie Warren",senEmail:"Kellie.Warren@senate.ks.gov",senDist:32},
+  "Wellsville HS":{rep:"Rep. Courtney Sappington",email:"Courtney.Sappington@house.ks.gov",dist:5,sen:"Sen. Rick Kloos",senEmail:"Rick.Kloos@senate.ks.gov",senDist:3},
+  "West Franklin HS":{rep:"Rep. Rebecca Schmoe",email:"rebecca.schmoe@house.ks.gov",dist:59,sen:"Sen. Rick Kloos",senEmail:"Rick.Kloos@senate.ks.gov",senDist:3},
+  "Winfield HS":{rep:"Rep. Webster Roth",email:"webster.roth@house.ks.gov",dist:79,sen:"Sen. Kellie Warren",senEmail:"Kellie.Warren@senate.ks.gov",senDist:32},
 };
 
 // ================================================================
@@ -1069,7 +1069,9 @@ function updateRepDisplay() {
   const autoEl = document.getElementById('repAutoInfo');
   const manEl = document.getElementById('repManual');
   if (auto) {
-    autoEl.innerHTML = '✓ <strong>' + auto.rep + '</strong> — District ' + auto.dist + '<br><span style="font-size:0.8rem;color:var(--muted);">' + auto.email + '</span>';
+    var html = '✓ <strong>' + auto.rep + '</strong> — House District ' + auto.dist + '<br><span style="font-size:0.8rem;color:var(--muted);">' + auto.email + '</span>';
+    if (auto.sen) html += '<br>✓ <strong>' + auto.sen + '</strong> — Senate District ' + auto.senDist + '<br><span style="font-size:0.8rem;color:var(--muted);">' + auto.senEmail + '</span>';
+    autoEl.innerHTML = html;
     autoEl.style.display = 'block';
     manEl.style.display = 'none';
   } else {
@@ -1102,7 +1104,12 @@ function getEmailContent(r, name, school, s, rv) {
   let greeting = 'Dear Members of the House and Senate Education Committees,';
   if (includeRep && rep && rep.rep) {
     const repLast = rep.rep.replace('Rep. ','');
-    greeting = 'Dear Representative ' + repLast + ' and Members of the House and Senate Education Committees,';
+    if (rep.sen) {
+      const senLast = rep.sen.replace('Sen. ','');
+      greeting = 'Dear Representative ' + repLast + ', Senator ' + senLast + ', and Members of the House and Senate Education Committees,';
+    } else {
+      greeting = 'Dear Representative ' + repLast + ' and Members of the House and Senate Education Committees,';
+    }
   }
 
   const data = rv.n + ' (' + rv.cls + ', enrollment ' + rv.enr.toLocaleString() + ') draws from a talent pool of ' + rv.pool + ' while ' + school + ' (enrollment ' + s.enr.toLocaleString() + ') draws from just ' + s.pool + '. Despite competing in the same classification, ' + rv.n + ' has won ' + rT + ' ' + tm + ' state titles since 2021 compared to ' + school + "'s " + yT + '. This is not a coaching gap. It is a structural advantage built on selective enrollment.';
@@ -1150,12 +1157,16 @@ function rebuildEmail() {
   const rep = getRepInfo();
   let toEmails = COMMITTEE.slice();
   if (includeRep && rep && rep.email) toEmails.push(rep.email);
+  if (includeRep && rep && rep.senEmail) toEmails.push(rep.senEmail);
   let ccEmails = SPONSOR;
 
   // Preview
   preview.classList.add('show');
   let toHtml = '<strong>To:</strong> House Education Committee (17 members) + Senate Education Committee (11 members)';
-  if (includeRep && rep) toHtml += ' + ' + rep.rep + ' (Your Rep, Dist. ' + rep.dist + ')';
+  if (includeRep && rep) {
+    toHtml += ' + ' + rep.rep + ' (House Dist. ' + rep.dist + ')';
+    if (rep.sen) toHtml += ' + ' + rep.sen + ' (Senate Dist. ' + rep.senDist + ')';
+  }
   toHtml += '<br><strong>CC:</strong> Rep. Poetter Parshall (Bill Sponsor)';
   document.getElementById('epTo').innerHTML = toHtml;
   document.getElementById('epSubj').textContent = content.subj;
@@ -1447,23 +1458,4 @@ Thank you,
   });
 }
 
-// ================================================================
-// FAQ ACCORDION
-// ================================================================
-function toggleFaq(header) {
-  const body = header.nextElementSibling;
-  const arrow = header.querySelector('.faq-arrow');
-  if (body.style.display === 'none') {
-    body.style.display = 'block';
-    arrow.style.transform = 'rotate(180deg)';
-  } else {
-    body.style.display = 'none';
-    arrow.style.transform = 'rotate(0deg)';
-  }
-}
-
-// Init
-rebuildEmail();
-</script>
-</body>
-</html>
+// =======================================================
