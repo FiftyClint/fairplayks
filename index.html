@@ -420,13 +420,13 @@
 </style>
 <!-- Open Graph / Social Preview -->
 <meta property="og:title" content="Fair Play Kansas - Support HB 2176">
-<meta property="og:description" content="Private schools are 7% of Kansas 3A-5A membership but win 37% of state titles. HB 2176 fixes the classification system. Email the committee in 60 seconds.">
+<meta property="og:description" content="HB 2176 dies Feb 19 without a hearing. KSHSAA schools voted 216-139 FOR it. The Board of Ed approved it 6-4. The legislature is the only roadblock. Email the committee in 60 seconds.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://fairplayks.org">
 <meta property="og:image" content="https://fairplayks.org/og-image.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Fair Play Kansas - Support HB 2176">
-<meta name="twitter:description" content="Private schools are 7% of 3A-5A but win 37% of titles. Help fix it in 60 seconds.">
+<meta name="twitter:description" content="HB 2176 dies Feb 19 without a hearing. KSHSAA voted 216-139 FOR it. Board of Ed approved 6-4. The legislature is the only roadblock.">
 <meta name="twitter:image" content="https://fairplayks.org/og-image.png">
 <!-- ANALYTICS: To enable Google Analytics, add these two lines ABOVE this comment:
      1. <scrip​t async src="https://www.googletagmanager.com/gtag/js?id=YOUR-ID"></scrip​t>
@@ -658,7 +658,8 @@
   </footer>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/3.0.3/jspdf.umd.min.js"></script>
+<script src="https://unpkg.com/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+<script>if(!window.jspdf){document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"><\/script>')}</script>
 <script>
 // ================================================================
 // DATA
@@ -1104,20 +1105,20 @@ function getEmailContent(r, name, school, s, rv) {
 
   const t = {
     parent: {
-      subj: 'Proponent Testimony - HB 2176 - Fair Play for ' + school + ' Student-Athletes',
-      body: greeting + '\n\nPOSITION: PROPONENT — I SUPPORT HB 2176\n\nMy name is ' + name + ', and I am a parent at ' + school + '. I am writing in support of House Bill 2176 and urge you to schedule a hearing and vote YES.\n\n' + data + '\n\nPrivate schools represent less than 7% of 3A-5A membership, yet capture nearly 37% of all state championships. HB 2176 proposes a common-sense "Success Multiplier" - a proven system already used in Missouri - to ensure schools are classified based on their actual competitive advantage, not just headcount. It does not ban or punish anyone. It levels the playing field.\n\nI support HB 2176. Please bring it to a hearing and give Kansas families a fair fight.\n\nRespectfully,\n' + name + '\n' + school
+      subj: 'HB 2176 Needs a Hearing This Week — Turnaround is Feb 19',
+      body: greeting + '\n\nPOSITION: PROPONENT — I SUPPORT HB 2176\n\nMy name is ' + name + ', and I am a parent at ' + school + '. I am writing to demand an immediate hearing on House Bill 2176 before Turnaround Day on February 19th.\n\nThis is not a new idea. KSHSAA member schools voted 216-139 in favor of a classification multiplier. The Kansas State Board of Education approved it 6-4. The only place this has been blocked is the legislature.\n\nAs a parent of a student-athlete at ' + school + ', I see how the current classification system disadvantages community schools.\n\n' + data + '\n\nWe are not asking to ban private schools. We are asking for a Success Multiplier — a proven system Missouri has used since 2003 — to move dominant programs into a classification that matches their actual competitive advantage.\n\nIf this bill does not receive a hearing before February 19th, it dies — and our kids lose another year to a system everyone agrees is broken.\n\nRespectfully,\n' + name + '\n' + school
     },
     student: {
-      subj: 'Proponent Testimony - HB 2176 - A ' + school + ' Student-Athlete Asking for Fair Play',
-      body: greeting + '\n\nPOSITION: PROPONENT — I SUPPORT HB 2176\n\nMy name is ' + name + ', and I am a student-athlete at ' + school + '. I am writing in support of House Bill 2176.\n\nI train year-round. I show up early, stay late, and push myself every day. But under the current system, I compete in the same classification as private schools that can recruit from an entire metro area.\n\n' + data + '\n\nI am not asking for a trophy I did not earn. I am asking for a fair chance to compete against schools that play by the same rules we do. HB 2176 applies a Success Multiplier so schools are classified based on their actual competitive advantage. Missouri already does this, and it works.\n\nI support HB 2176. Please give students like me a fair shot and bring it to a vote.\n\nRespectfully,\n' + name + '\nStudent-Athlete, ' + school
+      subj: "I'm a Kansas Student-Athlete — HB 2176 Deserves a Hearing Before Feb 19",
+      body: greeting + '\n\nPOSITION: PROPONENT — I SUPPORT HB 2176\n\nMy name is ' + name + ', and I am a student-athlete at ' + school + '. I am asking you to hold a hearing on House Bill 2176 before Turnaround Day on February 19th.\n\nI train year-round. I show up early, stay late, and push myself every day. But the current classification system puts my school against programs with no district boundaries drawing from talent pools many times our size. That\'s not competition — it\'s a foregone conclusion.\n\n' + data + '\n\nI am not asking for a trophy I did not earn. I am asking for a fair chance to compete against schools that play by the same rules we do. HB 2176 applies a Success Multiplier so schools are classified based on their actual competitive advantage. Missouri already does this, and it works.\n\nKSHSAA\'s own member schools voted 216-139 for this fix. The Board of Education approved it 6-4. The legislature is the only thing standing in the way.\n\nPlease give this bill a hearing before it\'s too late.\n\nRespectfully,\n' + name + '\nStudent-Athlete, ' + school
     },
     coach: {
-      subj: 'Proponent Testimony - HB 2176 - Safety & Competitive Integrity for ' + school,
-      body: greeting + '\n\nPOSITION: PROPONENT — I SUPPORT HB 2176\n\nMy name is ' + name + ', and I am a coach/administrator at ' + school + '. I am writing in support of House Bill 2176 and request an immediate hearing.\n\nI see the impact of classification imbalances firsthand. When a community school plays a private school drawing from a metro talent pool of 600,000+, it creates safety concerns in contact sports and demoralizes participation across all programs.\n\n' + data + '\n\nWe are not asking to ban private schools. We are asking for a Success Multiplier, a proven system used in Missouri, to move dominant programs into a classification that matches their actual competitive ability.\n\nI support HB 2176. It protects the integrity of Kansas high school sports. Please vote YES.\n\nRespectfully,\n' + name + '\n' + school
+      subj: 'The Legislature Is the Only Roadblock — HB 2176 Needs a Hearing Before Feb 19',
+      body: greeting + '\n\nPOSITION: PROPONENT — I SUPPORT HB 2176\n\nMy name is ' + name + ', and I am a coach/administrator at ' + school + '. I am writing to demand a hearing on House Bill 2176 before Turnaround Day on February 19th.\n\nI see the impact of classification imbalances firsthand. When a community school plays a private school drawing from a metro talent pool of 600,000+, it creates safety concerns in contact sports and demoralizes participation across all programs.\n\n' + data + '\n\nThis has already been vetted. KSHSAA member schools voted 216-139 in favor. The State Board of Education approved it 6-4. Missouri has used this exact system since 2003. The legislature killed it last time. Don\'t let that happen again.\n\nHB 2176 protects the integrity of Kansas high school sports. Please give it a hearing.\n\nRespectfully,\n' + name + '\n' + school
     },
     taxpayer: {
-      subj: 'Proponent Testimony - HB 2176 - Protect Public School Investments',
-      body: greeting + '\n\nPOSITION: PROPONENT — I SUPPORT HB 2176\n\nMy name is ' + name + ', and I am a taxpayer in the ' + school + ' community. I am writing in support of House Bill 2176.\n\nOur community invests millions in our public schools. Under the current KSHSAA classification system, those investments are undermined when our teams are forced to compete against regional private select programs operating under fundamentally different rules.\n\n' + data + '\n\nHB 2176 fixes this by implementing a Success Multiplier that ensures schools with selective enrollment advantages play in a higher classification. Missouri already uses this system successfully. This is a common-sense fix.\n\nI support HB 2176. Please bring it to a vote.\n\nRespectfully,\n' + name + '\n' + school
+      subj: 'Our Schools Voted for This — HB 2176 Needs a Hearing Before Feb 19',
+      body: greeting + '\n\nPOSITION: PROPONENT — I SUPPORT HB 2176\n\nMy name is ' + name + ', and I am a taxpayer in the ' + school + ' community. I am writing to demand a hearing on House Bill 2176 before Turnaround Day on February 19th.\n\nOur community invests millions in our public schools. Under the current KSHSAA classification system, those investments are undermined when our teams are forced to compete against regional private select programs operating under fundamentally different rules.\n\n' + data + '\n\nKSHSAA member schools voted 216-139 for this change. The State Board of Education approved it 6-4. The only place it was blocked was the legislature. Don\'t let that happen again.\n\nMissouri has used this system since 2003. It doesn\'t punish anyone. It just makes the competition real.\n\nPlease bring HB 2176 to a vote.\n\nRespectfully,\n' + name + '\n' + school
     }
   };
   return t[r] || null;
@@ -1221,6 +1222,9 @@ function rebuildEmail() {
 
       // Generate PDF using jsPDF
       try {
+        if (!window.jspdf || !window.jspdf.jsPDF) {
+          throw new Error('PDF library not loaded');
+        }
         var jsPDF = window.jspdf.jsPDF;
         var doc = new jsPDF();
         var margin = 20;
@@ -1270,9 +1274,18 @@ function rebuildEmail() {
         // Download
         doc.save('HB2176_Testimony_' + selected.n.replace(/[^a-zA-Z0-9]/g,'_') + '.pdf');
       } catch(e) {
-        console.error('PDF generation failed:', e);
-        alert('PDF generation failed. Please try again.');
-        return;
+        // Fallback: download as .txt file if PDF fails
+        console.error('PDF failed:', e);
+        var txt = 'WRITTEN TESTIMONY — HOUSE BILL 2176\nHouse Committee on Education\nKansas State Legislature\nDate: ' + new Date().toLocaleDateString('en-US', {year:'numeric',month:'long',day:'numeric'}) + '\n\nPOSITION: PROPONENT — I SUPPORT HB 2176\n\n' + content.body + '\n\nGenerated via fairplayks.org';
+        var blob = new Blob([txt], {type:'text/plain'});
+        var url = URL.createObjectURL(blob);
+        var dl = document.createElement('a');
+        dl.href = url;
+        dl.download = 'HB2176_Testimony_' + selected.n.replace(/[^a-zA-Z0-9]/g,'_') + '.txt';
+        document.body.appendChild(dl);
+        dl.click();
+        document.body.removeChild(dl);
+        URL.revokeObjectURL(url);
       }
 
       // Show popup
@@ -1385,7 +1398,7 @@ function shareFB() {
   window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(SITE_URL), '_blank', 'width=600,height=400');
 }
 function shareX() {
-  const text = 'Private schools are 7% of Kansas 3A-5A but win 37% of state titles. HB 2176 fixes the classification system. Email the committee in 60 seconds:';
+  const text = 'HB 2176 dies Thursday without a hearing. KSHSAA schools voted 216-139 FOR it. The Board of Ed approved it 6-4. The legislature is the only roadblock. Email the committee in 60 seconds:';
   window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(text) + '&url=' + encodeURIComponent(SITE_URL), '_blank', 'width=600,height=400');
 }
 function copyLink() {
@@ -1401,25 +1414,25 @@ function copyLink() {
 // ================================================================
 function copyCoachEmail() {
   const school = selected ? selected.n : '[Your School]';
-  const email = `Subject: 60 Seconds to Help Our Student-Athletes — Please Read
+  const email = `Subject: HB 2176 Dies Thursday Without a Hearing — 60 Seconds to Help
 
 Hi [Team/Booster Club],
 
-I'm reaching out about something that directly affects our athletes at ${school}.
+This is urgent. House Bill 2176 — the bill to fix Kansas high school athletic classifications — dies on February 19th (Turnaround Day) if it doesn't get a hearing this week.
 
-Right now, Kansas private schools make up just 7% of 3A-5A membership but win 37% of state championships. They draw from talent pools of 600,000+ while our kids compete from a community of a few thousand. Despite this massive advantage, they play in the SAME classification as us.
+Here's what makes this inexcusable: KSHSAA member schools already voted 216-139 IN FAVOR of a classification multiplier. The Kansas State Board of Education approved it 6-4. The legislature is the only thing blocking it.
 
-House Bill 2176 would fix this with a "Success Multiplier" — the same proven system Missouri has used since 2003. It doesn't ban or punish anyone. It simply moves dominant programs to a classification that matches their actual competitive ability.
+Right now, private schools make up just 7% of 3A-5A membership but win 37% of state championships. They draw from talent pools of 600,000+ while our kids at ${school} compete from a community of a few thousand. Same classification.
 
-You can email the entire Kansas House Education Committee in literally 60 seconds:
+You can email the entire House Education Committee in 60 seconds:
 
 👉 ${SITE_URL}
 
-Select ${school}, pick your role, and the email writes itself. It takes less time than tying your shoes.
+Select ${school}, pick your role, and the email writes itself.
 
-Every email matters. Committee members track constituent volume. If they see 500 emails from parents across Kansas, this bill gets a hearing. If they see 5, it dies in committee.
+Committee members track email volume. If they get hundreds of emails this week, the bill gets a hearing. If they don't, our kids lose another year.
 
-Please forward this to anyone who cares about fair competition for our kids.
+Please forward this to every parent, coach, and booster you know. We have 4 days.
 
 Thank you,
 [Your Name]`;
