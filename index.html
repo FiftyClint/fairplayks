@@ -420,13 +420,13 @@
 </style>
 <!-- Open Graph / Social Preview -->
 <meta property="og:title" content="Fair Play Kansas - Support HB 2176 & SB 349">
-<meta property="og:description" content="HB 2176 / SB 349 die Feb 19 without a hearing. KSHSAA schools voted 216-139 FOR it. The Board of Ed approved it 6-4. The legislature is the only roadblock. Email both committees in 30 seconds.">
+<meta property="og:description" content="Informational hearing March 3. Submit written testimony by March 1. KSHSAA schools voted 216-139 FOR a classification multiplier. The Board of Ed approved it 6-4. The legislature is the only roadblock.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://fairplayks.org">
 <meta property="og:image" content="https://fairplayks.org/og-image.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Fair Play Kansas - Support HB 2176 & SB 349">
-<meta name="twitter:description" content="HB 2176 / SB 349 die Feb 19 without a hearing. KSHSAA voted 216-139 FOR it. Board of Ed approved 6-4. The legislature is the only roadblock.">
+<meta name="twitter:description" content="Informational hearing March 3. Submit testimony by March 1. KSHSAA voted 216-139 FOR it. Board of Ed approved 6-4. The legislature is the only roadblock.">
 <meta name="twitter:image" content="https://fairplayks.org/og-image.png">
 <!-- ANALYTICS: To enable Google Analytics, add these two lines ABOVE this comment:
      1. <scrip​t async src="https://www.googletagmanager.com/gtag/js?id=YOUR-ID"></scrip​t>
@@ -435,9 +435,9 @@
 </head>
 <body>
 
-<!-- URGENCY BANNER: Set HEARING_ACTIVE=true and update date/time to show -->
-<div id="urgencyBanner" style="display:none;background:linear-gradient(90deg,#d44030,#b82e20);color:#fff;text-align:center;padding:0.65rem 1rem;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:1rem;letter-spacing:1px;text-transform:uppercase;position:sticky;top:0;z-index:9999;cursor:pointer;" onclick="document.getElementById('schoolPicker').focus();document.getElementById('schoolPicker').scrollIntoView({behavior:'smooth'});">
-  <span id="urgencyText">⚠️ Legislative Deadline: February 19, 2026 — Act Now</span>
+<!-- HEARING BANNER -->
+<div id="urgencyBanner" style="display:none;background:linear-gradient(90deg,#c8a84e,#b8952e);color:#0b1120;text-align:center;padding:0.65rem 1rem;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:1rem;letter-spacing:1px;text-transform:uppercase;position:sticky;top:0;z-index:9999;cursor:pointer;" onclick="document.getElementById('schoolPicker').focus();document.getElementById('schoolPicker').scrollIntoView({behavior:'smooth'});">
+  <span id="urgencyText">📣 INFORMATIONAL HEARING — MARCH 3, 2026 | Written Testimony Deadline: March 1</span>
 </div>
 
 
@@ -485,7 +485,7 @@
   </section>
 
   <section class="action-section">
-    <h2 class="section-title">Take Action in 30 seconds</h2>
+    <h2 class="section-title">Take Action — Deadline March 1</h2>
 
     <div class="form-group">
       <label for="userName">Your Name</label>
@@ -554,8 +554,16 @@
       <div class="ep-body" id="epBody"></div>
     </div>
 
-    <!-- BUTTONS -->
-    <button class="action-btn btn-primary" id="btnCommittee">✉️ &nbsp;Email House & Senate Education Committees</button>
+    <!-- ===== PRIMARY CTA: SUBMIT WRITTEN TESTIMONY ===== -->
+    <div id="testimonyBox" style="background:var(--gold-dim);border:2px solid var(--gold);border-radius:var(--radius);padding:1.25rem;margin-bottom:0.75rem;">
+      <p style="font-size:0.95rem;font-weight:700;color:var(--cream);margin-bottom:0.35rem;">📄 Submit Official Written Testimony</p>
+      <p style="font-size:0.82rem;color:var(--muted);line-height:1.5;">Written testimony carries the most weight in the legislative record. Clicking below downloads your letter as a PDF and opens an email to both committees. Attach the PDF and hit send.</p>
+      <button id="btnTestimony" class="action-btn btn-primary" style="margin-top:0.75rem;">📎 &nbsp;Download PDF & Submit Testimony</button>
+      <p style="text-align:center;font-size:0.75rem;color:var(--muted);margin-top:0.4rem;">⏰ Written testimony must be submitted by <strong style="color:var(--cream);">Saturday, March 1</strong></p>
+    </div>
+
+    <!-- ===== SECONDARY CTA: EMAIL COMMITTEES ===== -->
+    <button class="action-btn btn-outline" id="btnCommittee">✉️ &nbsp;Email House & Senate Education Committees</button>
 
     <p class="btn-note">
       Clicking opens your email app with everything pre-filled — recipients, subject, and body. You just hit Send.<br>
@@ -572,10 +580,15 @@
       </div>
     </div>
 
-    <div id="testimonyBox" style="background:var(--midnight);border:1px solid rgba(200,168,78,0.25);border-radius:var(--radius);padding:1rem;margin-bottom:0.75rem;cursor:pointer;transition:border-color 0.2s;" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='rgba(200,168,78,0.25)'">
-      <p style="font-size:0.85rem;font-weight:700;color:var(--cream);margin-bottom:0.35rem;">📄 Want even more impact? Submit official written testimony.</p>
-      <p style="font-size:0.78rem;color:var(--muted);line-height:1.5;">Clicking below will download your letter as a PDF and open an email to both committees. Attach the PDF and hit send. Testimony must be in PDF format to be entered into the official legislative record.</p>
-      <button id="btnTestimony" class="action-btn btn-outline" style="margin-top:0.6rem;font-size:0.85rem;padding:0.65rem 1.25rem;">📎 &nbsp;Download PDF & Email Testimony</button>
+    <!-- ===== ATTEND THE HEARING ===== -->
+    <div style="background:var(--midnight);border:1px solid rgba(200,168,78,0.25);border-radius:var(--radius);padding:1.25rem;margin-bottom:0.75rem;">
+      <p style="font-family:'Barlow Condensed',sans-serif;font-size:1.05rem;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:1px;margin-bottom:0.5rem;">🏛️ Attend the Hearing — March 3, Topeka</p>
+      <p style="font-size:0.85rem;color:var(--muted);line-height:1.6;">The informational hearing is open to the public. Showing up in person sends a powerful message to committee members. Room, time, and building details will be posted when available — sign up for updates below to be notified.</p>
+    </div>
+
+    <!-- ===== MARCH 4 ROUNDTABLE ===== -->
+    <div style="background:var(--midnight);border:1px solid rgba(200,168,78,0.12);border-radius:var(--radius);padding:1rem;margin-bottom:0.75rem;">
+      <p style="font-size:0.85rem;color:var(--cream);line-height:1.6;"><strong style="color:var(--gold);">March 4:</strong> Legislative roundtable discussion with supporters and opponents. The committee is looking for representatives from both smaller and larger districts. Interested? Email <a href="mailto:house.ed@ks.gov" style="color:var(--gold);text-decoration:none;">house.ed@ks.gov</a></p>
     </div>
 
     <!-- TESTIMONY POPUP -->
@@ -959,7 +972,6 @@ let selected = null, rival = null, mode = 'main', role = null;
 // POPULATE DROPDOWN (public schools only)
 // ================================================================
 const picker = document.getElementById('schoolPicker');
-// Group schools: 4A/5A goes in 5A group, 3A/4A goes in 4A group
 function classGroup(cls) {
   if (cls === '5A' || cls === '4A/5A') return '5A';
   if (cls === '4A' || cls === '3A/4A') return '4A';
@@ -1089,14 +1101,13 @@ function getRepInfo() {
 }
 
 // ================================================================
-// EMAIL TEMPLATES
+// EMAIL TEMPLATES (UPDATED FOR TESTIMONY / HEARING PHASE)
 // ================================================================
 function getEmailContent(r, name, school, s, rv) {
   const tm = mode === 'main' ? 'main sport' : 'KSHSAA activity';
   const yT = mode === 'main' ? s.mainT : s.totalT;
   const rT = mode === 'main' ? rv.mainT : rv.totalT;
 
-  // Build greeting based on whether local rep is CC'd
   const includeRep = document.getElementById('chkLocalRep').checked;
   const rep = getRepInfo();
   let greeting = 'Dear Members of the House and Senate Education Committees,';
@@ -1109,20 +1120,20 @@ function getEmailContent(r, name, school, s, rv) {
 
   const t = {
     parent: {
-      subj: 'HB 2176 / SB 349 Need a Hearing This Week — Turnaround is Feb 19',
-      body: greeting + '\n\nPOSITION: PROPONENT — I SUPPORT HB 2176 / SB 349\n\nMy name is ' + name + ', and I am a parent at ' + school + '. I am writing to demand an immediate hearing on House Bill 2176 and Senate Bill 349 before Turnaround Day on February 19th.\n\nThis is not a new idea. KSHSAA member schools voted 216-139 in favor of a classification multiplier. The Kansas State Board of Education approved it 6-4. The only place this has been blocked is the legislature.\n\nAs a parent of a student-athlete at ' + school + ', I see how the current classification system disadvantages community schools.\n\n' + data + '\n\nWe are not asking to ban private schools. We are asking for a Success Multiplier, a proven system Missouri has used since 2003, to move dominant programs into a classification that matches their actual competitive advantage.\n\nIf HB 2176 / SB 349 does not receive a hearing before February 19th, it dies and our kids lose another year to a system everyone agrees is broken.\n\nRespectfully,\n' + name + '\n' + school
+      subj: 'Written Testimony in Support of HB 2176 / SB 349',
+      body: greeting + '\n\nPOSITION: PROPONENT — I SUPPORT HB 2176 / SB 349\n\nMy name is ' + name + ', and I am a parent at ' + school + '. I am submitting this testimony in support of House Bill 2176 and Senate Bill 349, which would implement a Success Multiplier for KSHSAA athletic classifications.\n\nAs a parent of a student-athlete, I see how the current system disadvantages community schools that play by the rules.\n\n' + data + '\n\nThis is not a new idea. KSHSAA member schools voted 216-139 in favor of a classification multiplier. The Kansas State Board of Education approved it 6-4. Missouri has used this exact system since 2003.\n\nWe are not asking to ban or punish any school. We are asking for a proven system that moves dominant programs into a classification matching their actual competitive advantage.\n\nI respectfully ask the committee to recommend this bill for a floor amendment during this session.\n\nRespectfully,\n' + name + '\n' + school
     },
     student: {
-      subj: "I'm a Kansas Student-Athlete — HB 2176 / SB 349 Deserves a Hearing Before Feb 19",
-      body: greeting + '\n\nPOSITION: PROPONENT — I SUPPORT HB 2176 / SB 349\n\nMy name is ' + name + ', and I am a student-athlete at ' + school + '. I am asking you to hold a hearing on House Bill 2176 and Senate Bill 349 before Turnaround Day on February 19th.\n\nI train year-round. I show up early, stay late, and push myself every day. But the current classification system puts my school against programs with no district boundaries drawing from talent pools many times our size. That\'s not competition, it\'s a foregone conclusion.\n\n' + data + '\n\nI am not asking for a trophy I did not earn. I am asking for a fair chance to compete against schools that play by the same rules we do. HB 2176 / SB 349 applies a Success Multiplier so schools are classified based on their actual competitive advantage. Missouri already does this, and it works.\n\nKSHSAA\'s own member schools voted 216-139 for this fix. The Board of Education approved it 6-4. The legislature is the only thing standing in the way.\n\nPlease give this bill a hearing before it\'s too late.\n\nRespectfully,\n' + name + '\nStudent-Athlete, ' + school
+      subj: 'Student-Athlete Testimony in Support of HB 2176 / SB 349',
+      body: greeting + '\n\nPOSITION: PROPONENT — I SUPPORT HB 2176 / SB 349\n\nMy name is ' + name + ', and I am a student-athlete at ' + school + '. I am submitting this testimony in support of House Bill 2176 and Senate Bill 349.\n\nI train year-round. I show up early, stay late, and push myself every day. But the current classification system puts my school against programs with no district boundaries drawing from talent pools many times our size. That is not competition — it is a foregone conclusion.\n\n' + data + '\n\nI am not asking for a trophy I did not earn. I am asking for a fair chance to compete against schools that play by the same rules we do. KSHSAA member schools voted 216-139 for this fix. The Board of Education approved it 6-4. Missouri has used this system since 2003 and it works.\n\nI respectfully ask the committee to recommend this bill for a floor amendment during this session.\n\nRespectfully,\n' + name + '\nStudent-Athlete, ' + school
     },
     coach: {
-      subj: 'The Legislature Is the Only Roadblock — HB 2176 / SB 349 Needs a Hearing Before Feb 19',
-      body: greeting + '\n\nPOSITION: PROPONENT — I SUPPORT HB 2176 / SB 349\n\nMy name is ' + name + ', and I am a coach/administrator at ' + school + '. I am writing to demand a hearing on House Bill 2176 and Senate Bill 349 before Turnaround Day on February 19th.\n\nI see the impact of classification imbalances firsthand. When a community school plays a private school drawing from a metro talent pool of 600,000+, it creates a statistical competitive advantage and demoralizes participation across all programs.\n\n' + data + '\n\nThis has already been vetted. KSHSAA member schools voted 216-139 in favor. The State Board of Education approved it 6-4. Missouri has used this exact system since 2003. The legislature killed it last time. Don\'t let that happen again.\n\nHB 2176 / SB 349 protects the integrity of Kansas high school sports. Please give it a hearing.\n\nRespectfully,\n' + name + '\n' + school
+      subj: 'Coach Testimony in Support of HB 2176 / SB 349',
+      body: greeting + '\n\nPOSITION: PROPONENT — I SUPPORT HB 2176 / SB 349\n\nMy name is ' + name + ', and I am a coach/administrator at ' + school + '. I am submitting this testimony in support of House Bill 2176 and Senate Bill 349.\n\nI see the impact of classification imbalances firsthand. When a community school plays a private school drawing from a metro talent pool of 600,000+, it creates a statistical competitive advantage that demoralizes participation across all programs.\n\n' + data + '\n\nThis has already been vetted. KSHSAA member schools voted 216-139 in favor. The State Board of Education approved it 6-4. Missouri has used this exact system since 2003. It does not punish anyone — it makes the competition real.\n\nI respectfully ask the committee to recommend this bill for a floor amendment during this session.\n\nRespectfully,\n' + name + '\n' + school
     },
     taxpayer: {
-      subj: 'Our Schools Voted for This — HB 2176 / SB 349 Needs a Hearing Before Feb 19',
-      body: greeting + '\n\nPOSITION: PROPONENT — I SUPPORT HB 2176 / SB 349\n\nMy name is ' + name + ', and I am a taxpayer in the ' + school + ' community. I am writing to demand a hearing on House Bill 2176 and Senate Bill 349 before Turnaround Day on February 19th.\n\nOur community invests millions in our public schools. Under the current KSHSAA classification system, those investments are undermined when our teams are forced to compete against regional private select programs operating under fundamentally different rules.\n\n' + data + '\n\nKSHSAA member schools voted 216-139 for this change. The State Board of Education approved it 6-4. The only place it was blocked was the legislature. Don\'t let that happen again.\n\nMissouri has used this system since 2003. It doesn\'t punish anyone. It just makes the competition real.\n\nPlease bring HB 2176 / SB 349 to a vote.\n\nRespectfully,\n' + name + '\n' + school
+      subj: 'Taxpayer Testimony in Support of HB 2176 / SB 349',
+      body: greeting + '\n\nPOSITION: PROPONENT — I SUPPORT HB 2176 / SB 349\n\nMy name is ' + name + ', and I am a taxpayer in the ' + school + ' community. I am submitting this testimony in support of House Bill 2176 and Senate Bill 349.\n\nOur community invests millions in our public schools. Under the current KSHSAA classification system, those investments are undermined when our teams are forced to compete against regional private select programs operating under fundamentally different rules.\n\n' + data + '\n\nKSHSAA member schools voted 216-139 for this change. The State Board of Education approved it 6-4. Missouri has used this system since 2003. It does not punish anyone — it just makes the competition fair.\n\nI respectfully ask the committee to recommend this bill for a floor amendment during this session.\n\nRespectfully,\n' + name + '\n' + school
     }
   };
   return t[r] || null;
@@ -1145,7 +1156,6 @@ function rebuildEmail() {
   const content = getEmailContent(role, name, selected.n, selected, rival);
   if (!content) return;
 
-  // Build TO list: committee + optionally local rep. CC: always sponsor.
   const includeRep = document.getElementById('chkLocalRep').checked;
   const rep = getRepInfo();
   let toEmails = COMMITTEE.slice();
@@ -1174,11 +1184,9 @@ function rebuildEmail() {
     }
   }
 
-  // Open email: try mailto via hidden link, show fallback if it fails
+  // Open email helper
   function openEmail(to, cc, subj, body) {
     var mailto = 'mailto:' + to + (cc ? '?cc=' + encodeURIComponent(cc) + '&' : '?') + 'subject=' + encodeURIComponent(subj) + '&body=' + encodeURIComponent(body);
-
-    // Try mailto via temporary anchor (most reliable cross-browser method)
     var a = document.createElement('a');
     a.href = mailto;
     a.style.display = 'none';
@@ -1186,14 +1194,10 @@ function rebuildEmail() {
     a.click();
     document.body.removeChild(a);
 
-    // Show fallback options after a short delay (in case mailto silently fails)
     setTimeout(function() {
       var fb = document.getElementById('emailFallback');
-      // Build Gmail compose URL
       var gmailUrl = 'https://mail.google.com/mail/?view=cm&to=' + encodeURIComponent(to) + (cc ? '&cc=' + encodeURIComponent(cc) : '') + '&su=' + encodeURIComponent(subj) + '&body=' + encodeURIComponent(body);
-      // Build Outlook web compose URL
       var outlookUrl = 'https://outlook.live.com/mail/0/deeplink/compose?to=' + encodeURIComponent(to) + (cc ? '&cc=' + encodeURIComponent(cc) : '') + '&subject=' + encodeURIComponent(subj) + '&body=' + encodeURIComponent(body);
-      // Build Yahoo compose URL
       var yahooUrl = 'https://compose.mail.yahoo.com/?to=' + encodeURIComponent(to) + (cc ? '&cc=' + encodeURIComponent(cc) : '') + '&subject=' + encodeURIComponent(subj) + '&body=' + encodeURIComponent(body);
 
       document.getElementById('gmailLink').href = gmailUrl;
@@ -1214,7 +1218,7 @@ function rebuildEmail() {
     openEmail(to, cc, subj, body);
   };
 
-  // Testimony button — generate PDF + open email
+  // Testimony button
   var btnT = document.getElementById('btnTestimony');
   if (btnT) {
     btnT.onclick = function() {
@@ -1224,7 +1228,6 @@ function rebuildEmail() {
       }
       submitForm();
 
-      // Generate PDF using jsPDF
       try {
         if (!window.jspdf || !window.jspdf.jsPDF) {
           throw new Error('PDF library not loaded');
@@ -1235,7 +1238,6 @@ function rebuildEmail() {
         var pageWidth = doc.internal.pageSize.getWidth() - margin * 2;
         var y = 25;
 
-        // Header
         doc.setFontSize(11);
         doc.setFont('helvetica', 'bold');
         doc.text('WRITTEN TESTIMONY — HB 2176 / SB 349', margin, y);
@@ -1246,16 +1248,16 @@ function rebuildEmail() {
         y += 5;
         doc.text('Kansas State Legislature', margin, y);
         y += 5;
+        doc.text('Informational Hearing: March 3, 2026', margin, y);
+        y += 5;
         doc.text('Date: ' + new Date().toLocaleDateString('en-US', {year:'numeric',month:'long',day:'numeric'}), margin, y);
         y += 10;
 
-        // Position
         doc.setFont('helvetica', 'bold');
         doc.setFontSize(11);
         doc.text('POSITION: PROPONENT — I SUPPORT HB 2176 / SB 349', margin, y);
         y += 10;
 
-        // Body
         doc.setFont('helvetica', 'normal');
         doc.setFontSize(10);
         var bodyLines = doc.splitTextToSize(content.body, pageWidth);
@@ -1268,19 +1270,16 @@ function rebuildEmail() {
           y += 5;
         }
 
-        // Footer
         y += 5;
         if (y > 270) { doc.addPage(); y = 25; }
         doc.setFontSize(8);
         doc.setTextColor(128);
         doc.text('Generated via fairplayks.org — Data: KSHSAA championship records (2021-2025)', margin, y);
 
-        // Download
         doc.save('HB2176_SB349_Testimony_' + selected.n.replace(/[^a-zA-Z0-9]/g,'_') + '.pdf');
       } catch(e) {
-        // Fallback: download as .txt file if PDF fails
         console.error('PDF failed:', e);
-        var txt = 'WRITTEN TESTIMONY — HB 2176 / SB 349\nHouse Committee on Education & Senate Committee on Education\nKansas State Legislature\nDate: ' + new Date().toLocaleDateString('en-US', {year:'numeric',month:'long',day:'numeric'}) + '\n\nPOSITION: PROPONENT — I SUPPORT HB 2176 / SB 349\n\n' + content.body + '\n\nGenerated via fairplayks.org';
+        var txt = 'WRITTEN TESTIMONY — HB 2176 / SB 349\nHouse Committee on Education & Senate Committee on Education\nKansas State Legislature\nInformational Hearing: March 3, 2026\nDate: ' + new Date().toLocaleDateString('en-US', {year:'numeric',month:'long',day:'numeric'}) + '\n\nPOSITION: PROPONENT — I SUPPORT HB 2176 / SB 349\n\n' + content.body + '\n\nGenerated via fairplayks.org';
         var blob = new Blob([txt], {type:'text/plain'});
         var url = URL.createObjectURL(blob);
         var dl = document.createElement('a');
@@ -1292,11 +1291,9 @@ function rebuildEmail() {
         URL.revokeObjectURL(url);
       }
 
-      // Show popup
       var popup = document.getElementById('testimonyPopup');
       popup.style.display = 'flex';
 
-      // Open email to testimony addresses + committee CC chair
       var testimonyTo = 'house.ed@ks.gov,H.Education@house.ks.gov,S.Education@senate.ks.gov';
       var testimonyCc = 'Susan.Estes@house.ks.gov,Renee.Erickson@senate.ks.gov';
       var testimonySubj = content.subj;
@@ -1336,9 +1333,8 @@ function printFlyer() {
   const poolRatio = poolYou > 0 ? Math.round(poolRival / poolYou) : '∞';
   const tRatio = yT > 0 ? Math.round(rT / yT) + 'x' : rT + '-0';
 
-  const html = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Fair Play Flyer - ' + s.n + '</title><style>@import url("https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Libre+Franklin:wght@400;600;700&display=swap");*{margin:0;padding:0;box-sizing:border-box}@page{size:letter;margin:.5in}body{font-family:"Libre Franklin",sans-serif;color:#0b1120;width:7.5in;margin:0 auto}.hdr{text-align:center;border-bottom:4px solid #c8a84e;padding-bottom:1rem;margin-bottom:1.25rem}.hdr h1{font-family:"Barlow Condensed",sans-serif;font-size:2.8rem;font-weight:800;text-transform:uppercase;letter-spacing:3px}.hdr h1 em{font-style:normal;color:#c8a84e}.hdr p{font-size:1rem;color:#555;margin-top:.3rem}.badge{display:inline-block;background:#c8a84e;color:#0b1120;font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:.85rem;padding:.25rem 1rem;margin-top:.75rem;letter-spacing:2px;text-transform:uppercase}.vs{display:grid;grid-template-columns:1fr auto 1fr;border:2px solid #e0ddd5;border-radius:8px;padding:1rem 1.25rem;margin:1.25rem 0}.vs .ch{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:1.15rem;text-transform:uppercase;letter-spacing:1px;padding-bottom:.5rem;border-bottom:1px solid #e0ddd5}.vs .ch:first-child{text-align:right;color:#2d7a3e}.vs .ch:nth-child(2){text-align:center;color:#999;font-size:.7rem}.vs .ch:last-child{text-align:left;color:#c23b22}.vr{display:contents}.vr .v{padding:.4rem 0;font-weight:600;font-size:.95rem}.vr .v:first-child{text-align:right}.vr .v:last-child{text-align:left}.vr .m{text-align:center;font-size:.7rem;color:#888;text-transform:uppercase;letter-spacing:1px;font-family:"Barlow Condensed",sans-serif;padding:.4rem .5rem}.stats{display:flex;justify-content:center;gap:2.5rem;margin:1.25rem 0;padding:1rem;background:#f5f3ee;border-radius:8px}.st{text-align:center}.st .n{font-family:"Barlow Condensed",sans-serif;font-weight:800;font-size:2.2rem;color:#c8a84e;line-height:1}.st .l{font-size:.7rem;color:#888;text-transform:uppercase;letter-spacing:1px;margin-top:.15rem}.sn{text-align:center;font-size:.8rem;font-style:italic;color:#999;margin-top:.5rem}.cta{text-align:center;margin:1.5rem 0 1rem}.cta h2{font-family:"Barlow Condensed",sans-serif;font-size:1.6rem;font-weight:700;text-transform:uppercase;letter-spacing:2px}.cta p{font-size:1rem;color:#555;margin-top:.5rem;line-height:1.5}.cta .url{display:inline-block;margin-top:.75rem;background:#0b1120;color:#c8a84e;font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:1.1rem;padding:.5rem 1.5rem;border-radius:4px;letter-spacing:2px}.ft{text-align:center;font-size:.7rem;color:#aaa;margin-top:1.5rem;padding-top:.75rem;border-top:1px solid #e0ddd5}</style></head><body><div class="hdr"><h1>Fair Play <em>Kansas</em></h1><p>Our student-athletes deserve a level playing field.</p><div class="badge">Support HB 2176 & SB 349</div></div><p class="yr" style="text-align:center;font-weight:700;font-size:.95rem;margin:.75rem 0 .25rem">State Championship Data: 2021 - 2025 (5 Years)</p><div class="vs"><div class="ch">' + s.n.replace(' HS','') + '</div><div class="ch">VS</div><div class="ch">' + r.n.replace(' HS','') + '</div><div class="vr"><div class="v">Class ' + s.cls + '</div><div class="m">Classification</div><div class="v">Class ' + r.cls + '</div></div><div class="vr"><div class="v">' + s.enr.toLocaleString() + '</div><div class="m">Enrollment</div><div class="v">' + r.enr.toLocaleString() + '</div></div><div class="vr"><div class="v">' + s.distPop + '</div><div class="m">District Pop.</div><div class="v">' + r.distPop + '</div></div><div class="vr"><div class="v">' + s.pool + '</div><div class="m">Talent Pool</div><div class="v">' + r.pool + '</div></div><div class="vr"><div class="v">' + s.tuition + '</div><div class="m">Tuition</div><div class="v">' + r.tuition + '</div></div><div class="vr"><div class="v">' + yT + '</div><div class="m">' + tLabel + '</div><div class="v">' + rT + '</div></div></div>' + (mode==='main' ? '<p class="sn">Main Sports: Baseball, Boys Basketball, Girls Basketball, Football, Boys Soccer, Girls Soccer, Softball, Volleyball</p>' : '') + '<div class="stats">' + (rT > 0 ? '<div class="st"><div class="n">' + tRatio + '</div><div class="l">More Titles</div></div>' : '') + '<div class="st"><div class="n">' + poolRatio + 'x</div><div class="l">Larger Talent Pool</div></div><div class="st"><div class="n">Same</div><div class="l">Classification</div></div></div><div class="cta"><h2>This is not fair. Help fix it.</h2><p>HB 2176 / SB 349 creates a Success Multiplier so private schools compete in a classification that matches their actual advantage. Missouri already does this.</p><p>Visit the link below to email the Kansas House and Senate Education Committees in 30 seconds.</p><div style="margin-top:1rem;"><img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://fairplayks.org&format=png" alt="QR Code" style="width:130px;height:130px;display:block;margin:0 auto;border:3px solid #0b1120;border-radius:6px;"><div class="url" style="margin-top:.5rem;display:block;">fairplayks.org</div></div></div><div class="ft">Data: KSHSAA championship records (2021-2025). Not affiliated with KSHSAA or any political party.</div></body></html>';
+  const html = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Fair Play Flyer - ' + s.n + '</title><style>@import url("https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Libre+Franklin:wght@400;600;700&display=swap");*{margin:0;padding:0;box-sizing:border-box}@page{size:letter;margin:.5in}body{font-family:"Libre Franklin",sans-serif;color:#0b1120;width:7.5in;margin:0 auto}.hdr{text-align:center;border-bottom:4px solid #c8a84e;padding-bottom:1rem;margin-bottom:1.25rem}.hdr h1{font-family:"Barlow Condensed",sans-serif;font-size:2.8rem;font-weight:800;text-transform:uppercase;letter-spacing:3px}.hdr h1 em{font-style:normal;color:#c8a84e}.hdr p{font-size:1rem;color:#555;margin-top:.3rem}.badge{display:inline-block;background:#c8a84e;color:#0b1120;font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:.85rem;padding:.25rem 1rem;margin-top:.75rem;letter-spacing:2px;text-transform:uppercase}.vs{display:grid;grid-template-columns:1fr auto 1fr;border:2px solid #e0ddd5;border-radius:8px;padding:1rem 1.25rem;margin:1.25rem 0}.vs .ch{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:1.15rem;text-transform:uppercase;letter-spacing:1px;padding-bottom:.5rem;border-bottom:1px solid #e0ddd5}.vs .ch:first-child{text-align:right;color:#2d7a3e}.vs .ch:nth-child(2){text-align:center;color:#999;font-size:.7rem}.vs .ch:last-child{text-align:left;color:#c23b22}.vr{display:contents}.vr .v{padding:.4rem 0;font-weight:600;font-size:.95rem}.vr .v:first-child{text-align:right}.vr .v:last-child{text-align:left}.vr .m{text-align:center;font-size:.7rem;color:#888;text-transform:uppercase;letter-spacing:1px;font-family:"Barlow Condensed",sans-serif;padding:.4rem .5rem}.stats{display:flex;justify-content:center;gap:2.5rem;margin:1.25rem 0;padding:1rem;background:#f5f3ee;border-radius:8px}.st{text-align:center}.st .n{font-family:"Barlow Condensed",sans-serif;font-weight:800;font-size:2.2rem;color:#c8a84e;line-height:1}.st .l{font-size:.7rem;color:#888;text-transform:uppercase;letter-spacing:1px;margin-top:.15rem}.sn{text-align:center;font-size:.8rem;font-style:italic;color:#999;margin-top:.5rem}.cta{text-align:center;margin:1.5rem 0 1rem}.cta h2{font-family:"Barlow Condensed",sans-serif;font-size:1.6rem;font-weight:700;text-transform:uppercase;letter-spacing:2px}.cta p{font-size:1rem;color:#555;margin-top:.5rem;line-height:1.5}.cta .url{display:inline-block;margin-top:.75rem;background:#0b1120;color:#c8a84e;font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:1.1rem;padding:.5rem 1.5rem;border-radius:4px;letter-spacing:2px}.ft{text-align:center;font-size:.7rem;color:#aaa;margin-top:1.5rem;padding-top:.75rem;border-top:1px solid #e0ddd5}</style></head><body><div class="hdr"><h1>Fair Play <em>Kansas</em></h1><p>Our student-athletes deserve a level playing field.</p><div class="badge">Support HB 2176 & SB 349</div></div><p class="yr" style="text-align:center;font-weight:700;font-size:.95rem;margin:.75rem 0 .25rem">State Championship Data: 2021 - 2025 (5 Years)</p><div class="vs"><div class="ch">' + s.n.replace(' HS','') + '</div><div class="ch">VS</div><div class="ch">' + r.n.replace(' HS','') + '</div><div class="vr"><div class="v">Class ' + s.cls + '</div><div class="m">Classification</div><div class="v">Class ' + r.cls + '</div></div><div class="vr"><div class="v">' + s.enr.toLocaleString() + '</div><div class="m">Enrollment</div><div class="v">' + r.enr.toLocaleString() + '</div></div><div class="vr"><div class="v">' + s.distPop + '</div><div class="m">District Pop.</div><div class="v">' + r.distPop + '</div></div><div class="vr"><div class="v">' + s.pool + '</div><div class="m">Talent Pool</div><div class="v">' + r.pool + '</div></div><div class="vr"><div class="v">' + s.tuition + '</div><div class="m">Tuition</div><div class="v">' + r.tuition + '</div></div><div class="vr"><div class="v">' + yT + '</div><div class="m">' + tLabel + '</div><div class="v">' + rT + '</div></div></div>' + (mode==='main' ? '<p class="sn">Main Sports: Baseball, Boys Basketball, Girls Basketball, Football, Boys Soccer, Girls Soccer, Softball, Volleyball</p>' : '') + '<div class="stats">' + (rT > 0 ? '<div class="st"><div class="n">' + tRatio + '</div><div class="l">More Titles</div></div>' : '') + '<div class="st"><div class="n">' + poolRatio + 'x</div><div class="l">Larger Talent Pool</div></div><div class="st"><div class="n">Same</div><div class="l">Classification</div></div></div><div class="cta"><h2>This is not fair. Help fix it.</h2><p>HB 2176 / SB 349 creates a Success Multiplier so dominant programs compete in a classification that matches their actual advantage. Missouri has done this since 2003.</p><p>Submit written testimony or email the committees in 60 seconds.</p><div style="margin-top:1rem;"><img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://fairplayks.org&format=png" alt="QR Code" style="width:130px;height:130px;display:block;margin:0 auto;border:3px solid #0b1120;border-radius:6px;"><div class="url" style="margin-top:.5rem;display:block;">fairplayks.org</div></div></div><div class="ft">Data: KSHSAA championship records (2021-2025). Not affiliated with KSHSAA or any political party.</div></body></html>';
 
-  // Use Blob URL to avoid popup blockers
   var blob = new Blob([html], {type: 'text/html'});
   var url = URL.createObjectURL(blob);
   var a = document.createElement('a');
@@ -1352,21 +1348,21 @@ function printFlyer() {
 
 
 // ================================================================
-// CONFIG: Set these when events occur
+// CONFIG
 // ================================================================
-const HEARING_ACTIVE = true; // Set to true when hearing is scheduled
-const HEARING_TEXT = '⚠️ Legislative Deadline: February 19, 2026 — Act Now';
-const EMAIL_COUNT = 0; // Fallback if fetch fails
-const COUNTER_URL = 'https://script.google.com/macros/s/AKfycbyNqnJ4jEOonT8MrpcSrg7z53E6YZM8uKm3BJAlRYszJyCVV-VeYojQ-DREODJGurHm/exec'; // Paste your Google Apps Script URL here (see setup instructions)
+const HEARING_ACTIVE = true;
+const HEARING_TEXT = '📣 INFORMATIONAL HEARING — MARCH 3, 2026 | Written Testimony Deadline: March 1';
+const EMAIL_COUNT = 0;
+const COUNTER_URL = 'https://script.google.com/macros/s/AKfycbyNqnJ4jEOonT8MrpcSrg7z53E6YZM8uKm3BJAlRYszJyCVV-VeYojQ-DREODJGurHm/exec';
 const SITE_URL = 'https://fairplayks.org';
 
-// Show urgency banner if active
+// Show banner
 if (HEARING_ACTIVE) {
   document.getElementById('urgencyBanner').style.display = 'block';
   document.getElementById('urgencyText').textContent = HEARING_TEXT;
 }
 
-// Email counter display — fetches live count from Google Sheet
+// Email counter
 (function() {
   var el = document.getElementById('counterNum');
   var counterEl = document.getElementById('emailCounter');
@@ -1384,7 +1380,6 @@ if (HEARING_ACTIVE) {
     }
   }
 
-  // Try to fetch live count from Google Apps Script
   if (COUNTER_URL) {
     fetch(COUNTER_URL)
       .then(function(r) { return r.json(); })
@@ -1396,13 +1391,13 @@ if (HEARING_ACTIVE) {
 })();
 
 // ================================================================
-// SOCIAL SHARING
+// SOCIAL SHARING (UPDATED)
 // ================================================================
 function shareFB() {
   window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(SITE_URL), '_blank', 'width=600,height=400');
 }
 function shareX() {
-  const text = 'HB 2176 / SB 349 dies Thursday without a hearing. KSHSAA schools voted 216-139 FOR it. The Board of Ed approved it 6-4. The legislature is the only roadblock. Email both committees in 30 seconds:';
+  const text = 'Kansas HB 2176 / SB 349 gets an informational hearing March 3. KSHSAA schools voted 216-139 FOR a classification multiplier. Submit testimony or email the committees in 60 seconds:';
   window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(text) + '&url=' + encodeURIComponent(SITE_URL), '_blank', 'width=600,height=400');
 }
 function copyLink() {
@@ -1414,29 +1409,31 @@ function copyLink() {
 }
 
 // ================================================================
-// COACH FORWARDING EMAIL
+// COACH FORWARDING EMAIL (UPDATED)
 // ================================================================
 function copyCoachEmail() {
   const school = selected ? selected.n : '[Your School]';
-  const email = `Subject: HB 2176 / SB 349 Dies Thursday Without a Hearing — 30 Seconds to Help
+  const email = `Subject: HB 2176 / SB 349 — Informational Hearing March 3 — Submit Testimony by March 1
 
 Hi [Team/Booster Club],
 
-This is urgent. House Bill 2176 and Senate Bill 349 — the identical bills to fix Kansas high school athletic classifications — die on February 19th (Turnaround Day) if they don't get a hearing this week.
+Big news: House Bill 2176 and Senate Bill 349 — the bills to fix Kansas high school athletic classifications — have an informational hearing on March 3 before the House Education Committee.
 
-Here's what makes this inexcusable: KSHSAA member schools already voted 216-139 IN FAVOR of a classification multiplier. The Kansas State Board of Education approved it 6-4. The legislature is the only thing blocking it.
+Written testimony must be submitted by Saturday, March 1. Here's why this matters:
+
+KSHSAA member schools already voted 216-139 IN FAVOR of a classification multiplier. The Kansas State Board of Education approved it 6-4. The legislature is the only thing blocking it.
 
 Right now, private schools make up just 7% of 3A-5A membership but win 37% of state championships. They draw from talent pools of 600,000+ while our kids at ${school} compete from a community of a few thousand. Same classification.
 
-You can email both the House and Senate Education Committees in 30 seconds:
+You can submit official written testimony or email both committees in 60 seconds:
 
 👉 ${SITE_URL}
 
-Select ${school}, pick your role, and the email writes itself.
+Select ${school}, pick your role, and everything writes itself. The testimony downloads as a PDF — attach it and send.
 
-Committee members track email volume. If they get hundreds of emails this week, the bills get a hearing. If they don't, our kids lose another year.
+If you can make it to Topeka on March 3, showing up in person sends an even stronger message.
 
-Please forward this to every parent, coach, and booster you know. We have 4 days.
+Please forward this to every parent, coach, and booster you know.
 
 Thank you,
 [Your Name]`;
