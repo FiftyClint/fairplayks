@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FairPlayKS — Championship Disparity Analysis</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700&family=Libre+Franklin:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0b1120;
+  --surface: #151d30;
+  --surface2: #1e2a42;
+  --border: #2a3654;
+  --text: #f0ece4;
+  --text-dim: #b0b8c8;
+  --text-muted: #7b8aa4;
+  --accent: #c8a84e;
+  --accent-glow: rgba(200,168,78,0.15);
+  --accent-bright: #e8c95a;
+  --private: #c8a84e;
+  --public: #3b82f6;
+  --gold: #c8a84e;
+  --green: #3a9e5c;
+  --red: #d44030;
+  --font: 'Libre Franklin', sans-serif;
+  --mono: 'Barlow Condensed', sans-serif;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+.container { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
+
+/* Header */
+header {
+  background: linear-gradient(180deg, #0d1528 0%, var(--bg) 100%);
+  border-bottom: 1px solid var(--border);
+  padding: 40px 0 32px;
+}
+.header-label {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+.header-title {
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 8px;
+}
+.header-sub {
+  font-size: 15px;
+  color: var(--text-dim);
+  max-width: 700px;
+}
+
+/* Baseline Banner */
+.baseline-banner {
+  background: var(--accent-glow);
+  border: 1px solid rgba(200,168,78,0.3);
+  border-radius: 8px;
+  padding: 16px 24px;
+  margin: 24px 0;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.baseline-icon {
+  font-size: 28px;
+  flex-shrink: 0;
+}
+.baseline-text {
+  font-size: 15px;
+  line-height: 1.6;
+}
+.baseline-text strong { color: var(--accent); }
+.stat-highlight {
+  font-family: var(--mono);
+  font-weight: 600;
+  color: #fff;
+  background: rgba(200,168,78,0.2);
+  padding: 2px 6px;
+  border-radius: 3px;
+}
+
+/* Controls */
+.controls {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 24px 0;
+}
+.control-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.control-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.btn-group {
+  display: flex;
+  background: var(--surface);
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+.btn-group button {
+  padding: 8px 14px;
+  font-family: var(--font);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-dim);
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: all .15s;
+  border-right: 1px solid var(--border);
+}
+.btn-group button:last-child { border-right: none; }
+.btn-group button:hover { color: var(--text); background: var(--surface2); }
+.btn-group button.active {
+  color: #fff;
+  background: var(--accent);
+}
+
+/* Cards */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 24px;
+  margin-bottom: 20px;
+}
+.card-title {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+}
+.card-title .context {
+  color: var(--text-dim);
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+  font-size: 12px;
+}
+
+/* Grid */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+.grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 20px; }
+
+/* Big stat */
+.big-stat { text-align: center; padding: 12px 0; }
+.big-stat .number {
+  font-family: var(--mono);
+  font-size: 42px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--accent);
+}
+.big-stat .label {
+  font-size: 13px;
+  color: var(--text-dim);
+  margin-top: 4px;
+}
+.big-stat .sub {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+.big-stat.blue .number { color: var(--public); }
+.big-stat.gold .number { color: var(--gold); }
+
+/* Bars */
+.bar-row {
+  display: flex;
+  align-items: center;
+  margin: 6px 0;
+  gap: 10px;
+}
+.bar-label {
+  width: 160px;
+  font-size: 13px;
+  color: var(--text-dim);
+  flex-shrink: 0;
+  text-align: right;
+}
+.bar-track {
+  flex: 1;
+  height: 28px;
+  background: var(--surface2);
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+}
+.bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width .4s ease;
+  position: relative;
+}
+.bar-fill.private { background: var(--private); }
+.bar-fill.public { background: var(--public); }
+.bar-value {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 600;
+  color: #fff;
+}
+.bar-value-outside {
+  width: 60px;
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  flex-shrink: 0;
+}
+
+/* Table */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.data-table th {
+  text-align: left;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border);
+}
+.data-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid rgba(42,54,84,0.5);
+  color: var(--text-dim);
+}
+.data-table tr:hover td { background: rgba(255,255,255,0.02); }
+.data-table .num {
+  font-family: var(--mono);
+  font-weight: 600;
+  text-align: right;
+}
+.data-table .hot { color: var(--accent); }
+.data-table .warm { color: var(--gold); }
+.data-table .cool { color: var(--green); }
+
+/* Talent pool viz */
+.pool-compare {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  height: 200px;
+  padding: 0 20px;
+  margin: 16px 0;
+}
+.pool-bar {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  height: 100%;
+}
+.pool-bar-fill {
+  width: 100%;
+  max-width: 80px;
+  border-radius: 6px 6px 0 0;
+  transition: height .4s ease;
+  position: relative;
+}
+.pool-bar-fill.private { background: var(--private); }
+.pool-bar-fill.public { background: var(--public); }
+.pool-bar-val {
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 4px;
+  text-align: center;
+}
+.pool-bar-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 4px;
+  text-align: center;
+}
+
+/* Section headers */
+.section {
+  margin: 40px 0 20px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+}
+.section-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+.section-sub {
+  font-size: 14px;
+  color: var(--text-dim);
+  margin-bottom: 20px;
+}
+
+/* Tag */
+.tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  font-family: var(--mono);
+}
+.tag.red { background: rgba(200,168,78,0.15); color: var(--accent); }
+.tag.blue { background: rgba(59,130,246,0.15); color: var(--public); }
+
+/* Year chart */
+.year-chart {
+  height: 180px;
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  padding: 0 4px;
+}
+.year-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  height: 100%;
+  cursor: pointer;
+}
+.year-col:hover .yc-bar { opacity: 0.8; }
+.yc-bar {
+  width: 100%;
+  border-radius: 3px 3px 0 0;
+  transition: height .3s ease;
+}
+.yc-label {
+  font-size: 9px;
+  color: var(--text-muted);
+  margin-top: 4px;
+  transform: rotate(-45deg);
+  white-space: nowrap;
+}
+.yc-tooltip {
+  position: absolute;
+  background: #151d30;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 12px;
+  pointer-events: none;
+  z-index: 100;
+  display: none;
+}
+
+/* Callout */
+.callout {
+  background: rgba(200,168,78,0.08);
+  border-left: 3px solid var(--accent);
+  padding: 12px 16px;
+  margin: 16px 0;
+  font-size: 14px;
+  color: var(--text-dim);
+}
+.callout strong { color: var(--accent); }
+
+/* Footer */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 24px 0;
+  margin-top: 40px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+footer a { color: var(--accent); text-decoration: none; }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+  .header-title { font-size: 24px; }
+  .big-stat .number { font-size: 32px; }
+  .bar-label { width: 100px; font-size: 11px; }
+  .baseline-banner { flex-direction: column; text-align: center; }
+}
+
+/* Print */
+@media print {
+  body { background: #fff; color: #000; }
+  .card { border: 1px solid #ddd; }
+  .controls { display: none; }
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="container">
+    <div class="header-label">FairPlayKS.org — Legislative Data Brief</div>
+    <h1 class="header-title">Private School Championship Dominance in Kansas (3A–5A)</h1>
+    <p class="header-sub">Statistical analysis of KSHSAA championship results supporting HB 2176 / SB 349. Data covers 2001–2025 across 136 schools in classes 3A, 4A, and 5A — the only classes impacted by the proposed legislation.</p>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- BASELINE BANNER - Always visible -->
+  <div class="baseline-banner" id="baselineBanner">
+    <div class="baseline-icon">⚖️</div>
+    <div class="baseline-text">
+      <strong>The Baseline:</strong> Private schools are <span class="stat-highlight">11 of 136</span> schools in 3A–5A — just <span class="stat-highlight">8.1%</span>. If competition were fair, they'd win roughly 8% of championships. Instead, they win <span class="stat-highlight" id="bannerPct">34.7%</span> — a <span class="stat-highlight" id="bannerMultiple">4.3×</span> overrepresentation. This page explains <em>why</em>.
+    </div>
+  </div>
+
+  <!-- Controls -->
+  <div class="controls">
+    <div class="control-group">
+      <span class="control-label">Category</span>
+      <div class="btn-group" id="catBtns">
+        <button data-val="main" class="active">Main Sports</button>
+        <button data-val="athletic">All Athletic</button>
+        <button data-val="all">All KSHSAA</button>
+      </div>
+    </div>
+    <div class="control-group">
+      <span class="control-label">Period</span>
+      <div class="btn-group" id="periodBtns">
+        <button data-val="5yr">5 yr</button>
+        <button data-val="10yr">10 yr</button>
+        <button data-val="15yr">15 yr</button>
+        <button data-val="20yr">20 yr</button>
+        <button data-val="25yr" class="active">25 yr</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== SECTION 1: HEADLINE STATS ===================== -->
+  <div id="headlineSection">
+    <div class="grid-4" id="headlineGrid"></div>
+  </div>
+
+  <!-- ===================== SECTION 2: CLASS BREAKDOWN ===================== -->
+  <div class="section">
+    <div class="section-title">Championship Dominance by Class</div>
+    <div class="section-sub">8.1% of schools → disproportionate title share in every class</div>
+  </div>
+  <div class="grid-3" id="classCards"></div>
+
+  <!-- ===================== SECTION 3: TALENT POOL ===================== -->
+  <div class="section">
+    <div class="section-title">The Structural Advantage: Talent Pool Disparity</div>
+    <div class="section-sub">Why private schools dominate — they recruit from entire metro areas while public schools serve defined districts</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Average Talent Pool per School — Private vs. Public</div>
+    <div class="callout">
+      KSHSAA classifies schools by <strong>enrollment</strong>, but private schools recruit from populations <strong>28× to 99× larger</strong> than the public schools they compete against. A private school with 250 students has the same enrollment as a rural public school — but draws from a metro area of 500,000+.
+    </div>
+    <div id="talentPoolBars"></div>
+  </div>
+
+  <!-- ===================== SECTION 4: BY SPORT ===================== -->
+  <div class="section">
+    <div class="section-title">Sport-by-Sport Breakdown</div>
+    <div class="section-sub">Private school title share by sport, broken down by class. Remember: 8.1% is fair.</div>
+  </div>
+  <div class="card">
+    <div id="sportTable"></div>
+  </div>
+
+  <!-- ===================== SECTION 5: GENDER ===================== -->
+  <div class="section">
+    <div class="section-title">Gender Impact Analysis</div>
+    <div class="section-sub">Girls' sports are hit hardest by the structural advantage</div>
+  </div>
+  <div class="grid-3" id="genderCards"></div>
+
+  <!-- ===================== SECTION 6: YEAR TREND ===================== -->
+  <div class="section">
+    <div class="section-title">Year-by-Year Trend</div>
+    <div class="section-sub">Private school championship percentage by year (red = private share, blue dashed = 8.1% fair baseline)</div>
+  </div>
+  <div class="card">
+    <div id="yearChart" style="position:relative;"></div>
+  </div>
+
+  <!-- ===================== SECTION 7: TOP SCHOOLS ===================== -->
+  <div class="section">
+    <div class="section-title">Individual School Dominance</div>
+    <div class="section-sub">Title counts for each of the 11 private schools in 3A–5A</div>
+  </div>
+  <div class="card">
+    <div id="topSchoolsTable"></div>
+  </div>
+
+  <!-- ===================== SECTION 8: DYNASTIES ===================== -->
+  <div class="section">
+    <div class="section-title">Dynasty Analysis</div>
+    <div class="section-sub">Consecutive championship streaks (3+ years) — evidence of sustained structural advantage</div>
+  </div>
+  <div class="grid-2" id="dynastyStats"></div>
+  <div class="card" style="margin-top:20px;">
+    <div id="dynastyTable"></div>
+  </div>
+
+</div>
+
+<footer>
+  <div class="container">
+    <p>Data source: KSHSAA championship records 2001–2025 &amp; 2025-26 classifications. Analysis by <a href="https://fairplayks.org">FairPlayKS.org</a> in support of HB 2176 / SB 349.</p>
+    <p style="margin-top:4px;">Schools classified using current (2025-26) KSHSAA classifications. Talent pool = estimated metro/district population each school can recruit from.</p>
+  </div>
+</footer>
+
+<script>
+const DATA = {"schools": {"JC Harmon": {"name": "JC Harmon", "displayName": "JC Harmon HS", "cls": "5A", "enrollment": 1283, "talentPool": 22200, "isPrivate": false, "tuition": 0, "district": "USD 500", "districtPop": 110999, "povertyPct": 0.244, "frlPct": 0.785}, "Kansas City-Washington": {"name": "Kansas City-Washington", "displayName": "Kansas City-Washington HS", "cls": "5A", "enrollment": 1255, "talentPool": 22200, "isPrivate": false, "tuition": 0, "district": "USD 500", "districtPop": 110999, "povertyPct": 0.244, "frlPct": 0.785}, "Leavenworth": {"name": "Leavenworth", "displayName": "Leavenworth HS", "cls": "5A", "enrollment": 1168, "talentPool": 36569, "isPrivate": false, "tuition": 0, "district": "USD 453", "districtPop": 36569, "povertyPct": 0.142, "frlPct": 0.531}, "Bishop Carroll": {"name": "Bishop Carroll", "displayName": "Bishop Carroll HS", "cls": "5A", "enrollment": 1163, "talentPool": 536081, "isPrivate": true, "tuition": 8080, "district": "", "districtPop": 0, "povertyPct": 0, "frlPct": 0}, "Emporia": {"name": "Emporia", "displayName": "Emporia HS", "cls": "5A", "enrollment": 1158, "talentPool": 33843, "isPrivate": false, "tuition": 0, "district": "USD 253", "districtPop": 33843, "povertyPct": 0.168, "frlPct": 0.632}, "Hutchinson": {"name": "Hutchinson", "displayName": "Hutchinson HS", "cls": "5A", "enrollment": 1157, "talentPool": 30917, "isPrivate": false, "tuition": 0, "district": "USD 308", "districtPop": 30917, "povertyPct": 0.175, "frlPct": 0.648}, "Spring Hill": {"name": "Spring Hill", "displayName": "Spring Hill HS", "cls": "5A", "enrollment": 1120, "talentPool": 22687, "isPrivate": false, "tuition": 0, "district": "USD 230", "districtPop": 22687, "povertyPct": 0.03, "frlPct": 0.124}, "Topeka West": {"name": "Topeka West", "displayName": "Topeka West HS", "cls": "5A", "enrollment": 1120, "talentPool": 27866, "isPrivate": false, "tuition": 0, "district": "USD 501", "districtPop": 83597, "povertyPct": 0.171, "frlPct": 0.764}, "Blue Valley Southwest": {"name": "Blue Valley Southwest", "displayName": "Blue Valley Southwest HS", "cls": "5A", "enrollment": 1119, "talentPool": 29106, "isPrivate": false, "tuition": 0, "district": "USD 229", "districtPop": 145532, "povertyPct": 0.031, "frlPct": 0.085}, "Hays": {"name": "Hays", "displayName": "Hays HS", "cls": "5A", "enrollment": 1114, "talentPool": 25219, "isPrivate": false, "tuition": 0, "district": "USD 489", "districtPop": 25219, "povertyPct": 0.134, "frlPct": 0.382}, "Maize South": {"name": "Maize South", "displayName": "Maize South HS", "cls": "5A", "enrollment": 1110, "talentPool": 20650, "isPrivate": false, "tuition": 0, "district": "USD 266", "districtPop": 41300, "povertyPct": 0.048, "frlPct": 0.168}, "Seaman": {"name": "Seaman", "displayName": "Seaman HS", "cls": "5A", "enrollment": 1102, "talentPool": 23197, "isPrivate": false, "tuition": 0, "district": "USD 345", "districtPop": 23197, "povertyPct": 0.068, "frlPct": 0.324}, "Shawnee Heights": {"name": "Shawnee Heights", "displayName": "Shawnee Heights HS", "cls": "5A", "enrollment": 1085, "talentPool": 19280, "isPrivate": false, "tuition": 0, "district": "USD 450", "districtPop": 19280, "povertyPct": 0.065, "frlPct": 0.317}, "Turner": {"name": "Turner", "displayName": "Turner HS", "cls": "5A", "enrollment": 1057, "talentPool": 19195, "isPrivate": false, "tuition": 0, "district": "USD 202", "districtPop": 19195, "povertyPct": 0.165, "frlPct": 0.715}, "Valley Center": {"name": "Valley Center", "displayName": "Valley Center HS", "cls": "5A", "enrollment": 1044, "talentPool": 20468, "isPrivate": false, "tuition": 0, "district": "USD 262", "districtPop": 20468, "povertyPct": 0.072, "frlPct": 0.281}, "Salina-South": {"name": "Salina-South", "displayName": "Salina-South HS", "cls": "5A", "enrollment": 1039, "talentPool": 23757, "isPrivate": false, "tuition": 0, "district": "USD 305", "districtPop": 47513, "povertyPct": 0.148, "frlPct": 0.542}, "St. James Academy": {"name": "St. James Academy", "displayName": "St. James Academy", "cls": "5A", "enrollment": 1001, "talentPool": 632276, "isPrivate": true, "tuition": 16850, "district": "", "districtPop": 0, "povertyPct": 0, "frlPct": 0}, "De Soto": {"name": "De Soto", "displayName": "De Soto HS", "cls": "5A", "enrollment": 995, "talentPool": 14923, "isPrivate": false, "tuition": 0, "district": "USD 232", "districtPop": 29845, "povertyPct": 0.025, "frlPct": 0.146}, "Andover": {"name": "Andover", "displayName": "Andover HS", "cls": "5A", "enrollment": 991, "talentPool": 10750, "isPrivate": false, "tuition": 0, "district": "USD 385", "districtPop": 21500, "povertyPct": 0.045, "frlPct": 0.182}, "Pittsburg": {"name": "Pittsburg", "displayName": "Pittsburg HS", "cls": "5A", "enrollment": 978, "talentPool": 21708, "isPrivate": false, "tuition": 0, "district": "USD 250", "districtPop": 21708, "povertyPct": 0.214, "frlPct": 0.615}, "Eisenhower": {"name": "Eisenhower", "displayName": "Eisenhower HS", "cls": "5A", "enrollment": 967, "talentPool": 11075, "isPrivate": false, "tuition": 0, "district": "USD 265", "districtPop": 22150, "povertyPct": 0.049, "frlPct": 0.173}, "Newton": {"name": "Newton", "displayName": "Newton HS", "cls": "5A", "enrollment": 953, "talentPool": 20500, "isPrivate": false, "tuition": 0, "district": "USD 373", "districtPop": 20500, "povertyPct": 0.128, "frlPct": 0.524}, "Piper": {"name": "Piper", "displayName": "Piper HS", "cls": "5A", "enrollment": 952, "talentPool": 11800, "isPrivate": false, "tuition": 0, "district": "USD 203", "districtPop": 11800, "povertyPct": 0.052, "frlPct": 0.289}, "Goddard": {"name": "Goddard", "displayName": "Goddard HS", "cls": "5A", "enrollment": 942, "talentPool": 11075, "isPrivate": false, "tuition": 0, "district": "USD 265", "districtPop": 22150, "povertyPct": 0.049, "frlPct": 0.173}, "Salina-Central": {"name": "Salina-Central", "displayName": "Salina-Central HS", "cls": "5A", "enrollment": 923, "talentPool": 23757, "isPrivate": false, "tuition": 0, "district": "USD 305", "districtPop": 47513, "povertyPct": 0.148, "frlPct": 0.542}, "Basehor-Linwood": {"name": "Basehor-Linwood", "displayName": "Basehor-Linwood HS", "cls": "5A", "enrollment": 906, "talentPool": 16200, "isPrivate": false, "tuition": 0, "district": "USD 458", "districtPop": 16200, "povertyPct": 0.041, "frlPct": 0.185}, "Kapaun Mt. Carmel": {"name": "Kapaun Mt. Carmel", "displayName": "Kapaun Mt. Carmel HS", "cls": "5A", "enrollment": 900, "talentPool": 536081, "isPrivate": true, "tuition": 9600, "district": "", "districtPop": 0, "povertyPct": 0, "frlPct": 0}, "Arkansas City": {"name": "Arkansas City", "displayName": "Arkansas City HS", "cls": "5A", "enrollment": 881, "talentPool": 16500, "isPrivate": false, "tuition": 0, "district": "USD 470", "districtPop": 16500, "povertyPct": 0.165, "frlPct": 0.628}, "Great Bend": {"name": "Great Bend", "displayName": "Great Bend HS", "cls": "5A", "enrollment": 878, "talentPool": 21200, "isPrivate": false, "tuition": 0, "district": "USD 428", "districtPop": 21200, "povertyPct": 0.141, "frlPct": 0.584}, "Andover Central": {"name": "Andover Central", "displayName": "Andover Central HS", "cls": "5A", "enrollment": 872, "talentPool": 10750, "isPrivate": false, "tuition": 0, "district": "USD 385", "districtPop": 21500, "povertyPct": 0.045, "frlPct": 0.182}, "St. Thomas Aquinas": {"name": "St. Thomas Aquinas", "displayName": "St. Thomas Aquinas HS", "cls": "5A", "enrollment": 863, "talentPool": 632276, "isPrivate": true, "tuition": 15500, "district": "", "districtPop": 0, "povertyPct": 0, "frlPct": 0}, "Sumner Academy": {"name": "Sumner Academy", "displayName": "Sumner Academy", "cls": "5A", "enrollment": 854, "talentPool": 22200, "isPrivate": false, "tuition": 0, "district": "USD 500", "districtPop": 110999, "povertyPct": 0.244, "frlPct": 0.785}, "Highland Park": {"name": "Highland Park", "displayName": "Highland Park HS", "cls": "5A", "enrollment": 850, "talentPool": 27866, "isPrivate": false, "tuition": 0, "district": "USD 501", "districtPop": 83597, "povertyPct": 0.171, "frlPct": 0.764}, "Lansing": {"name": "Lansing", "displayName": "Lansing HS", "cls": "5A", "enrollment": 840, "talentPool": 18500, "isPrivate": false, "tuition": 0, "district": "USD 469", "districtPop": 18500, "povertyPct": 0.058, "frlPct": 0.221}, "FL Schlagle": {"name": "FL Schlagle", "displayName": "FL Schlagle HS", "cls": "5A", "enrollment": 829, "talentPool": 22200, "isPrivate": false, "tuition": 0, "district": "USD 500", "districtPop": 110999, "povertyPct": 0.244, "frlPct": 0.785}, "Bonner Springs": {"name": "Bonner Springs", "displayName": "Bonner Springs HS", "cls": "5A", "enrollment": 814, "talentPool": 15800, "isPrivate": false, "tuition": 0, "district": "USD 204", "districtPop": 15800, "povertyPct": 0.092, "frlPct": 0.485}, "Ottawa": {"name": "Ottawa", "displayName": "Ottawa HS", "cls": "4A", "enrollment": 680, "talentPool": 16800, "isPrivate": false, "tuition": 0, "district": "USD 290", "districtPop": 16800, "povertyPct": 0.134, "frlPct": 0.452}, "McPherson": {"name": "McPherson", "displayName": "McPherson HS", "cls": "4A", "enrollment": 673, "talentPool": 17200, "isPrivate": false, "tuition": 0, "district": "USD 418", "districtPop": 17200, "povertyPct": 0.098, "frlPct": 0.356}, "Bishop Miege": {"name": "Bishop Miege", "displayName": "Bishop Miege HS", "cls": "4A", "enrollment": 661, "talentPool": 632276, "isPrivate": true, "tuition": 13650, "district": "", "districtPop": 0, "povertyPct": 0, "frlPct": 0}, "Buhler": {"name": "Buhler", "displayName": "Buhler HS", "cls": "4A", "enrollment": 657, "talentPool": 9500, "isPrivate": false, "tuition": 0, "district": "USD 313", "districtPop": 9500, "povertyPct": 0.065, "frlPct": 0.254}, "Tonganoxie": {"name": "Tonganoxie", "displayName": "Tonganoxie HS", "cls": "4A", "enrollment": 627, "talentPool": 12400, "isPrivate": false, "tuition": 0, "district": "USD 464", "districtPop": 12400, "povertyPct": 0.063, "frlPct": 0.241}, "Circle": {"name": "Circle", "displayName": "Circle HS", "cls": "4A", "enrollment": 614, "talentPool": 10200, "isPrivate": false, "tuition": 0, "district": "USD 375", "districtPop": 10200, "povertyPct": 0.062, "frlPct": 0.285}, "Paola": {"name": "Paola", "displayName": "Paola HS", "cls": "4A", "enrollment": 602, "talentPool": 10500, "isPrivate": false, "tuition": 0, "district": "USD 368", "districtPop": 10500, "povertyPct": 0.089, "frlPct": 0.342}, "Winfield": {"name": "Winfield", "displayName": "Winfield HS", "cls": "4A", "enrollment": 599, "talentPool": 15600, "isPrivate": false, "tuition": 0, "district": "USD 465", "districtPop": 15600, "povertyPct": 0.142, "frlPct": 0.558}, "Eudora": {"name": "Eudora", "displayName": "Eudora HS", "cls": "4A", "enrollment": 579, "talentPool": 9200, "isPrivate": false, "tuition": 0, "district": "USD 491", "districtPop": 9200, "povertyPct": 0.065, "frlPct": 0.264}, "Mulvane": {"name": "Mulvane", "displayName": "Mulvane HS", "cls": "4A", "enrollment": 564, "talentPool": 9800, "isPrivate": false, "tuition": 0, "district": "USD 263", "districtPop": 9800, "povertyPct": 0.084, "frlPct": 0.382}, "Louisburg": {"name": "Louisburg", "displayName": "Louisburg HS", "cls": "4A", "enrollment": 555, "talentPool": 10100, "isPrivate": false, "tuition": 0, "district": "USD 416", "districtPop": 10100, "povertyPct": 0.042, "frlPct": 0.165}, "Fort Scott": {"name": "Fort Scott", "displayName": "Fort Scott HS", "cls": "4A", "enrollment": 549, "talentPool": 10500, "isPrivate": false, "tuition": 0, "district": "USD 234", "districtPop": 10500, "povertyPct": 0.185, "frlPct": 0.601}, "Augusta": {"name": "Augusta", "displayName": "Augusta HS", "cls": "4A", "enrollment": 548, "talentPool": 11200, "isPrivate": false, "tuition": 0, "district": "USD 402", "districtPop": 11200, "povertyPct": 0.095, "frlPct": 0.364}, "Independence": {"name": "Independence", "displayName": "Independence HS", "cls": "4A", "enrollment": 543, "talentPool": 12500, "isPrivate": false, "tuition": 0, "district": "USD 446", "districtPop": 12500, "povertyPct": 0.178, "frlPct": 0.652}, "Field Kindley": {"name": "Field Kindley", "displayName": "Field Kindley HS", "cls": "4A", "enrollment": 521, "talentPool": 13100, "isPrivate": false, "tuition": 0, "district": "USD 445", "districtPop": 13100, "povertyPct": 0.195, "frlPct": 0.684}, "Rose Hill": {"name": "Rose Hill", "displayName": "Rose Hill HS", "cls": "4A", "enrollment": 504, "talentPool": 8349, "isPrivate": false, "tuition": 0, "district": "USD 394", "districtPop": 8349, "povertyPct": 0.059, "frlPct": 0.248}, "Chanute": {"name": "Chanute", "displayName": "Chanute HS", "cls": "4A", "enrollment": 503, "talentPool": 11800, "isPrivate": false, "tuition": 0, "district": "USD 413", "districtPop": 11800, "povertyPct": 0.156, "frlPct": 0.542}, "Wamego": {"name": "Wamego", "displayName": "Wamego HS", "cls": "4A", "enrollment": 492, "talentPool": 10500, "isPrivate": false, "tuition": 0, "district": "USD 320", "districtPop": 10500, "povertyPct": 0.072, "frlPct": 0.295}, "Abilene": {"name": "Abilene", "displayName": "Abilene HS", "cls": "4A", "enrollment": 467, "talentPool": 9200, "isPrivate": false, "tuition": 0, "district": "USD 435", "districtPop": 9200, "povertyPct": 0.115, "frlPct": 0.421}, "Wellington": {"name": "Wellington", "displayName": "Wellington HS", "cls": "4A", "enrollment": 640, "talentPool": 10100, "isPrivate": false, "tuition": 0, "district": "USD 353", "districtPop": 10100, "povertyPct": 0.158, "frlPct": 0.524}, "El Dorado": {"name": "El Dorado", "displayName": "El Dorado HS", "cls": "4A", "enrollment": 456, "talentPool": 14500, "isPrivate": false, "tuition": 0, "district": "USD 490", "districtPop": 14500, "povertyPct": 0.132, "frlPct": 0.585}, "Labette County": {"name": "Labette County", "displayName": "Labette County HS", "cls": "4A", "enrollment": 456, "talentPool": 8500, "isPrivate": false, "tuition": 0, "district": "USD 506", "districtPop": 8500, "povertyPct": 0.125, "frlPct": 0.552}, "Rock Creek": {"name": "Rock Creek", "displayName": "Rock Creek HS", "cls": "4A", "enrollment": 439, "talentPool": 7800, "isPrivate": false, "tuition": 0, "district": "USD 323", "districtPop": 7800, "povertyPct": 0.045, "frlPct": 0.184}, "Baldwin": {"name": "Baldwin", "displayName": "Baldwin HS", "cls": "4A", "enrollment": 432, "talentPool": 9500, "isPrivate": false, "tuition": 0, "district": "USD 348", "districtPop": 9500, "povertyPct": 0.068, "frlPct": 0.282}, "Ulysses": {"name": "Ulysses", "displayName": "Ulysses HS", "cls": "4A", "enrollment": 428, "talentPool": 8900, "isPrivate": false, "tuition": 0, "district": "USD 214", "districtPop": 8900, "povertyPct": 0.145, "frlPct": 0.658}, "Andale": {"name": "Andale", "displayName": "Andale HS", "cls": "4A", "enrollment": 417, "talentPool": 8200, "isPrivate": false, "tuition": 0, "district": "USD 267", "districtPop": 8200, "povertyPct": 0.042, "frlPct": 0.125}, "Atchison": {"name": "Atchison", "displayName": "Atchison HS", "cls": "4A", "enrollment": 400, "talentPool": 12500, "isPrivate": false, "tuition": 0, "district": "USD 409", "districtPop": 12500, "povertyPct": 0.182, "frlPct": 0.624}, "Parsons": {"name": "Parsons", "displayName": "Parsons HS", "cls": "4A", "enrollment": 389, "talentPool": 11800, "isPrivate": false, "tuition": 0, "district": "USD 503", "districtPop": 11800, "povertyPct": 0.205, "frlPct": 0.685}, "Clearwater": {"name": "Clearwater", "displayName": "Clearwater HS", "cls": "4A", "enrollment": 383, "talentPool": 7500, "isPrivate": false, "tuition": 0, "district": "USD 264", "districtPop": 7500, "povertyPct": 0.058, "frlPct": 0.245}, "Chapman": {"name": "Chapman", "displayName": "Chapman HS", "cls": "4A", "enrollment": 366, "talentPool": 7200, "isPrivate": false, "tuition": 0, "district": "USD 473", "districtPop": 7200, "povertyPct": 0.085, "frlPct": 0.352}, "Concordia": {"name": "Concordia", "displayName": "Concordia HS", "cls": "4A", "enrollment": 355, "talentPool": 7800, "isPrivate": false, "tuition": 0, "district": "USD 333", "districtPop": 7800, "povertyPct": 0.142, "frlPct": 0.515}, "Hayden": {"name": "Hayden", "displayName": "Hayden HS", "cls": "4A", "enrollment": 349, "talentPool": 177942, "isPrivate": true, "tuition": 9960, "district": "", "districtPop": 0, "povertyPct": 0, "frlPct": 0}, "Pratt": {"name": "Pratt", "displayName": "Pratt HS", "cls": "4A", "enrollment": 324, "talentPool": 8500, "isPrivate": false, "tuition": 0, "district": "USD 382", "districtPop": 8500, "povertyPct": 0.128, "frlPct": 0.485}, "Santa Fe Trail": {"name": "Santa Fe Trail", "displayName": "Santa Fe Trail HS", "cls": "4A", "enrollment": 316, "talentPool": 8100, "isPrivate": false, "tuition": 0, "district": "USD 434", "districtPop": 8100, "povertyPct": 0.095, "frlPct": 0.382}, "Clay Center Community": {"name": "Clay Center Community", "displayName": "Clay Center Community HS", "cls": "4A", "enrollment": 311, "talentPool": 6800, "isPrivate": false, "tuition": 0, "district": "USD 379", "districtPop": 6800, "povertyPct": 0.102, "frlPct": 0.425}, "Hugoton": {"name": "Hugoton", "displayName": "Hugoton HS", "cls": "4A", "enrollment": 308, "talentPool": 6500, "isPrivate": false, "tuition": 0, "district": "USD 210", "districtPop": 6500, "povertyPct": 0.115, "frlPct": 0.582}, "Holton": {"name": "Holton", "displayName": "Holton HS", "cls": "3A", "enrollment": 301, "talentPool": 6200, "isPrivate": false, "tuition": 0, "district": "USD 336", "districtPop": 6200, "povertyPct": 0.118, "frlPct": 0.445}, "Iola": {"name": "Iola", "displayName": "Iola HS", "cls": "3A", "enrollment": 299, "talentPool": 8500, "isPrivate": false, "tuition": 0, "district": "USD 257", "districtPop": 8500, "povertyPct": 0.172, "frlPct": 0.615}, "Hesston": {"name": "Hesston", "displayName": "Hesston HS", "cls": "3A", "enrollment": 294, "talentPool": 5800, "isPrivate": false, "tuition": 0, "district": "USD 460", "districtPop": 5800, "povertyPct": 0.065, "frlPct": 0.228}, "Scott Community": {"name": "Scott Community", "displayName": "Scott Community HS", "cls": "3A", "enrollment": 292, "talentPool": 5400, "isPrivate": false, "tuition": 0, "district": "USD 466", "districtPop": 5400, "povertyPct": 0.098, "frlPct": 0.385}, "Anderson County": {"name": "Anderson County", "displayName": "Anderson County HS", "cls": "3A", "enrollment": 287, "talentPool": 6500, "isPrivate": false, "tuition": 0, "district": "USD 365", "districtPop": 6500, "povertyPct": 0.145, "frlPct": 0.524}, "Bishop Ward": {"name": "Bishop Ward", "displayName": "Bishop Ward HS", "cls": "3A", "enrollment": 284, "talentPool": 169418, "isPrivate": true, "tuition": 9800, "district": "", "districtPop": 0, "povertyPct": 0, "frlPct": 0}, "Frontenac": {"name": "Frontenac", "displayName": "Frontenac HS", "cls": "3A", "enrollment": 280, "talentPool": 5100, "isPrivate": false, "tuition": 0, "district": "USD 249", "districtPop": 5100, "povertyPct": 0.102, "frlPct": 0.428}, "Columbus": {"name": "Columbus", "displayName": "Columbus HS", "cls": "3A", "enrollment": 278, "talentPool": 5800, "isPrivate": false, "tuition": 0, "district": "USD 493", "districtPop": 5800, "povertyPct": 0.165, "frlPct": 0.602}, "Osawatomie": {"name": "Osawatomie", "displayName": "Osawatomie HS", "cls": "3A", "enrollment": 278, "talentPool": 6200, "isPrivate": false, "tuition": 0, "district": "USD 367", "districtPop": 6200, "povertyPct": 0.132, "frlPct": 0.485}, "Colby": {"name": "Colby", "displayName": "Colby HS", "cls": "3A", "enrollment": 275, "talentPool": 6100, "isPrivate": false, "tuition": 0, "district": "USD 315", "districtPop": 6100, "povertyPct": 0.095, "frlPct": 0.368}, "Girard": {"name": "Girard", "displayName": "Girard HS", "cls": "3A", "enrollment": 272, "talentPool": 5500, "isPrivate": false, "tuition": 0, "district": "USD 248", "districtPop": 5500, "povertyPct": 0.125, "frlPct": 0.452}, "Jefferson West": {"name": "Jefferson West", "displayName": "Jefferson West HS", "cls": "3A", "enrollment": 270, "talentPool": 5200, "isPrivate": false, "tuition": 0, "district": "USD 340", "districtPop": 5200, "povertyPct": 0.085, "frlPct": 0.324}, "Holcomb": {"name": "Holcomb", "displayName": "Holcomb HS", "cls": "3A", "enrollment": 266, "talentPool": 5800, "isPrivate": false, "tuition": 0, "district": "USD 363", "districtPop": 5800, "povertyPct": 0.082, "frlPct": 0.485}, "Wellsville": {"name": "Wellsville", "displayName": "Wellsville HS", "cls": "3A", "enrollment": 261, "talentPool": 5100, "isPrivate": false, "tuition": 0, "district": "USD 289", "districtPop": 5100, "povertyPct": 0.075, "frlPct": 0.285}, "Wichita Collegiate": {"name": "Wichita Collegiate", "displayName": "Wichita Collegiate HS", "cls": "3A", "enrollment": 260, "talentPool": 536081, "isPrivate": true, "tuition": 25350, "district": "", "districtPop": 0, "povertyPct": 0, "frlPct": 0}, "Goodland": {"name": "Goodland", "displayName": "Goodland HS", "cls": "3A", "enrollment": 257, "talentPool": 5400, "isPrivate": false, "tuition": 0, "district": "USD 352", "districtPop": 5400, "povertyPct": 0.138, "frlPct": 0.524}, "Wichita-Trinity Academy": {"name": "Wichita-Trinity Academy", "displayName": "Wichita-Trinity Academy", "cls": "3A", "enrollment": 254, "talentPool": 536081, "isPrivate": true, "tuition": 14975, "district": "", "districtPop": 0, "povertyPct": 0, "frlPct": 0}, "Hiawatha": {"name": "Hiawatha", "displayName": "Hiawatha HS", "cls": "3A", "enrollment": 249, "talentPool": 5500, "isPrivate": false, "tuition": 0, "district": "USD 415", "districtPop": 5500, "povertyPct": 0.132, "frlPct": 0.485}, "Burlington": {"name": "Burlington", "displayName": "Burlington HS", "cls": "3A", "enrollment": 247, "talentPool": 5200, "isPrivate": false, "tuition": 0, "district": "USD 244", "districtPop": 5200, "povertyPct": 0.095, "frlPct": 0.352}, "Nemaha Central": {"name": "Nemaha Central", "displayName": "Nemaha Central HS", "cls": "3A", "enrollment": 247, "talentPool": 5100, "isPrivate": false, "tuition": 0, "district": "USD 115", "districtPop": 5100, "povertyPct": 0.065, "frlPct": 0.245}, "Prairie View": {"name": "Prairie View", "displayName": "Prairie View HS", "cls": "3A", "enrollment": 247, "talentPool": 5600, "isPrivate": false, "tuition": 0, "district": "USD 362", "districtPop": 5600, "povertyPct": 0.125, "frlPct": 0.468}, "Smoky Valley": {"name": "Smoky Valley", "displayName": "Smoky Valley HS", "cls": "3A", "enrollment": 246, "talentPool": 5300, "isPrivate": false, "tuition": 0, "district": "USD 400", "districtPop": 5300, "povertyPct": 0.078, "frlPct": 0.312}, "Perry-Lecompton": {"name": "Perry-Lecompton", "displayName": "Perry-Lecompton HS", "cls": "3A", "enrollment": 244, "talentPool": 5100, "isPrivate": false, "tuition": 0, "district": "USD 343", "districtPop": 5100, "povertyPct": 0.075, "frlPct": 0.284}, "Marysville": {"name": "Marysville", "displayName": "Marysville HS", "cls": "3A", "enrollment": 243, "talentPool": 5200, "isPrivate": false, "tuition": 0, "district": "USD 364", "districtPop": 5200, "povertyPct": 0.085, "frlPct": 0.345}, "Larned": {"name": "Larned", "displayName": "Larned HS", "cls": "3A", "enrollment": 242, "talentPool": 5400, "isPrivate": false, "tuition": 0, "district": "USD 495", "districtPop": 5400, "povertyPct": 0.142, "frlPct": 0.568}, "Baxter Springs": {"name": "Baxter Springs", "displayName": "Baxter Springs HS", "cls": "3A", "enrollment": 236, "talentPool": 5500, "isPrivate": false, "tuition": 0, "district": "USD 508", "districtPop": 5500, "povertyPct": 0.175, "frlPct": 0.624}, "Cheney": {"name": "Cheney", "displayName": "Cheney HS", "cls": "3A", "enrollment": 236, "talentPool": 4800, "isPrivate": false, "tuition": 0, "district": "USD 268", "districtPop": 4800, "povertyPct": 0.045, "frlPct": 0.185}, "Nickerson": {"name": "Nickerson", "displayName": "Nickerson HS", "cls": "3A", "enrollment": 236, "talentPool": 4900, "isPrivate": false, "tuition": 0, "district": "USD 309", "districtPop": 4900, "povertyPct": 0.115, "frlPct": 0.482}, "Haven": {"name": "Haven", "displayName": "Haven HS", "cls": "3A", "enrollment": 232, "talentPool": 4800, "isPrivate": false, "tuition": 0, "district": "USD 312", "districtPop": 4800, "povertyPct": 0.082, "frlPct": 0.365}, "Beloit": {"name": "Beloit", "displayName": "Beloit HS", "cls": "3A", "enrollment": 231, "talentPool": 4900, "isPrivate": false, "tuition": 0, "district": "USD 273", "districtPop": 4900, "povertyPct": 0.105, "frlPct": 0.425}, "Hoisington": {"name": "Hoisington", "displayName": "Hoisington HS", "cls": "3A", "enrollment": 230, "talentPool": 4600, "isPrivate": false, "tuition": 0, "district": "USD 431", "districtPop": 4600, "povertyPct": 0.095, "frlPct": 0.382}, "Council Grove": {"name": "Council Grove", "displayName": "Council Grove HS", "cls": "3A", "enrollment": 228, "talentPool": 4500, "isPrivate": false, "tuition": 0, "district": "USD 417", "districtPop": 4500, "povertyPct": 0.125, "frlPct": 0.465}, "Halstead": {"name": "Halstead", "displayName": "Halstead HS", "cls": "3A", "enrollment": 227, "talentPool": 4600, "isPrivate": false, "tuition": 0, "district": "USD 440", "districtPop": 4600, "povertyPct": 0.085, "frlPct": 0.352}, "Silver Lake": {"name": "Silver Lake", "displayName": "Silver Lake HS", "cls": "3A", "enrollment": 227, "talentPool": 4800, "isPrivate": false, "tuition": 0, "district": "USD 372", "districtPop": 4800, "povertyPct": 0.055, "frlPct": 0.224}, "Galena": {"name": "Galena", "displayName": "Galena HS", "cls": "3A", "enrollment": 226, "talentPool": 4900, "isPrivate": false, "tuition": 0, "district": "USD 499", "districtPop": 4900, "povertyPct": 0.185, "frlPct": 0.645}, "Royal Valley": {"name": "Royal Valley", "displayName": "Royal Valley HS", "cls": "3A", "enrollment": 226, "talentPool": 4500, "isPrivate": false, "tuition": 0, "district": "USD 337", "districtPop": 4500, "povertyPct": 0.112, "frlPct": 0.445}, "Riley County": {"name": "Riley County", "displayName": "Riley County HS", "cls": "3A", "enrollment": 224, "talentPool": 4800, "isPrivate": false, "tuition": 0, "district": "USD 378", "districtPop": 4800, "povertyPct": 0.075, "frlPct": 0.285}, "Lyons": {"name": "Lyons", "displayName": "Lyons HS", "cls": "3A", "enrollment": 221, "talentPool": 4600, "isPrivate": false, "tuition": 0, "district": "USD 405", "districtPop": 4600, "povertyPct": 0.155, "frlPct": 0.625}, "Neodesha": {"name": "Neodesha", "displayName": "Neodesha HS", "cls": "3A", "enrollment": 221, "talentPool": 4500, "isPrivate": false, "tuition": 0, "district": "USD 461", "districtPop": 4500, "povertyPct": 0.165, "frlPct": 0.605}, "Caney Valley": {"name": "Caney Valley", "displayName": "Caney Valley HS", "cls": "3A", "enrollment": 219, "talentPool": 4600, "isPrivate": false, "tuition": 0, "district": "USD 436", "districtPop": 4600, "povertyPct": 0.152, "frlPct": 0.585}, "Sabetha": {"name": "Sabetha", "displayName": "Sabetha HS", "cls": "3A", "enrollment": 218, "talentPool": 4800, "isPrivate": false, "tuition": 0, "district": "USD 113", "districtPop": 4800, "povertyPct": 0.075, "frlPct": 0.285}, "Southeast of Saline": {"name": "Southeast of Saline", "displayName": "Southeast of Saline HS", "cls": "3A", "enrollment": 217, "talentPool": 4700, "isPrivate": false, "tuition": 0, "district": "USD 306", "districtPop": 4700, "povertyPct": 0.065, "frlPct": 0.245}, "Russell": {"name": "Russell", "displayName": "Russell HS", "cls": "3A", "enrollment": 213, "talentPool": 5200, "isPrivate": false, "tuition": 0, "district": "USD 407", "districtPop": 5200, "povertyPct": 0.135, "frlPct": 0.545}, "Minneapolis": {"name": "Minneapolis", "displayName": "Minneapolis HS", "cls": "3A", "enrollment": 206, "talentPool": 4500, "isPrivate": false, "tuition": 0, "district": "USD 239", "districtPop": 4500, "povertyPct": 0.105, "frlPct": 0.425}, "Chaparral": {"name": "Chaparral", "displayName": "Chaparral HS", "cls": "3A", "enrollment": 204, "talentPool": 4600, "isPrivate": false, "tuition": 0, "district": "USD 361", "districtPop": 4600, "povertyPct": 0.115, "frlPct": 0.485}, "Fredonia": {"name": "Fredonia", "displayName": "Fredonia HS", "cls": "3A", "enrollment": 204, "talentPool": 4500, "isPrivate": false, "tuition": 0, "district": "USD 484", "districtPop": 4500, "povertyPct": 0.162, "frlPct": 0.625}, "Ellsworth": {"name": "Ellsworth", "displayName": "Ellsworth HS", "cls": "3A", "enrollment": 203, "talentPool": 4400, "isPrivate": false, "tuition": 0, "district": "USD 327", "districtPop": 4400, "povertyPct": 0.105, "frlPct": 0.385}, "Osage City": {"name": "Osage City", "displayName": "Osage City HS", "cls": "3A", "enrollment": 202, "talentPool": 4500, "isPrivate": false, "tuition": 0, "district": "USD 420", "districtPop": 4500, "povertyPct": 0.115, "frlPct": 0.442}, "Maranatha Christian Academy": {"name": "Maranatha Christian Academy", "displayName": "Maranatha Christian Academy", "cls": "3A", "enrollment": 200, "talentPool": 632276, "isPrivate": true, "tuition": 12600, "district": "", "districtPop": 0, "povertyPct": 0, "frlPct": 0}, "Riverton": {"name": "Riverton", "displayName": "Riverton HS", "cls": "3A", "enrollment": 199, "talentPool": 4600, "isPrivate": false, "tuition": 0, "district": "USD 404", "districtPop": 4600, "povertyPct": 0.145, "frlPct": 0.565}, "Cherryvale": {"name": "Cherryvale", "displayName": "Cherryvale HS", "cls": "3A", "enrollment": 195, "talentPool": 4500, "isPrivate": false, "tuition": 0, "district": "USD 447", "districtPop": 4500, "povertyPct": 0.152, "frlPct": 0.615}, "Lakin": {"name": "Lakin", "displayName": "Lakin HS", "cls": "3A", "enrollment": 191, "talentPool": 4400, "isPrivate": false, "tuition": 0, "district": "USD 215", "districtPop": 4400, "povertyPct": 0.105, "frlPct": 0.525}, "West Franklin": {"name": "West Franklin", "displayName": "West Franklin HS", "cls": "3A", "enrollment": 191, "talentPool": 4500, "isPrivate": false, "tuition": 0, "district": "USD 287", "districtPop": 4500, "povertyPct": 0.112, "frlPct": 0.455}, "Kingman": {"name": "Kingman", "displayName": "Kingman HS", "cls": "3A", "enrollment": 186, "talentPool": 4800, "isPrivate": false, "tuition": 0, "district": "USD 331", "districtPop": 4800, "povertyPct": 0.095, "frlPct": 0.385}, "Pleasant Ridge": {"name": "Pleasant Ridge", "displayName": "Pleasant Ridge HS", "cls": "3A", "enrollment": 183, "talentPool": 4600, "isPrivate": false, "tuition": 0, "district": "USD 449", "districtPop": 4600, "povertyPct": 0.075, "frlPct": 0.325}, "Norton Community": {"name": "Norton Community", "displayName": "Norton Community HS", "cls": "3A", "enrollment": 181, "talentPool": 4400, "isPrivate": false, "tuition": 0, "district": "USD 211", "districtPop": 4400, "povertyPct": 0.115, "frlPct": 0.425}, "Garden Plain": {"name": "Garden Plain", "displayName": "Garden Plain HS", "cls": "3A", "enrollment": 180, "talentPool": 8200, "isPrivate": false, "tuition": 0, "district": "USD 267", "districtPop": 8200, "povertyPct": 0.042, "frlPct": 0.125}, "Cimarron": {"name": "Cimarron", "displayName": "Cimarron HS", "cls": "3A", "enrollment": 174, "talentPool": 4400, "isPrivate": false, "tuition": 0, "district": "USD 102", "districtPop": 4400, "povertyPct": 0.095, "frlPct": 0.485}, "Oskaloosa": {"name": "Oskaloosa", "displayName": "Oskaloosa HS", "cls": "3A", "enrollment": 174, "talentPool": 4500, "isPrivate": false, "tuition": 0, "district": "USD 341", "districtPop": 4500, "povertyPct": 0.102, "frlPct": 0.385}, "Phillipsburg": {"name": "Phillipsburg", "displayName": "Phillipsburg HS", "cls": "3A", "enrollment": 174, "talentPool": 4600, "isPrivate": false, "tuition": 0, "district": "USD 325", "districtPop": 4600, "povertyPct": 0.115, "frlPct": 0.425}, "Riverside": {"name": "Riverside", "displayName": "Riverside HS", "cls": "3A", "enrollment": 174, "talentPool": 4600, "isPrivate": false, "tuition": 0, "district": "USD 114", "districtPop": 4600, "povertyPct": 0.125, "frlPct": 0.485}, "Southwestern Heights": {"name": "Southwestern Heights", "displayName": "Southwestern Heights HS", "cls": "3A", "enrollment": 170, "talentPool": 4200, "isPrivate": false, "tuition": 0, "district": "USD 483", "districtPop": 4200, "povertyPct": 0.135, "frlPct": 0.625}, "Heritage Christian Academy": {"name": "Heritage Christian Academy", "displayName": "Heritage Christian Academy", "cls": "3A", "enrollment": 169, "talentPool": 632276, "isPrivate": true, "tuition": 12729, "district": "", "districtPop": 0, "povertyPct": 0, "frlPct": 0}, "Jayhawk Linn": {"name": "Jayhawk Linn", "displayName": "Jayhawk Linn HS", "cls": "3A", "enrollment": 169, "talentPool": 4500, "isPrivate": false, "tuition": 0, "district": "USD 346", "districtPop": 4500, "povertyPct": 0.142, "frlPct": 0.545}}, "classStructure": {"3A": {"totalSchools": 64, "publicSchools": 59, "privateSchools": 5, "privatePct": 7.8, "avgEnrollPublic": 229, "avgEnrollPrivate": 233, "avgPoolPublic": 5090, "avgPoolPrivate": 501226, "totalPoolPublic": 300300, "totalPoolPrivate": 2506132, "poolRatio": 98.5, "privateNames": ["Bishop Ward", "Heritage Christian Academy", "Maranatha Christian Academy", "Wichita Collegiate", "Wichita-Trinity Academy"]}, "4A": {"totalSchools": 36, "publicSchools": 34, "privateSchools": 2, "privatePct": 5.6, "avgEnrollPublic": 491, "avgEnrollPrivate": 505, "avgPoolPublic": 10372, "avgPoolPrivate": 405109, "totalPoolPublic": 352649, "totalPoolPrivate": 810218, "poolRatio": 39.1, "privateNames": ["Bishop Miege", "Hayden"]}, "5A": {"totalSchools": 36, "publicSchools": 32, "privateSchools": 4, "privatePct": 11.1, "avgEnrollPublic": 1011, "avgEnrollPrivate": 982, "avgPoolPublic": 21061, "avgPoolPrivate": 584178, "totalPoolPublic": 673958, "totalPoolPrivate": 2336714, "poolRatio": 27.7, "privateNames": ["Bishop Carroll", "Kapaun Mt. Carmel", "St. James Academy", "St. Thomas Aquinas"]}}, "results": {"main": {"5yr": {"overall": {"total": 105, "private": 51, "public": 54, "privatePct": 48.6}, "byClass": {"3A": {"total": 23, "private": 6, "public": 17, "privatePct": 26.1, "privPerSchool": 1.2, "pubPerSchool": 0.3, "multiplier": 4.2}, "4A": {"total": 42, "private": 21, "public": 21, "privatePct": 50.0, "privPerSchool": 10.5, "pubPerSchool": 0.6, "multiplier": 17.0}, "5A": {"total": 40, "private": 24, "public": 16, "privatePct": 60.0, "privPerSchool": 6.0, "pubPerSchool": 0.5, "multiplier": 12.0}}, "bySport": {"Baseball": {"total": 15, "private": 8, "privatePct": 53.3, "byClass": {"3A": {"total": 3, "private": 3, "pct": 100.0}, "4A": {"total": 7, "private": 2, "pct": 28.6}, "5A": {"total": 5, "private": 3, "pct": 60.0}}}, "Basketball_Boys": {"total": 14, "private": 4, "privatePct": 28.6, "byClass": {"3A": {"total": 5, "private": 0, "pct": 0.0}, "4A": {"total": 5, "private": 2, "pct": 40.0}, "5A": {"total": 4, "private": 2, "pct": 50.0}}}, "Basketball_Girls": {"total": 15, "private": 8, "privatePct": 53.3, "byClass": {"3A": {"total": 5, "private": 0, "pct": 0.0}, "4A": {"total": 5, "private": 4, "pct": 80.0}, "5A": {"total": 5, "private": 4, "pct": 80.0}}}, "Football": {"total": 12, "private": 5, "privatePct": 41.7, "byClass": {"3A": {"total": 1, "private": 0, "pct": 0.0}, "4A": {"total": 5, "private": 1, "pct": 20.0}, "5A": {"total": 6, "private": 4, "pct": 66.7}}}, "Soccer_Boys": {"total": 10, "private": 4, "privatePct": 40.0, "byClass": {"3A": {"total": 0, "private": 0, "pct": 0}, "4A": {"total": 5, "private": 4, "pct": 80.0}, "5A": {"total": 5, "private": 0, "pct": 0.0}}}, "Soccer_Girls": {"total": 10, "private": 10, "privatePct": 100.0, "byClass": {"3A": {"total": 0, "private": 0, "pct": 0}, "4A": {"total": 5, "private": 5, "pct": 100.0}, "5A": {"total": 5, "private": 5, "pct": 100.0}}}, "Softball": {"total": 14, "private": 3, "privatePct": 21.4, "byClass": {"3A": {"total": 4, "private": 0, "pct": 0.0}, "4A": {"total": 5, "private": 0, "pct": 0.0}, "5A": {"total": 5, "private": 3, "pct": 60.0}}}, "Volleyball": {"total": 15, "private": 9, "privatePct": 60.0, "byClass": {"3A": {"total": 5, "private": 3, "pct": 60.0}, "4A": {"total": 5, "private": 3, "pct": 60.0}, "5A": {"total": 5, "private": 3, "pct": 60.0}}}}, "byGender": {"Boys": {"total": 51, "private": 21, "privatePct": 41.2}, "Girls": {"total": 54, "private": 30, "privatePct": 55.6}}, "byClassGender": {"3A": {"Boys": {"total": 9, "private": 3, "privatePct": 33.3}, "Girls": {"total": 14, "private": 3, "privatePct": 21.4}}, "4A": {"Boys": {"total": 22, "private": 9, "privatePct": 40.9}, "Girls": {"total": 20, "private": 12, "privatePct": 60.0}}, "5A": {"Boys": {"total": 20, "private": 9, "privatePct": 45.0}, "Girls": {"total": 20, "private": 15, "privatePct": 75.0}}}, "topSchools": [{"name": "Bishop Miege", "titles": 20, "pctOfAll": 19.0, "cls": 36}, {"name": "St. Thomas Aquinas", "titles": 16, "pctOfAll": 15.2, "cls": 36}, {"name": "Bishop Carroll", "titles": 4, "pctOfAll": 3.8, "cls": 36}, {"name": "Kapaun Mt. Carmel", "titles": 3, "pctOfAll": 2.9, "cls": 36}, {"name": "Heritage Christian Academy", "titles": 3, "pctOfAll": 2.9, "cls": 64}, {"name": "Wichita Collegiate", "titles": 2, "pctOfAll": 1.9, "cls": 64}, {"name": "Hayden", "titles": 1, "pctOfAll": 1.0, "cls": 36}, {"name": "St. James Academy", "titles": 1, "pctOfAll": 1.0, "cls": 36}, {"name": "Wichita-Trinity Academy", "titles": 1, "pctOfAll": 1.0, "cls": 64}], "yearByYear": {"2021": {"total": 20, "private": 10, "privatePct": 50.0}, "2022": {"total": 21, "private": 11, "privatePct": 52.4}, "2023": {"total": 20, "private": 10, "privatePct": 50.0}, "2024": {"total": 22, "private": 11, "privatePct": 50.0}, "2025": {"total": 22, "private": 9, "privatePct": 40.9}}}, "10yr": {"overall": {"total": 230, "private": 98, "public": 132, "privatePct": 42.6}, "byClass": {"3A": {"total": 60, "private": 8, "public": 52, "privatePct": 13.3, "privPerSchool": 1.6, "pubPerSchool": 0.9, "multiplier": 1.8}, "4A": {"total": 84, "private": 47, "public": 37, "privatePct": 56.0, "privPerSchool": 23.5, "pubPerSchool": 1.1, "multiplier": 21.6}, "5A": {"total": 86, "private": 43, "public": 43, "privatePct": 50.0, "privPerSchool": 10.8, "pubPerSchool": 1.3, "multiplier": 8.0}}, "bySport": {"Baseball": {"total": 28, "private": 9, "privatePct": 32.1, "byClass": {"3A": {"total": 10, "private": 3, "pct": 30.0}, "4A": {"total": 8, "private": 2, "pct": 25.0}, "5A": {"total": 10, "private": 4, "pct": 40.0}}}, "Basketball_Boys": {"total": 37, "private": 12, "privatePct": 32.4, "byClass": {"3A": {"total": 13, "private": 2, "pct": 15.4}, "4A": {"total": 11, "private": 6, "pct": 54.5}, "5A": {"total": 13, "private": 4, "pct": 30.8}}}, "Basketball_Girls": {"total": 42, "private": 17, "privatePct": 40.5, "byClass": {"3A": {"total": 14, "private": 0, "pct": 0.0}, "4A": {"total": 15, "private": 8, "pct": 53.3}, "5A": {"total": 13, "private": 9, "pct": 69.2}}}, "Football": {"total": 25, "private": 12, "privatePct": 48.0, "byClass": {"3A": {"total": 4, "private": 0, "pct": 0.0}, "4A": {"total": 12, "private": 5, "pct": 41.7}, "5A": {"total": 9, "private": 7, "pct": 77.8}}}, "Soccer_Boys": {"total": 20, "private": 11, "privatePct": 55.0, "byClass": {"3A": {"total": 0, "private": 0, "pct": 0}, "4A": {"total": 10, "private": 9, "pct": 90.0}, "5A": {"total": 10, "private": 2, "pct": 20.0}}}, "Soccer_Girls": {"total": 18, "private": 16, "privatePct": 88.9, "byClass": {"3A": {"total": 0, "private": 0, "pct": 0}, "4A": {"total": 9, "private": 9, "pct": 100.0}, "5A": {"total": 9, "private": 7, "pct": 77.8}}}, "Softball": {"total": 29, "private": 3, "privatePct": 10.3, "byClass": {"3A": {"total": 10, "private": 0, "pct": 0.0}, "4A": {"total": 7, "private": 0, "pct": 0.0}, "5A": {"total": 12, "private": 3, "pct": 25.0}}}, "Volleyball": {"total": 31, "private": 18, "privatePct": 58.1, "byClass": {"3A": {"total": 9, "private": 3, "pct": 33.3}, "4A": {"total": 12, "private": 8, "pct": 66.7}, "5A": {"total": 10, "private": 7, "pct": 70.0}}}}, "byGender": {"Boys": {"total": 110, "private": 44, "privatePct": 40.0}, "Girls": {"total": 120, "private": 54, "privatePct": 45.0}}, "byClassGender": {"3A": {"Boys": {"total": 27, "private": 5, "privatePct": 18.5}, "Girls": {"total": 33, "private": 3, "privatePct": 9.1}}, "4A": {"Boys": {"total": 41, "private": 22, "privatePct": 53.7}, "Girls": {"total": 43, "private": 25, "privatePct": 58.1}}, "5A": {"Boys": {"total": 42, "private": 17, "privatePct": 40.5}, "Girls": {"total": 44, "private": 26, "privatePct": 59.1}}}, "topSchools": [{"name": "Bishop Miege", "titles": 43, "pctOfAll": 18.7, "cls": 36}, {"name": "St. Thomas Aquinas", "titles": 27, "pctOfAll": 11.7, "cls": 36}, {"name": "Bishop Carroll", "titles": 6, "pctOfAll": 2.6, "cls": 36}, {"name": "St. James Academy", "titles": 6, "pctOfAll": 2.6, "cls": 36}, {"name": "Hayden", "titles": 4, "pctOfAll": 1.7, "cls": 36}, {"name": "Wichita Collegiate", "titles": 4, "pctOfAll": 1.7, "cls": 64}, {"name": "Kapaun Mt. Carmel", "titles": 4, "pctOfAll": 1.7, "cls": 36}, {"name": "Heritage Christian Academy", "titles": 3, "pctOfAll": 1.3, "cls": 64}, {"name": "Wichita-Trinity Academy", "titles": 1, "pctOfAll": 0.4, "cls": 64}], "yearByYear": {"2016": {"total": 25, "private": 11, "privatePct": 44.0}, "2017": {"total": 25, "private": 9, "privatePct": 36.0}, "2018": {"total": 24, "private": 9, "privatePct": 37.5}, "2019": {"total": 21, "private": 8, "privatePct": 38.1}, "2020": {"total": 30, "private": 10, "privatePct": 33.3}, "2021": {"total": 20, "private": 10, "privatePct": 50.0}, "2022": {"total": 21, "private": 11, "privatePct": 52.4}, "2023": {"total": 20, "private": 10, "privatePct": 50.0}, "2024": {"total": 22, "private": 11, "privatePct": 50.0}, "2025": {"total": 22, "private": 9, "privatePct": 40.9}}}, "15yr": {"overall": {"total": 340, "private": 146, "public": 194, "privatePct": 42.9}, "byClass": {"3A": {"total": 90, "private": 11, "public": 79, "privatePct": 12.2, "privPerSchool": 2.2, "pubPerSchool": 1.3, "multiplier": 1.6}, "4A": {"total": 124, "private": 64, "public": 60, "privatePct": 51.6, "privPerSchool": 32.0, "pubPerSchool": 1.8, "multiplier": 18.1}, "5A": {"total": 126, "private": 71, "public": 55, "privatePct": 56.3, "privPerSchool": 17.8, "pubPerSchool": 1.7, "multiplier": 10.3}}, "bySport": {"Baseball": {"total": 44, "private": 16, "privatePct": 36.4, "byClass": {"3A": {"total": 15, "private": 4, "pct": 26.7}, "4A": {"total": 11, "private": 4, "pct": 36.4}, "5A": {"total": 18, "private": 8, "pct": 44.4}}}, "Basketball_Boys": {"total": 52, "private": 13, "privatePct": 25.0, "byClass": {"3A": {"total": 19, "private": 2, "pct": 10.5}, "4A": {"total": 16, "private": 6, "pct": 37.5}, "5A": {"total": 17, "private": 5, "pct": 29.4}}}, "Basketball_Girls": {"total": 59, "private": 23, "privatePct": 39.0, "byClass": {"3A": {"total": 20, "private": 1, "pct": 5.0}, "4A": {"total": 21, "private": 10, "pct": 47.6}, "5A": {"total": 18, "private": 12, "pct": 66.7}}}, "Football": {"total": 37, "private": 16, "privatePct": 43.2, "byClass": {"3A": {"total": 8, "private": 0, "pct": 0.0}, "4A": {"total": 17, "private": 7, "pct": 41.2}, "5A": {"total": 12, "private": 9, "pct": 75.0}}}, "Soccer_Boys": {"total": 28, "private": 16, "privatePct": 57.1, "byClass": {"3A": {"total": 0, "private": 0, "pct": 0}, "4A": {"total": 15, "private": 12, "pct": 80.0}, "5A": {"total": 13, "private": 4, "pct": 30.8}}}, "Soccer_Girls": {"total": 28, "private": 26, "privatePct": 92.9, "byClass": {"3A": {"total": 1, "private": 1, "pct": 100.0}, "4A": {"total": 12, "private": 12, "pct": 100.0}, "5A": {"total": 15, "private": 13, "pct": 86.7}}}, "Softball": {"total": 45, "private": 8, "privatePct": 17.8, "byClass": {"3A": {"total": 15, "private": 0, "pct": 0.0}, "4A": {"total": 12, "private": 0, "pct": 0.0}, "5A": {"total": 18, "private": 8, "pct": 44.4}}}, "Volleyball": {"total": 47, "private": 28, "privatePct": 59.6, "byClass": {"3A": {"total": 12, "private": 3, "pct": 25.0}, "4A": {"total": 20, "private": 13, "pct": 65.0}, "5A": {"total": 15, "private": 12, "pct": 80.0}}}}, "byGender": {"Boys": {"total": 161, "private": 61, "privatePct": 37.9}, "Girls": {"total": 179, "private": 85, "privatePct": 47.5}}, "byClassGender": {"3A": {"Boys": {"total": 42, "private": 6, "privatePct": 14.3}, "Girls": {"total": 48, "private": 5, "privatePct": 10.4}}, "4A": {"Boys": {"total": 59, "private": 29, "privatePct": 49.2}, "Girls": {"total": 65, "private": 35, "privatePct": 53.8}}, "5A": {"Boys": {"total": 60, "private": 26, "privatePct": 43.3}, "Girls": {"total": 66, "private": 45, "privatePct": 68.2}}}, "topSchools": [{"name": "Bishop Miege", "titles": 53, "pctOfAll": 15.6, "cls": 36}, {"name": "St. Thomas Aquinas", "titles": 38, "pctOfAll": 11.2, "cls": 36}, {"name": "Bishop Carroll", "titles": 14, "pctOfAll": 4.1, "cls": 36}, {"name": "St. James Academy", "titles": 13, "pctOfAll": 3.8, "cls": 36}, {"name": "Hayden", "titles": 11, "pctOfAll": 3.2, "cls": 36}, {"name": "Kapaun Mt. Carmel", "titles": 6, "pctOfAll": 1.8, "cls": 36}, {"name": "Wichita Collegiate", "titles": 5, "pctOfAll": 1.5, "cls": 64}, {"name": "Heritage Christian Academy", "titles": 3, "pctOfAll": 0.9, "cls": 64}, {"name": "Wichita-Trinity Academy", "titles": 2, "pctOfAll": 0.6, "cls": 64}, {"name": "Bishop Ward", "titles": 1, "pctOfAll": 0.3, "cls": 64}], "yearByYear": {"2011": {"total": 18, "private": 8, "privatePct": 44.4}, "2012": {"total": 20, "private": 11, "privatePct": 55.0}, "2013": {"total": 20, "private": 9, "privatePct": 45.0}, "2014": {"total": 27, "private": 11, "privatePct": 40.7}, "2015": {"total": 25, "private": 9, "privatePct": 36.0}, "2016": {"total": 25, "private": 11, "privatePct": 44.0}, "2017": {"total": 25, "private": 9, "privatePct": 36.0}, "2018": {"total": 24, "private": 9, "privatePct": 37.5}, "2019": {"total": 21, "private": 8, "privatePct": 38.1}, "2020": {"total": 30, "private": 10, "privatePct": 33.3}, "2021": {"total": 20, "private": 10, "privatePct": 50.0}, "2022": {"total": 21, "private": 11, "privatePct": 52.4}, "2023": {"total": 20, "private": 10, "privatePct": 50.0}, "2024": {"total": 22, "private": 11, "privatePct": 50.0}, "2025": {"total": 22, "private": 9, "privatePct": 40.9}}}, "20yr": {"overall": {"total": 430, "private": 186, "public": 244, "privatePct": 43.3}, "byClass": {"3A": {"total": 122, "private": 22, "public": 100, "privatePct": 18.0, "privPerSchool": 4.4, "pubPerSchool": 1.7, "multiplier": 2.6}, "4A": {"total": 145, "private": 75, "public": 70, "privatePct": 51.7, "privPerSchool": 37.5, "pubPerSchool": 2.1, "multiplier": 18.2}, "5A": {"total": 163, "private": 89, "public": 74, "privatePct": 54.6, "privPerSchool": 22.2, "pubPerSchool": 2.3, "multiplier": 9.6}}, "bySport": {"Baseball": {"total": 59, "private": 22, "privatePct": 37.3, "byClass": {"3A": {"total": 24, "private": 8, "pct": 33.3}, "4A": {"total": 12, "private": 5, "pct": 41.7}, "5A": {"total": 23, "private": 9, "pct": 39.1}}}, "Basketball_Boys": {"total": 64, "private": 18, "privatePct": 28.1, "byClass": {"3A": {"total": 23, "private": 5, "pct": 21.7}, "4A": {"total": 18, "private": 8, "pct": 44.4}, "5A": {"total": 23, "private": 5, "pct": 21.7}}}, "Basketball_Girls": {"total": 72, "private": 26, "privatePct": 36.1, "byClass": {"3A": {"total": 26, "private": 2, "pct": 7.7}, "4A": {"total": 25, "private": 12, "pct": 48.0}, "5A": {"total": 21, "private": 12, "pct": 57.1}}}, "Football": {"total": 48, "private": 19, "privatePct": 39.6, "byClass": {"3A": {"total": 12, "private": 1, "pct": 8.3}, "4A": {"total": 22, "private": 9, "pct": 40.9}, "5A": {"total": 14, "private": 9, "pct": 64.3}}}, "Soccer_Boys": {"total": 36, "private": 23, "privatePct": 63.9, "byClass": {"3A": {"total": 1, "private": 1, "pct": 100.0}, "4A": {"total": 16, "private": 12, "pct": 75.0}, "5A": {"total": 19, "private": 10, "pct": 52.6}}}, "Soccer_Girls": {"total": 33, "private": 31, "privatePct": 93.9, "byClass": {"3A": {"total": 1, "private": 1, "pct": 100.0}, "4A": {"total": 12, "private": 12, "pct": 100.0}, "5A": {"total": 20, "private": 18, "pct": 90.0}}}, "Softball": {"total": 56, "private": 9, "privatePct": 16.1, "byClass": {"3A": {"total": 18, "private": 0, "pct": 0.0}, "4A": {"total": 15, "private": 0, "pct": 0.0}, "5A": {"total": 23, "private": 9, "pct": 39.1}}}, "Volleyball": {"total": 62, "private": 38, "privatePct": 61.3, "byClass": {"3A": {"total": 17, "private": 4, "pct": 23.5}, "4A": {"total": 25, "private": 17, "pct": 68.0}, "5A": {"total": 20, "private": 17, "pct": 85.0}}}}, "byGender": {"Boys": {"total": 207, "private": 82, "privatePct": 39.6}, "Girls": {"total": 223, "private": 104, "privatePct": 46.6}}, "byClassGender": {"3A": {"Boys": {"total": 60, "private": 15, "privatePct": 25.0}, "Girls": {"total": 62, "private": 7, "privatePct": 11.3}}, "4A": {"Boys": {"total": 68, "private": 34, "privatePct": 50.0}, "Girls": {"total": 77, "private": 41, "privatePct": 53.2}}, "5A": {"Boys": {"total": 79, "private": 33, "privatePct": 41.8}, "Girls": {"total": 84, "private": 56, "privatePct": 66.7}}}, "topSchools": [{"name": "Bishop Miege", "titles": 60, "pctOfAll": 14.0, "cls": 36}, {"name": "St. Thomas Aquinas", "titles": 50, "pctOfAll": 11.6, "cls": 36}, {"name": "St. James Academy", "titles": 19, "pctOfAll": 4.4, "cls": 36}, {"name": "Hayden", "titles": 15, "pctOfAll": 3.5, "cls": 36}, {"name": "Bishop Carroll", "titles": 14, "pctOfAll": 3.3, "cls": 36}, {"name": "Wichita Collegiate", "titles": 10, "pctOfAll": 2.3, "cls": 64}, {"name": "Kapaun Mt. Carmel", "titles": 6, "pctOfAll": 1.4, "cls": 36}, {"name": "Bishop Ward", "titles": 5, "pctOfAll": 1.2, "cls": 64}, {"name": "Wichita-Trinity Academy", "titles": 4, "pctOfAll": 0.9, "cls": 64}, {"name": "Heritage Christian Academy", "titles": 3, "pctOfAll": 0.7, "cls": 64}], "yearByYear": {"2006": {"total": 17, "private": 5, "privatePct": 29.4}, "2007": {"total": 15, "private": 7, "privatePct": 46.7}, "2008": {"total": 18, "private": 9, "privatePct": 50.0}, "2009": {"total": 21, "private": 11, "privatePct": 52.4}, "2010": {"total": 19, "private": 8, "privatePct": 42.1}, "2011": {"total": 18, "private": 8, "privatePct": 44.4}, "2012": {"total": 20, "private": 11, "privatePct": 55.0}, "2013": {"total": 20, "private": 9, "privatePct": 45.0}, "2014": {"total": 27, "private": 11, "privatePct": 40.7}, "2015": {"total": 25, "private": 9, "privatePct": 36.0}, "2016": {"total": 25, "private": 11, "privatePct": 44.0}, "2017": {"total": 25, "private": 9, "privatePct": 36.0}, "2018": {"total": 24, "private": 9, "privatePct": 37.5}, "2019": {"total": 21, "private": 8, "privatePct": 38.1}, "2020": {"total": 30, "private": 10, "privatePct": 33.3}, "2021": {"total": 20, "private": 10, "privatePct": 50.0}, "2022": {"total": 21, "private": 11, "privatePct": 52.4}, "2023": {"total": 20, "private": 10, "privatePct": 50.0}, "2024": {"total": 22, "private": 11, "privatePct": 50.0}, "2025": {"total": 22, "private": 9, "privatePct": 40.9}}}, "25yr": {"overall": {"total": 516, "private": 212, "public": 304, "privatePct": 41.1}, "byClass": {"3A": {"total": 151, "private": 28, "public": 123, "privatePct": 18.5, "privPerSchool": 5.6, "pubPerSchool": 2.1, "multiplier": 2.7}, "4A": {"total": 175, "private": 89, "public": 86, "privatePct": 50.9, "privPerSchool": 44.5, "pubPerSchool": 2.5, "multiplier": 17.6}, "5A": {"total": 190, "private": 95, "public": 95, "privatePct": 50.0, "privPerSchool": 23.8, "pubPerSchool": 3.0, "multiplier": 8.0}}, "bySport": {"Baseball": {"total": 74, "private": 28, "privatePct": 37.8, "byClass": {"3A": {"total": 33, "private": 12, "pct": 36.4}, "4A": {"total": 13, "private": 6, "pct": 46.2}, "5A": {"total": 28, "private": 10, "pct": 35.7}}}, "Basketball_Boys": {"total": 78, "private": 19, "privatePct": 24.4, "byClass": {"3A": {"total": 28, "private": 5, "pct": 17.9}, "4A": {"total": 24, "private": 9, "pct": 37.5}, "5A": {"total": 26, "private": 5, "pct": 19.2}}}, "Basketball_Girls": {"total": 86, "private": 31, "privatePct": 36.0, "byClass": {"3A": {"total": 31, "private": 2, "pct": 6.5}, "4A": {"total": 32, "private": 16, "pct": 50.0}, "5A": {"total": 23, "private": 13, "pct": 56.5}}}, "Football": {"total": 58, "private": 20, "privatePct": 34.5, "byClass": {"3A": {"total": 15, "private": 1, "pct": 6.7}, "4A": {"total": 25, "private": 10, "pct": 40.0}, "5A": {"total": 18, "private": 9, "pct": 50.0}}}, "Soccer_Boys": {"total": 43, "private": 26, "privatePct": 60.5, "byClass": {"3A": {"total": 3, "private": 3, "pct": 100.0}, "4A": {"total": 18, "private": 12, "pct": 66.7}, "5A": {"total": 22, "private": 11, "pct": 50.0}}}, "Soccer_Girls": {"total": 36, "private": 32, "privatePct": 88.9, "byClass": {"3A": {"total": 1, "private": 1, "pct": 100.0}, "4A": {"total": 13, "private": 13, "pct": 100.0}, "5A": {"total": 22, "private": 18, "pct": 81.8}}}, "Softball": {"total": 68, "private": 14, "privatePct": 20.6, "byClass": {"3A": {"total": 20, "private": 0, "pct": 0.0}, "4A": {"total": 21, "private": 3, "pct": 14.3}, "5A": {"total": 27, "private": 11, "pct": 40.7}}}, "Volleyball": {"total": 73, "private": 42, "privatePct": 57.5, "byClass": {"3A": {"total": 20, "private": 4, "pct": 20.0}, "4A": {"total": 29, "private": 20, "pct": 69.0}, "5A": {"total": 24, "private": 18, "pct": 75.0}}}}, "byGender": {"Boys": {"total": 253, "private": 93, "privatePct": 36.8}, "Girls": {"total": 263, "private": 119, "privatePct": 45.2}}, "byClassGender": {"3A": {"Boys": {"total": 79, "private": 21, "privatePct": 26.6}, "Girls": {"total": 72, "private": 7, "privatePct": 9.7}}, "4A": {"Boys": {"total": 80, "private": 37, "privatePct": 46.2}, "Girls": {"total": 95, "private": 52, "privatePct": 54.7}}, "5A": {"Boys": {"total": 94, "private": 35, "privatePct": 37.2}, "Girls": {"total": 96, "private": 60, "privatePct": 62.5}}}, "topSchools": [{"name": "Bishop Miege", "titles": 69, "pctOfAll": 13.4, "cls": 36}, {"name": "St. Thomas Aquinas", "titles": 51, "pctOfAll": 9.9, "cls": 36}, {"name": "Hayden", "titles": 20, "pctOfAll": 3.9, "cls": 36}, {"name": "St. James Academy", "titles": 19, "pctOfAll": 3.7, "cls": 36}, {"name": "Bishop Carroll", "titles": 19, "pctOfAll": 3.7, "cls": 36}, {"name": "Wichita Collegiate", "titles": 11, "pctOfAll": 2.1, "cls": 64}, {"name": "Bishop Ward", "titles": 8, "pctOfAll": 1.6, "cls": 64}, {"name": "Kapaun Mt. Carmel", "titles": 6, "pctOfAll": 1.2, "cls": 36}, {"name": "Wichita-Trinity Academy", "titles": 5, "pctOfAll": 1.0, "cls": 64}, {"name": "Heritage Christian Academy", "titles": 3, "pctOfAll": 0.6, "cls": 64}, {"name": "Maranatha Christian Academy", "titles": 1, "pctOfAll": 0.2, "cls": 64}], "yearByYear": {"2001": {"total": 17, "private": 8, "privatePct": 47.1}, "2002": {"total": 16, "private": 4, "privatePct": 25.0}, "2003": {"total": 18, "private": 4, "privatePct": 22.2}, "2004": {"total": 19, "private": 7, "privatePct": 36.8}, "2005": {"total": 16, "private": 3, "privatePct": 18.8}, "2006": {"total": 17, "private": 5, "privatePct": 29.4}, "2007": {"total": 15, "private": 7, "privatePct": 46.7}, "2008": {"total": 18, "private": 9, "privatePct": 50.0}, "2009": {"total": 21, "private": 11, "privatePct": 52.4}, "2010": {"total": 19, "private": 8, "privatePct": 42.1}, "2011": {"total": 18, "private": 8, "privatePct": 44.4}, "2012": {"total": 20, "private": 11, "privatePct": 55.0}, "2013": {"total": 20, "private": 9, "privatePct": 45.0}, "2014": {"total": 27, "private": 11, "privatePct": 40.7}, "2015": {"total": 25, "private": 9, "privatePct": 36.0}, "2016": {"total": 25, "private": 11, "privatePct": 44.0}, "2017": {"total": 25, "private": 9, "privatePct": 36.0}, "2018": {"total": 24, "private": 9, "privatePct": 37.5}, "2019": {"total": 21, "private": 8, "privatePct": 38.1}, "2020": {"total": 30, "private": 10, "privatePct": 33.3}, "2021": {"total": 20, "private": 10, "privatePct": 50.0}, "2022": {"total": 21, "private": 11, "privatePct": 52.4}, "2023": {"total": 20, "private": 10, "privatePct": 50.0}, "2024": {"total": 22, "private": 11, "privatePct": 50.0}, "2025": {"total": 22, "private": 9, "privatePct": 40.9}}}}, "athletic": {"5yr": {"overall": {"total": 253, "private": 100, "public": 153, "privatePct": 39.5}, "byClass": {"3A": {"total": 60, "private": 21, "public": 39, "privatePct": 35.0, "privPerSchool": 4.2, "pubPerSchool": 0.7, "multiplier": 6.4}, "4A": {"total": 93, "private": 28, "public": 65, "privatePct": 30.1, "privPerSchool": 14.0, "pubPerSchool": 1.9, "multiplier": 7.3}, "5A": {"total": 100, "private": 51, "public": 49, "privatePct": 51.0, "privPerSchool": 12.8, "pubPerSchool": 1.5, "multiplier": 8.3}}, "bySport": {"Baseball": {"total": 15, "private": 8, "privatePct": 53.3, "byClass": {"3A": {"total": 3, "private": 3, "pct": 100.0}, "4A": {"total": 7, "private": 2, "pct": 28.6}, "5A": {"total": 5, "private": 3, "pct": 60.0}}}, "Basketball_Boys": {"total": 14, "private": 4, "privatePct": 28.6, "byClass": {"3A": {"total": 5, "private": 0, "pct": 0.0}, "4A": {"total": 5, "private": 2, "pct": 40.0}, "5A": {"total": 4, "private": 2, "pct": 50.0}}}, "Basketball_Girls": {"total": 15, "private": 8, "privatePct": 53.3, "byClass": {"3A": {"total": 5, "private": 0, "pct": 0.0}, "4A": {"total": 5, "private": 4, "pct": 80.0}, "5A": {"total": 5, "private": 4, "pct": 80.0}}}, "Bowling_Boys": {"total": 7, "private": 3, "privatePct": 42.9, "byClass": {"3A": {"total": 1, "private": 1, "pct": 100.0}, "4A": {"total": 1, "private": 1, "pct": 100.0}, "5A": {"total": 5, "private": 1, "pct": 20.0}}}, "Bowling_Girls": {"total": 7, "private": 2, "privatePct": 28.6, "byClass": {"3A": {"total": 0, "private": 0, "pct": 0}, "4A": {"total": 2, "private": 0, "pct": 0.0}, "5A": {"total": 5, "private": 2, "pct": 40.0}}}, "Football": {"total": 12, "private": 5, "privatePct": 41.7, "byClass": {"3A": {"total": 1, "private": 0, "pct": 0.0}, "4A": {"total": 5, "private": 1, "pct": 20.0}, "5A": {"total": 6, "private": 4, "pct": 66.7}}}, "Golf_Boys": {"total": 12, "private": 6, "privatePct": 50.0, "byClass": {"3A": {"total": 3, "private": 1, "pct": 33.3}, "4A": {"total": 5, "private": 1, "pct": 20.0}, "5A": {"total": 4, "private": 4, "pct": 100.0}}}, "Golf_Girls": {"total": 12, "private": 8, "privatePct": 66.7, "byClass": {"3A": {"total": 2, "private": 0, "pct": 0.0}, "4A": {"total": 5, "private": 3, "pct": 60.0}, "5A": {"total": 5, "private": 5, "pct": 100.0}}}, "Soccer_Boys": {"total": 10, "private": 4, "privatePct": 40.0, "byClass": {"3A": {"total": 0, "private": 0, "pct": 0}, "4A": {"total": 5, "private": 4, "pct": 80.0}, "5A": {"total": 5, "private": 0, "pct": 0.0}}}, "Soccer_Girls": {"total": 10, "private": 10, "privatePct": 100.0, "byClass": {"3A": {"total": 0, "private": 0, "pct": 0}, "4A": {"total": 5, "private": 5, "pct": 100.0}, "5A": {"total": 5, "private": 5, "pct": 100.0}}}, "Softball": {"total": 14, "private": 3, "privatePct": 21.4, "byClass": {"3A": {"total": 4, "private": 0, "pct": 0.0}, "4A": {"total": 5, "private": 0, "pct": 0.0}, "5A": {"total": 5, "private": 3, "pct": 60.0}}}, "Swim_Boys": {"total": 5, "private": 0, "privatePct": 0.0, "byClass": {"3A": {"total": 0, "private": 0, "pct": 0}, "4A": {"total": 0, "private": 0, "pct": 0}, "5A": {"total": 5, "private": 0, "pct": 0.0}}}, "Swim_Girls": {"total": 5, "private": 1, "privatePct": 20.0, "byClass": {"3A": {"total": 0, "private": 0, "pct": 0}, "4A": {"total": 0, "private": 0, "pct": 0}, "5A": {"total": 5, "private": 1, "pct": 20.0}}}, "Tennis_Boys": {"total": 14, "private": 5, "privatePct": 35.7, "byClass": {"3A": {"total": 4, "private": 4, "pct": 100.0}, "4A": {"total": 5, "private": 0, "pct": 0.0}, "5A": {"total": 5, "private": 1, "pct": 20.0}}}, "Tennis_Girls": {"total": 15, "private": 7, "privatePct": 46.7, "byClass": {"3A": {"total": 6, "private": 5, "pct": 83.3}, "4A": {"total": 4, "private": 2, "pct": 50.0}, "5A": {"total": 5, "private": 0, "pct": 0.0}}}, "Track_Boys": {"total": 13, "private": 4, "privatePct": 30.8, "byClass": {"3A": {"total": 5, "private": 1, "pct": 20.0}, "4A": {"total": 5, "private": 0, "pct": 0.0}, "5A": {"total": 3, "private": 3, "pct": 100.0}}}, "Track_Girls": {"total": 14, "private": 4, "privatePct": 28.6, "byClass": {"3A": {"total": 5, "private": 0, "pct": 0.0}, "4A": {"total": 5, "private": 0, "pct": 0.0}, "5A": {"total": 4, "private": 4, "pct": 100.0}}}, "Volleyball": {"total": 15, "private": 9, "privatePct": 60.0, "byClass": {"3A": {"total": 5, "private": 3, "pct": 60.0}, "4A": {"total": 5, "private": 3, "pct": 60.0}, "5A": {"total": 5, "private": 3, "pct": 60.0}}}, "Wrestling": {"total": 15, "private": 1, "privatePct": 6.7, "byClass": {"3A": {"total": 1, "private": 0, "pct": 0.0}, "4A": {"total": 9, "private": 0, "pct": 0.0}, "5A": {"total": 5, "private": 1, "pct": 20.0}}}, "XC_Boys": {"total": 15, "private": 4, "privatePct": 26.7, "byClass": {"3A": {"total": 5, "private": 3, "pct": 60.0}, "4A": {"total": 5, "private": 0, "pct": 0.0}, "5A": {"total": 5, "private": 1, "pct": 20.0}}}, "XC_Girls": {"total": 14, "private": 4, "privatePct": 28.6, "byClass": {"3A": {"total": 5, "private": 0, "pct": 0.0}, "4A": {"total": 5, "private": 0, "pct": 0.0}, "5A": {"total": 4, "private": 4, "pct": 100.0}}}}, "byGender": {"Boys": {"total": 132, "private": 44, "privatePct": 33.3}, "Girls": {"total": 121, "private": 56, "privatePct": 46.3}}, "byClassGender": {"3A": {"Boys": {"total": 28, "private": 13, "privatePct": 46.4}, "Girls": {"total": 32, "private": 8, "privatePct": 25.0}}, "4A": {"Boys": {"total": 52, "private": 11, "privatePct": 21.2}, "Girls": {"total": 41, "private": 17, "privatePct": 41.5}}, "5A": {"Boys": {"total": 52, "private": 20, "privatePct": 38.5}, "Girls": {"total": 48, "private": 31, "privatePct": 64.6}}}, "topSchools": [{"name": "Bishop Miege", "titles": 21, "pctOfAll": 8.3, "cls": 36}, {"name": "St. Thomas Aquinas", "titles": 18, "pctOfAll": 7.1, "cls": 36}, {"name": "Kapaun Mt. Carmel", "titles": 16, "pctOfAll": 6.3, "cls": 36}, {"name": "Wichita Collegiate", "titles": 12, "pctOfAll": 4.7, "cls": 64}, {"name": "St. James Academy", "titles": 9, "pctOfAll": 3.6, "cls": 36}, {"name": "Bishop Carroll", "titles": 8, "pctOfAll": 3.2, "cls": 36}, {"name": "Hayden", "titles": 7, "pctOfAll": 2.8, "cls": 36}, {"name": "Wichita-Trinity Academy", "titles": 5, "pctOfAll": 2.0, "cls": 64}, {"name": "Heritage Christian Academy", "titles": 4, "pctOfAll": 1.6, "cls": 64}], "yearByYear": {"2021": {"total": 48, "private": 20, "privatePct": 41.7}, "2022": {"total": 49, "private": 19, "privatePct": 38.8}, "2023": {"total": 49, "private": 20, "privatePct": 40.8}, "2024": {"total": 54, "private": 22, "privatePct": 40.7}, "2025": {"total": 53, "private": 19, "privatePct": 35.8}}}, "10yr": {"overall": {"total": 503, "private": 191, "public": 312, "privatePct": 38.0}, "byClass": {"3A": {"total": 134, "private": 33, "public": 101, "privatePct": 24.6, "privPerSchool": 6.6, "pubPerSchool": 1.7, "multiplier": 3.9}, "4A": {"total": 164, "private": 59, "public": 105, "privatePct": 36.0, "privPerSchool": 29.5, "pubPerSchool": 3.1, "multiplier": 9.6}, "5A": {"total": 205, "private": 99, "public": 106, "privatePct": 48.3, "privPerSchool": 24.8, "pubPerSchool": 3.3, "multiplier": 7.5}}, "bySport": {"Baseball": {"total": 28, "private": 9, "privatePct": 32.1, "byClass": {"3A": {"total": 10, "private": 3, "pct": 30.0}, "4A": {"total": 8, "private": 2, "pct": 25.0}, "5A": {"total": 10, "private": 4, "pct": 40.0}}}, "Basketball_Boys": {"total": 37, "private": 12, "privatePct": 32.4, "byClass": {"3A": {"total": 13, "private": 2, "pct": 15.4}, "4A": {"total": 11, "private": 6, "pct": 54.5}, "5A": {"total": 13, "private": 4, "pct": 30.8}}}, "Basketball_Girls": {"total": 42, "private": 17, "privatePct": 40.5, "byClass": {"3A": {"total": 14, "private": 0, "pct": 0.0}, "4A": {"total": 15, "private": 8, "pct": 53.3}, "5A": {"total": 13, "private": 9, "pct": 69.2}}}, "Bowling_Boys": {"total": 12, "private": 3, "privatePct": 25.0, "byClass": {"3A": {"total": 1, "private": 1, "pct": 100.0}, "4A": {"total": 1, "private": 1, "pct": 100.0}, "5A": {"total": 10, "private": 1, "pct": 10.0}}}, "Bowling_Girls": {"total": 12, "private": 3, "privatePct": 25.0, "byClass": {"3A": {"total": 0, "private": 0, "pct": 0}, "4A": {"total": 3, "private": 0, "pct": 0.0}, "5A": {"total": 9, "private": 3, "pct": 33.3}}}, "Football": {"total": 25, "private": 12, "privatePct": 48.0, "byClass": {"3A": {"total": 4, "private": 0, "pct": 0.0}, "4A": {"total": 12, "private": 5, "pct": 41.7}, "5A": {"total": 9, "private": 7, "pct": 77.8}}}, "Golf_Boys": {"total": 24, "private": 10, "privatePct": 41.7, "byClass": {"3A": {"total": 8, "private": 2, "pct": 25.0}, "4A": {"total": 5, "private": 1, "pct": 20.0}, "5A": {"total": 11, "private": 7, "pct": 63.6}}}, "Golf_Girls": {"total": 24, "private": 16, "privatePct": 66.7, "byClass": {"3A": {"total": 5, "private": 1, "pct": 20.0}, "4A": {"total": 9, "private": 5, "pct": 55.6}, "5A": {"total": 10, "private": 10, "pct": 100.0}}}, "Soccer_Boys": {"total": 20, "private": 11, "privatePct": 55.0, "byClass": {"3A": {"total": 0, "private": 0, "pct": 0}, "4A": {"total": 10, "private": 9, "pct": 90.0}, "5A": {"total": 10, "private": 2, "pct": 20.0}}}, "Soccer_Girls": {"total": 18, "private": 16, "privatePct": 88.9, "byClass": {"3A": {"total": 0, "private": 0, "pct": 0}, "4A": {"total": 9, "private": 9, "pct": 100.0}, "5A": {"total": 9, "private": 7, "pct": 77.8}}}, "Softball": {"total": 29, "private": 3, "privatePct": 10.3, "byClass": {"3A": {"total": 10, "private": 0, "pct": 0.0}, "4A": {"total": 7, "private": 0, "pct": 0.0}, "5A": {"total": 12, "private": 3, "pct": 25.0}}}, "Swim_Boys": {"total": 6, "private": 0, "privatePct": 0.0, "byClass": {"3A": {"total": 0, "private": 0, "pct": 0}, "4A": {"total": 0, "private": 0, "pct": 0}, "5A": {"total": 6, "private": 0, "pct": 0.0}}}, "Swim_Girls": {"total": 9, "private": 4, "privatePct": 44.4, "byClass": {"3A": {"total": 0, "private": 0, "pct": 0}, "4A": {"total": 1, "private": 1, "pct": 100.0}, "5A": {"total": 8, "private": 3, "pct": 37.5}}}, "Tennis_Boys": {"total": 22, "private": 9, "privatePct": 40.9, "byClass": {"3A": {"total": 7, "private": 7, "pct": 100.0}, "4A": {"total": 7, "private": 1, "pct": 14.3}, "5A": {"total": 8, "private": 1, "pct": 12.5}}}, "Tennis_Girls": {"total": 25, "private": 16, "privatePct": 64.0, "byClass": {"3A": {"total": 11, "private": 10, "pct": 90.9}, "4A": {"total": 4, "private": 2, "pct": 50.0}, "5A": {"total": 10, "private": 4, "pct": 40.0}}}, "Track_Boys": {"total": 25, "private": 9, "privatePct": 36.0, "byClass": {"3A": {"total": 8, "private": 1, "pct": 12.5}, "4A": {"total": 10, "private": 1, "pct": 10.0}, "5A": {"total": 7, "private": 7, "pct": 100.0}}}, "Track_Girls": {"total": 26, "private": 5, "privatePct": 19.2, "byClass": {"3A": {"total": 9, "private": 0, "pct": 0.0}, "4A": {"total": 9, "private": 0, "pct": 0.0}, "5A": {"total": 8, "private": 5, "pct": 62.5}}}, "Volleyball": {"total": 31, "private": 18, "privatePct": 58.1, "byClass": {"3A": {"total": 9, "private": 3, "pct": 33.3}, "4A": {"total": 12, "private": 8, "pct": 66.7}, "5A": {"total": 10, "private": 7, "pct": 70.0}}}, "Wrestling": {"total": 29, "private": 1, "privatePct": 3.4, "byClass": {"3A": {"total": 7, "private": 0, "pct": 0.0}, "4A": {"total": 11, "private": 0, "pct": 0.0}, "5A": {"total": 11, "private": 1, "pct": 9.1}}}, "XC_Boys": {"total": 30, "private": 9, "privatePct": 30.0, "byClass": {"3A": {"total": 9, "private": 3, "pct": 33.3}, "4A": {"total": 10, "private": 0, "pct": 0.0}, "5A": {"total": 11, "private": 6, "pct": 54.5}}}, "XC_Girls": {"total": 29, "private": 8, "privatePct": 27.6, "byClass": {"3A": {"total": 9, "private": 0, "pct": 0.0}, "4A": {"total": 10, "private": 0, "pct": 0.0}, "5A": {"total": 10, "private": 8, "pct": 80.0}}}}, "byGender": {"Boys": {"total": 258, "private": 85, "privatePct": 32.9}, "Girls": {"total": 245, "private": 106, "privatePct": 43.3}}, "byClassGender": {"3A": {"Boys": {"total": 67, "private": 19, "privatePct": 28.4}, "Girls": {"total": 67, "private": 14, "privatePct": 20.9}}, "4A": {"Boys": {"total": 85, "private": 26, "privatePct": 30.6}, "Girls": {"total": 79, "private": 33, "privatePct": 41.8}}, "5A": {"Boys": {"total": 106, "private": 40, "privatePct": 37.7}, "Girls": {"total": 99, "private": 59, "privatePct": 59.6}}}, "topSchools": [{"name": "Bishop Miege", "titles": 46, "pctOfAll": 9.1, "cls": 36}, {"name": "St. Thomas Aquinas", "titles": 45, "pctOfAll": 8.9, "cls": 36}, {"name": "Wichita Collegiate", "titles": 22, "pctOfAll": 4.4, "cls": 64}, {"name": "Kapaun Mt. Carmel", "titles": 20, "pctOfAll": 4.0, "cls": 36}, {"name": "St. James Academy", "titles": 18, "pctOfAll": 3.6, "cls": 36}, {"name": "Bishop Carroll", "titles": 16, "pctOfAll": 3.2, "cls": 36}, {"name": "Hayden", "titles": 13, "pctOfAll": 2.6, "cls": 36}, {"name": "Wichita-Trinity Academy", "titles": 7, "pctOfAll": 1.4, "cls": 64}, {"name": "Heritage Christian Academy", "titles": 4, "pctOfAll": 0.8, "cls": 64}], "yearByYear": {"2016": {"total": 53, "private": 20, "privatePct": 37.7}, "2017": {"total": 51, "private": 19, "privatePct": 37.3}, "2018": {"total": 52, "private": 19, "privatePct": 36.5}, "2019": {"total": 49, "private": 19, "privatePct": 38.8}, "2020": {"total": 45, "private": 14, "privatePct": 31.1}, "2021": {"total": 48, "private": 20, "privatePct": 41.7}, "2022": {"total": 49, "private": 19, "privatePct": 38.8}, "2023": {"total": 49, "private": 20, "privatePct": 40.8}, "2024": {"total": 54, "private": 22, "privatePct": 40.7}, "2025": {"total": 53, "private": 19, "privatePct": 35.8}}}, "15yr": {"overall": {"total": 742, "private": 289, "public": 453, "privatePct": 38.9}, "byClass": {"3A": {"total": 201, "private": 50, "public": 151, "privatePct": 24.9, "privPerSchool": 10.0, "pubPerSchool": 2.6, "multiplier": 3.9}, "4A": {"total": 241, "private": 82, "public": 159, "privatePct": 34.0, "privPerSchool": 41.0, "pubPerSchool": 4.7, "multiplier": 8.8}, "5A": {"total": 300, "private": 157, "public": 143, "privatePct": 52.3, "privPerSchool": 39.2, "pubPerSchool": 4.5, "multiplier": 8.8}}, "bySport": {"Baseball": {"total": 44, "private": 16, "privatePct": 36.4, "byClass": {"3A": {"total": 15, "private": 4, "pct": 26.7}, "4A": {"total": 11, "private": 4, "pct": 36.4}, "5A": {"total": 18, "private": 8, "pct": 44.4}}}, "Basketball_Boys": {"total": 52, "private": 13, "privatePct": 25.0, "byClass": {"3A": {"total": 19, "private": 2, "pct": 10.5}, "4A": {"total": 16, "private": 6, "pct": 37.5}, "5A": {"total": 17, "private": 5, "pct": 29.4}}}, "Basketball_Girls": {"total": 59, "private": 23, "privatePct": 39.0, "byClass": {"3A": {"total": 20, "private": 1, "pct": 5.0}, "4A": {"total": 21, "private": 10, "pct": 47.6}, "5A": {"total": 18, "private": 12, "pct": 66.7}}}, "Bowling_Boys": {"total": 17, "private": 3, "privatePct": 17.6, "byClass": {"3A": {"total": 1, "private": 1, "pct": 100.0}, "4A": {"total": 2, "private": 1, "pct": 50.0}, "5A": {"total": 14, "private": 1, "pct": 7.1}}}, "Bowling_Girls": {"total": 17, "private": 3, "privatePct": 17.6, "byClass": {"3A": {"total": 0, "private": 0, "pct": 0}, "4A": {"total": 6, "private": 0, "pct": 0.0}, "5A": {"total": 11, "private": 3, "pct": 27.3}}}, "Football": {"total": 37, "private": 16, "privatePct": 43.2, "byClass": {"3A": {"total": 8, "private": 0, "pct": 0.0}, "4A": {"total": 17, "private": 7, "pct": 41.2}, "5A": {"total": 12, "private": 9, "pct": 75.0}}}, "Golf_Boys": {"total": 39, "private": 21, "privatePct": 53.8, "byClass": {"3A": {"total": 14, "private": 6, "pct": 42.9}, "4A": {"total": 8, "private": 3, "pct": 37.5}, "5A": {"total": 17, "private": 12, "pct": 70.6}}}, "Golf_Girls": {"total": 37, "private": 22, "privatePct": 59.5, "byClass": {"3A": {"total": 8, "private": 1, "pct": 12.5}, "4A": {"total": 13, "private": 6, "pct": 46.2}, "5A": {"total": 16, "private": 15, "pct": 93.8}}}, "Soccer_Boys": {"total": 28, "private": 16, "privatePct": 57.1, "byClass": {"3A": {"total": 0, "private": 0, "pct": 0}, "4A": {"total": 15, "private": 12, "pct": 80.0}, "5A": {"total": 13, "private": 4, "pct": 30.8}}}, "Soccer_Girls": {"total": 28, "private": 26, "privatePct": 92.9, "byClass": {"3A": {"total": 1, "private": 1, "pct": 100.0}, "4A": {"total": 12, "private": 12, "pct": 100.0}, "5A": {"total": 15, "private": 13, "pct": 86.7}}}, "Softball": {"total": 45, "private": 8, "privatePct": 17.8, "byClass": {"3A": {"total": 15, "private": 0, "pct": 0.0}, "4A": {"total": 12, "private": 0, "pct": 0.0}, "5A": {"total": 18, "private": 8, "pct": 44.4}}}, "Swim_Boys": {"total": 7, "private": 1, "privatePct": 14.3, "byClass": {"3A": {"total": 0, "private": 0, "pct": 0}, "4A": {"total": 1, "private": 1, "pct": 100.0}, "5A": {"total": 6, "private": 0, "pct": 0.0}}}, "Swim_Girls": {"total": 12, "private": 4, "privatePct": 33.3, "byClass": {"3A": {"total": 0, "private": 0, "pct": 0}, "4A": {"total": 1, "private": 1, "pct": 100.0}, "5A": {"total": 11, "private": 3, "pct": 27.3}}}, "Tennis_Boys": {"total": 30, "private": 13, "privatePct": 43.3, "byClass": {"3A": {"total": 10, "private": 9, "pct": 90.0}, "4A": {"total": 9, "private": 2, "pct": 22.2}, "5A": {"total": 11, "private": 2, "pct": 18.2}}}, "Tennis_Girls": {"total": 38, "private": 23, "privatePct": 60.5, "byClass": {"3A": {"total": 17, "private": 15, "pct": 88.2}, "4A": {"total": 6, "private": 2, "pct": 33.3}, "5A": {"total": 15, "private": 6, "pct": 40.0}}}, "Track_Boys": {"total": 38, "private": 12, "privatePct": 31.6, "byClass": {"3A": {"total": 11, "private": 3, "pct": 27.3}, "4A": {"total": 15, "private": 1, "pct": 6.7}, "5A": {"total": 12, "private": 8, "pct": 66.7}}}, "Track_Girls": {"total": 39, "private": 10, "privatePct": 25.6, "byClass": {"3A": {"total": 12, "private": 0, "pct": 0.0}, "4A": {"total": 14, "private": 0, "pct": 0.0}, "5A": {"total": 13, "private": 10, "pct": 76.9}}}, "Volleyball": {"total": 47, "private": 28, "privatePct": 59.6, "byClass": {"3A": {"total": 12, "private": 3, "pct": 25.0}, "4A": {"total": 20, "private": 13, "pct": 65.0}, "5A": {"total": 15, "private": 12, "pct": 80.0}}}, "Wrestling": {"total": 44, "private": 2, "privatePct": 4.5, "byClass": {"3A": {"total": 14, "private": 0, "pct": 0.0}, "4A": {"total": 14, "private": 0, "pct": 0.0}, "5A": {"total": 16, "private": 2, "pct": 12.5}}}, "XC_Boys": {"total": 43, "private": 14, "privatePct": 32.6, "byClass": {"3A": {"total": 12, "private": 3, "pct": 25.0}, "4A": {"total": 15, "private": 0, "pct": 0.0}, "5A": {"total": 16, "private": 11, "pct": 68.8}}}, "XC_Girls": {"total": 41, "private": 15, "privatePct": 36.6, "byClass": {"3A": {"total": 12, "private": 1, "pct": 8.3}, "4A": {"total": 13, "private": 1, "pct": 7.7}, "5A": {"total": 16, "private": 13, "pct": 81.2}}}}, "byGender": {"Boys": {"total": 379, "private": 127, "privatePct": 33.5}, "Girls": {"total": 363, "private": 162, "privatePct": 44.6}}, "byClassGender": {"3A": {"Boys": {"total": 104, "private": 28, "privatePct": 26.9}, "Girls": {"total": 97, "private": 22, "privatePct": 22.7}}, "4A": {"Boys": {"total": 123, "private": 37, "privatePct": 30.1}, "Girls": {"total": 118, "private": 45, "privatePct": 38.1}}, "5A": {"Boys": {"total": 152, "private": 62, "privatePct": 40.8}, "Girls": {"total": 148, "private": 95, "privatePct": 64.2}}}, "topSchools": [{"name": "St. Thomas Aquinas", "titles": 68, "pctOfAll": 9.2, "cls": 36}, {"name": "Bishop Miege", "titles": 57, "pctOfAll": 7.7, "cls": 36}, {"name": "Wichita Collegiate", "titles": 35, "pctOfAll": 4.7, "cls": 64}, {"name": "Bishop Carroll", "titles": 31, "pctOfAll": 4.2, "cls": 36}, {"name": "Kapaun Mt. Carmel", "titles": 30, "pctOfAll": 4.0, "cls": 36}, {"name": "St. James Academy", "titles": 28, "pctOfAll": 3.8, "cls": 36}, {"name": "Hayden", "titles": 25, "pctOfAll": 3.4, "cls": 36}, {"name": "Wichita-Trinity Academy", "titles": 10, "pctOfAll": 1.3, "cls": 64}, {"name": "Heritage Christian Academy", "titles": 4, "pctOfAll": 0.5, "cls": 64}, {"name": "Bishop Ward", "titles": 1, "pctOfAll": 0.1, "cls": 64}], "yearByYear": {"2011": {"total": 39, "private": 18, "privatePct": 46.2}, "2012": {"total": 42, "private": 21, "privatePct": 50.0}, "2013": {"total": 47, "private": 18, "privatePct": 38.3}, "2014": {"total": 57, "private": 24, "privatePct": 42.1}, "2015": {"total": 54, "private": 17, "privatePct": 31.5}, "2016": {"total": 53, "private": 20, "privatePct": 37.7}, "2017": {"total": 51, "private": 19, "privatePct": 37.3}, "2018": {"total": 52, "private": 19, "privatePct": 36.5}, "2019": {"total": 49, "private": 19, "privatePct": 38.8}, "2020": {"total": 45, "private": 14, "privatePct": 31.1}, "2021": {"total": 48, "private": 20, "privatePct": 41.7}, "2022": {"total": 49, "private": 19, "privatePct": 38.8}, "2023": {"total": 49, "private": 20, "privatePct": 40.8}, "2024": {"total": 54, "private": 22, "privatePct": 40.7}, "2025": {"total": 53, "private": 19, "privatePct": 35.8}}}, "20yr": {"overall": {"total": 958, "private": 373, "public": 585, "privatePct": 38.9}, "byClass": {"3A": {"total": 267, "private": 72, "public": 195, "privatePct": 27.0, "privPerSchool": 14.4, "pubPerSchool": 3.3, "multiplier": 4.4}, "4A": {"total": 298, "private": 97, "public": 201, "privatePct": 32.6, "privPerSchool": 48.5, "pubPerSchool": 5.9, "multiplier": 8.2}, "5A": {"total": 393, "private": 204, "public": 189, "privatePct": 51.9, "privPerSchool": 51.0, "pubPerSchool": 5.9, "multiplier": 8.6}}, "bySport": {"Baseball": {"total": 59, "private": 22, "privatePct": 37.3, "byClass": {"3A": {"total": 24, "private": 8, "pct": 33.3}, "4A": {"total": 12, "private": 5, "pct": 41.7}, "5A": {"total": 23, "private": 9, "pct": 39.1}}}, "Basketball_Boys": {"total": 64, "private": 18, "privatePct": 28.1, "byClass": {"3A": {"total": 23, "private": 5, "pct": 21.7}, "4A": {"total": 18, "private": 8, "pct": 44.4}, "5A": {"total": 23, "private": 5, "pct": 21.7}}}, "Basketball_Girls": {"total": 72, "private": 26, "privatePct": 36.1, "byClass": {"3A": {"total": 26, "private": 2, "pct": 7.7}, "4A": {"total": 25, "private": 12, "pct": 48.0}, "5A": {"total": 21, "private": 12, "pct": 57.1}}}, "Bowling_Boys": {"total": 21, "private": 5, "privatePct": 23.8, "byClass": {"3A": {"total": 1, "private": 1, "pct": 100.0}, "4A": {"total": 4, "private": 2, "pct": 50.0}, "5A": {"total": 16, "private": 2, "pct": 12.5}}}, "Bowling_Girls": {"total": 21, "private": 4, "privatePct": 19.0, "byClass": {"3A": {"total": 0, "private": 0, "pct": 0}, "4A": {"total": 6, "private": 0, "pct": 0.0}, "5A": {"total": 15, "private": 4, "pct": 26.7}}}, "Football": {"total": 48, "private": 19, "privatePct": 39.6, "byClass": {"3A": {"total": 12, "private": 1, "pct": 8.3}, "4A": {"total": 22, "private": 9, "pct": 40.9}, "5A": {"total": 14, "private": 9, "pct": 64.3}}}, "Golf_Boys": {"total": 53, "private": 31, "privatePct": 58.5, "byClass": {"3A": {"total": 19, "private": 11, "pct": 57.9}, "4A": {"total": 9, "private": 4, "pct": 44.4}, "5A": {"total": 25, "private": 16, "pct": 64.0}}}, "Golf_Girls": {"total": 49, "private": 28, "privatePct": 57.1, "byClass": {"3A": {"total": 11, "private": 1, "pct": 9.1}, "4A": {"total": 16, "private": 8, "pct": 50.0}, "5A": {"total": 22, "private": 19, "pct": 86.4}}}, "Soccer_Boys": {"total": 36, "private": 23, "privatePct": 63.9, "byClass": {"3A": {"total": 1, "private": 1, "pct": 100.0}, "4A": {"total": 16, "private": 12, "pct": 75.0}, "5A": {"total": 19, "private": 10, "pct": 52.6}}}, "Soccer_Girls": {"total": 33, "private": 31, "privatePct": 93.9, "byClass": {"3A": {"total": 1, "private": 1, "pct": 100.0}, "4A": {"total": 12, "private": 12, "pct": 100.0}, "5A": {"total": 20, "private": 18, "pct": 90.0}}}, "Softball": {"total": 56, "private": 9, "privatePct": 16.1, "byClass": {"3A": {"total": 18, "private": 0, "pct": 0.0}, "4A": {"total": 15, "private": 0, "pct": 0.0}, "5A": {"total": 23, "private": 9, "pct": 39.1}}}, "Swim_Boys": {"total": 8, "private": 1, "privatePct": 12.5, "byClass": {"3A": {"total": 0, "private": 0, "pct": 0}, "4A": {"total": 1, "private": 1, "pct": 100.0}, "5A": {"total": 7, "private": 0, "pct": 0.0}}}, "Swim_Girls": {"total": 13, "private": 5, "privatePct": 38.5, "byClass": {"3A": {"total": 0, "private": 0, "pct": 0}, "4A": {"total": 1, "private": 1, "pct": 100.0}, "5A": {"total": 12, "private": 4, "pct": 33.3}}}, "Tennis_Boys": {"total": 44, "private": 17, "privatePct": 38.6, "byClass": {"3A": {"total": 16, "private": 13, "pct": 81.2}, "4A": {"total": 12, "private": 2, "pct": 16.7}, "5A": {"total": 16, "private": 2, "pct": 12.5}}}, "Tennis_Girls": {"total": 49, "private": 29, "privatePct": 59.2, "byClass": {"3A": {"total": 20, "private": 17, "pct": 85.0}, "4A": {"total": 10, "private": 2, "pct": 20.0}, "5A": {"total": 19, "private": 10, "pct": 52.6}}}, "Track_Boys": {"total": 53, "private": 12, "privatePct": 22.6, "byClass": {"3A": {"total": 16, "private": 3, "pct": 18.8}, "4A": {"total": 20, "private": 1, "pct": 5.0}, "5A": {"total": 17, "private": 8, "pct": 47.1}}}, "Track_Girls": {"total": 49, "private": 12, "privatePct": 24.5, "byClass": {"3A": {"total": 13, "private": 0, "pct": 0.0}, "4A": {"total": 19, "private": 0, "pct": 0.0}, "5A": {"total": 17, "private": 12, "pct": 70.6}}}, "Volleyball": {"total": 62, "private": 38, "privatePct": 61.3, "byClass": {"3A": {"total": 17, "private": 4, "pct": 23.5}, "4A": {"total": 25, "private": 17, "pct": 68.0}, "5A": {"total": 20, "private": 17, "pct": 85.0}}}, "Wrestling": {"total": 57, "private": 5, "privatePct": 8.8, "byClass": {"3A": {"total": 18, "private": 0, "pct": 0.0}, "4A": {"total": 18, "private": 0, "pct": 0.0}, "5A": {"total": 21, "private": 5, "pct": 23.8}}}, "XC_Boys": {"total": 56, "private": 18, "privatePct": 32.1, "byClass": {"3A": {"total": 15, "private": 3, "pct": 20.0}, "4A": {"total": 20, "private": 0, "pct": 0.0}, "5A": {"total": 21, "private": 15, "pct": 71.4}}}, "XC_Girls": {"total": 55, "private": 20, "privatePct": 36.4, "byClass": {"3A": {"total": 16, "private": 1, "pct": 6.2}, "4A": {"total": 17, "private": 1, "pct": 5.9}, "5A": {"total": 22, "private": 18, "pct": 81.8}}}}, "byGender": {"Boys": {"total": 499, "private": 171, "privatePct": 34.3}, "Girls": {"total": 459, "private": 202, "privatePct": 44.0}}, "byClassGender": {"3A": {"Boys": {"total": 145, "private": 46, "privatePct": 31.7}, "Girls": {"total": 122, "private": 26, "privatePct": 21.3}}, "4A": {"Boys": {"total": 152, "private": 44, "privatePct": 28.9}, "Girls": {"total": 146, "private": 53, "privatePct": 36.3}}, "5A": {"Boys": {"total": 202, "private": 81, "privatePct": 40.1}, "Girls": {"total": 191, "private": 123, "privatePct": 64.4}}}, "topSchools": [{"name": "St. Thomas Aquinas", "titles": 97, "pctOfAll": 10.1, "cls": 36}, {"name": "Bishop Miege", "titles": 65, "pctOfAll": 6.8, "cls": 36}, {"name": "Wichita Collegiate", "titles": 51, "pctOfAll": 5.3, "cls": 64}, {"name": "Bishop Carroll", "titles": 39, "pctOfAll": 4.1, "cls": 36}, {"name": "St. James Academy", "titles": 35, "pctOfAll": 3.7, "cls": 36}, {"name": "Kapaun Mt. Carmel", "titles": 33, "pctOfAll": 3.4, "cls": 36}, {"name": "Hayden", "titles": 32, "pctOfAll": 3.3, "cls": 36}, {"name": "Wichita-Trinity Academy", "titles": 12, "pctOfAll": 1.3, "cls": 64}, {"name": "Bishop Ward", "titles": 5, "pctOfAll": 0.5, "cls": 64}, {"name": "Heritage Christian Academy", "titles": 4, "pctOfAll": 0.4, "cls": 64}], "yearByYear": {"2006": {"total": 38, "private": 12, "privatePct": 31.6}, "2007": {"total": 40, "private": 14, "privatePct": 35.0}, "2008": {"total": 44, "private": 20, "privatePct": 45.5}, "2009": {"total": 48, "private": 21, "privatePct": 43.8}, "2010": {"total": 46, "private": 17, "privatePct": 37.0}, "2011": {"total": 39, "private": 18, "privatePct": 46.2}, "2012": {"total": 42, "private": 21, "privatePct": 50.0}, "2013": {"total": 47, "private": 18, "privatePct": 38.3}, "2014": {"total": 57, "private": 24, "privatePct": 42.1}, "2015": {"total": 54, "private": 17, "privatePct": 31.5}, "2016": {"total": 53, "private": 20, "privatePct": 37.7}, "2017": {"total": 51, "private": 19, "privatePct": 37.3}, "2018": {"total": 52, "private": 19, "privatePct": 36.5}, "2019": {"total": 49, "private": 19, "privatePct": 38.8}, "2020": {"total": 45, "private": 14, "privatePct": 31.1}, "2021": {"total": 48, "private": 20, "privatePct": 41.7}, "2022": {"total": 49, "private": 19, "privatePct": 38.8}, "2023": {"total": 49, "private": 20, "privatePct": 40.8}, "2024": {"total": 54, "private": 22, "privatePct": 40.7}, "2025": {"total": 53, "private": 19, "privatePct": 35.8}}}, "25yr": {"overall": {"total": 1144, "private": 428, "public": 716, "privatePct": 37.4}, "byClass": {"3A": {"total": 326, "private": 88, "public": 238, "privatePct": 27.0, "privPerSchool": 17.6, "pubPerSchool": 4.0, "multiplier": 4.4}, "4A": {"total": 367, "private": 117, "public": 250, "privatePct": 31.9, "privPerSchool": 58.5, "pubPerSchool": 7.4, "multiplier": 8.0}, "5A": {"total": 451, "private": 223, "public": 228, "privatePct": 49.4, "privPerSchool": 55.8, "pubPerSchool": 7.1, "multiplier": 7.8}}, "bySport": {"Baseball": {"total": 74, "private": 28, "privatePct": 37.8, "byClass": {"3A": {"total": 33, "private": 12, "pct": 36.4}, "4A": {"total": 13, "private": 6, "pct": 46.2}, "5A": {"total": 28, "private": 10, "pct": 35.7}}}, "Basketball_Boys": {"total": 78, "private": 19, "privatePct": 24.4, "byClass": {"3A": {"total": 28, "private": 5, "pct": 17.9}, "4A": {"total": 24, "private": 9, "pct": 37.5}, "5A": {"total": 26, "private": 5, "pct": 19.2}}}, "Basketball_Girls": {"total": 86, "private": 31, "privatePct": 36.0, "byClass": {"3A": {"total": 31, "private": 2, "pct": 6.5}, "4A": {"total": 32, "private": 16, "pct": 50.0}, "5A": {"total": 23, "private": 13, "pct": 56.5}}}, "Bowling_Boys": {"total": 21, "private": 5, "privatePct": 23.8, "byClass": {"3A": {"total": 1, "private": 1, "pct": 100.0}, "4A": {"total": 4, "private": 2, "pct": 50.0}, "5A": {"total": 16, "private": 2, "pct": 12.5}}}, "Bowling_Girls": {"total": 22, "private": 5, "privatePct": 22.7, "byClass": {"3A": {"total": 0, "private": 0, "pct": 0}, "4A": {"total": 6, "private": 0, "pct": 0.0}, "5A": {"total": 16, "private": 5, "pct": 31.2}}}, "Football": {"total": 58, "private": 20, "privatePct": 34.5, "byClass": {"3A": {"total": 15, "private": 1, "pct": 6.7}, "4A": {"total": 25, "private": 10, "pct": 40.0}, "5A": {"total": 18, "private": 9, "pct": 50.0}}}, "Golf_Boys": {"total": 66, "private": 38, "privatePct": 57.6, "byClass": {"3A": {"total": 24, "private": 14, "pct": 58.3}, "4A": {"total": 14, "private": 6, "pct": 42.9}, "5A": {"total": 28, "private": 18, "pct": 64.3}}}, "Golf_Girls": {"total": 55, "private": 29, "privatePct": 52.7, "byClass": {"3A": {"total": 12, "private": 1, "pct": 8.3}, "4A": {"total": 18, "private": 8, "pct": 44.4}, "5A": {"total": 25, "private": 20, "pct": 80.0}}}, "Soccer_Boys": {"total": 43, "private": 26, "privatePct": 60.5, "byClass": {"3A": {"total": 3, "private": 3, "pct": 100.0}, "4A": {"total": 18, "private": 12, "pct": 66.7}, "5A": {"total": 22, "private": 11, "pct": 50.0}}}, "Soccer_Girls": {"total": 36, "private": 32, "privatePct": 88.9, "byClass": {"3A": {"total": 1, "private": 1, "pct": 100.0}, "4A": {"total": 13, "private": 13, "pct": 100.0}, "5A": {"total": 22, "private": 18, "pct": 81.8}}}, "Softball": {"total": 68, "private": 14, "privatePct": 20.6, "byClass": {"3A": {"total": 20, "private": 0, "pct": 0.0}, "4A": {"total": 21, "private": 3, "pct": 14.3}, "5A": {"total": 27, "private": 11, "pct": 40.7}}}, "Swim_Boys": {"total": 8, "private": 1, "privatePct": 12.5, "byClass": {"3A": {"total": 0, "private": 0, "pct": 0}, "4A": {"total": 1, "private": 1, "pct": 100.0}, "5A": {"total": 7, "private": 0, "pct": 0.0}}}, "Swim_Girls": {"total": 13, "private": 5, "privatePct": 38.5, "byClass": {"3A": {"total": 0, "private": 0, "pct": 0}, "4A": {"total": 1, "private": 1, "pct": 100.0}, "5A": {"total": 12, "private": 4, "pct": 33.3}}}, "Tennis_Boys": {"total": 56, "private": 21, "privatePct": 37.5, "byClass": {"3A": {"total": 18, "private": 15, "pct": 83.3}, "4A": {"total": 17, "private": 4, "pct": 23.5}, "5A": {"total": 21, "private": 2, "pct": 9.5}}}, "Tennis_Girls": {"total": 62, "private": 36, "privatePct": 58.1, "byClass": {"3A": {"total": 26, "private": 22, "pct": 84.6}, "4A": {"total": 12, "private": 2, "pct": 16.7}, "5A": {"total": 24, "private": 12, "pct": 50.0}}}, "Track_Boys": {"total": 62, "private": 13, "privatePct": 21.0, "byClass": {"3A": {"total": 19, "private": 3, "pct": 15.8}, "4A": {"total": 25, "private": 1, "pct": 4.0}, "5A": {"total": 18, "private": 9, "pct": 50.0}}}, "Track_Girls": {"total": 59, "private": 13, "privatePct": 22.0, "byClass": {"3A": {"total": 16, "private": 0, "pct": 0.0}, "4A": {"total": 25, "private": 1, "pct": 4.0}, "5A": {"total": 18, "private": 12, "pct": 66.7}}}, "Volleyball": {"total": 73, "private": 42, "privatePct": 57.5, "byClass": {"3A": {"total": 20, "private": 4, "pct": 20.0}, "4A": {"total": 29, "private": 20, "pct": 69.0}, "5A": {"total": 24, "private": 18, "pct": 75.0}}}, "Wrestling": {"total": 69, "private": 7, "privatePct": 10.1, "byClass": {"3A": {"total": 22, "private": 0, "pct": 0.0}, "4A": {"total": 22, "private": 0, "pct": 0.0}, "5A": {"total": 25, "private": 7, "pct": 28.0}}}, "XC_Boys": {"total": 67, "private": 21, "privatePct": 31.3, "byClass": {"3A": {"total": 17, "private": 3, "pct": 17.6}, "4A": {"total": 25, "private": 0, "pct": 0.0}, "5A": {"total": 25, "private": 18, "pct": 72.0}}}, "XC_Girls": {"total": 68, "private": 22, "privatePct": 32.4, "byClass": {"3A": {"total": 20, "private": 1, "pct": 5.0}, "4A": {"total": 22, "private": 2, "pct": 9.1}, "5A": {"total": 26, "private": 19, "pct": 73.1}}}}, "byGender": {"Boys": {"total": 602, "private": 199, "privatePct": 33.1}, "Girls": {"total": 542, "private": 229, "privatePct": 42.3}}, "byClassGender": {"3A": {"Boys": {"total": 180, "private": 57, "privatePct": 31.7}, "Girls": {"total": 146, "private": 31, "privatePct": 21.2}}, "4A": {"Boys": {"total": 188, "private": 51, "privatePct": 27.1}, "Girls": {"total": 179, "private": 66, "privatePct": 36.9}}, "5A": {"Boys": {"total": 234, "private": 91, "privatePct": 38.9}, "Girls": {"total": 217, "private": 132, "privatePct": 60.8}}}, "topSchools": [{"name": "St. Thomas Aquinas", "titles": 99, "pctOfAll": 8.7, "cls": 36}, {"name": "Bishop Miege", "titles": 77, "pctOfAll": 6.7, "cls": 36}, {"name": "Wichita Collegiate", "titles": 62, "pctOfAll": 5.4, "cls": 64}, {"name": "Bishop Carroll", "titles": 51, "pctOfAll": 4.5, "cls": 36}, {"name": "Hayden", "titles": 40, "pctOfAll": 3.5, "cls": 36}, {"name": "Kapaun Mt. Carmel", "titles": 38, "pctOfAll": 3.3, "cls": 36}, {"name": "St. James Academy", "titles": 35, "pctOfAll": 3.1, "cls": 36}, {"name": "Wichita-Trinity Academy", "titles": 13, "pctOfAll": 1.1, "cls": 64}, {"name": "Bishop Ward", "titles": 8, "pctOfAll": 0.7, "cls": 64}, {"name": "Heritage Christian Academy", "titles": 4, "pctOfAll": 0.3, "cls": 64}, {"name": "Maranatha Christian Academy", "titles": 1, "pctOfAll": 0.1, "cls": 64}], "yearByYear": {"2001": {"total": 36, "private": 14, "privatePct": 38.9}, "2002": {"total": 37, "private": 10, "privatePct": 27.0}, "2003": {"total": 36, "private": 8, "privatePct": 22.2}, "2004": {"total": 39, "private": 12, "privatePct": 30.8}, "2005": {"total": 38, "private": 11, "privatePct": 28.9}, "2006": {"total": 38, "private": 12, "privatePct": 31.6}, "2007": {"total": 40, "private": 14, "privatePct": 35.0}, "2008": {"total": 44, "private": 20, "privatePct": 45.5}, "2009": {"total": 48, "private": 21, "privatePct": 43.8}, "2010": {"total": 46, "private": 17, "privatePct": 37.0}, "2011": {"total": 39, "private": 18, "privatePct": 46.2}, "2012": {"total": 42, "private": 21, "privatePct": 50.0}, "2013": {"total": 47, "private": 18, "privatePct": 38.3}, "2014": {"total": 57, "private": 24, "privatePct": 42.1}, "2015": {"total": 54, "private": 17, "privatePct": 31.5}, "2016": {"total": 53, "private": 20, "privatePct": 37.7}, "2017": {"total": 51, "private": 19, "privatePct": 37.3}, "2018": {"total": 52, "private": 19, "privatePct": 36.5}, "2019": {"total": 49, "private": 19, "privatePct": 38.8}, "2020": {"total": 45, "private": 14, "privatePct": 31.1}, "2021": {"total": 48, "private": 20, "privatePct": 41.7}, "2022": {"total": 49, "private": 19, "privatePct": 38.8}, "2023": {"total": 49, "private": 20, "privatePct": 40.8}, "2024": {"total": 54, "private": 22, "privatePct": 40.7}, "2025": {"total": 53, "private": 19, "privatePct": 35.8}}}}, "all": {"5yr": {"overall": {"total": 328, "private": 123, "public": 205, "privatePct": 37.5}, "byClass": {"3A": {"total": 78, "private": 31, "public": 47, "privatePct": 39.7, "privPerSchool": 6.2, "pubPerSchool": 0.8, "multiplier": 7.8}, "4A": {"total": 121, "private": 34, "public": 87, "privatePct": 28.1, "privPerSchool": 17.0, "pubPerSchool": 2.6, "multiplier": 6.6}, "5A": {"total": 129, "private": 58, "public": 71, "privatePct": 45.0, "privPerSchool": 14.5, "pubPerSchool": 2.2, "multiplier": 6.5}}, "bySport": {"Baseball": {"total": 15, "private": 8, "privatePct": 53.3, "byClass": {"3A": {"total": 3, "private": 3, "pct": 100.0}, "4A": {"total": 7, "private": 2, "pct": 28.6}, "5A": {"total": 5, "private": 3, "pct": 60.0}}}, "Basketball_Boys": {"total": 14, "private": 4, "privatePct": 28.6, "byClass": {"3A": {"total": 5, "private": 0, "pct": 0.0}, "4A": {"total": 5, "private": 2, "pct": 40.0}, "5A": {"total": 4, "private": 2, "pct": 50.0}}}, "Basketball_Girls": {"total": 15, "private": 8, "privatePct": 53.3, "byClass": {"3A": {"total": 5, "private": 0, "pct": 0.0}, "4A": {"total": 5, "private": 4, "pct": 80.0}, "5A": {"total": 5, "private": 4, "pct": 80.0}}}, "Bowling_Boys": {"total": 7, "private": 3, "privatePct": 42.9, "byClass": {"3A": {"total": 1, "private": 1, "pct": 100.0}, "4A": {"total": 1, "private": 1, "pct": 100.0}, "5A": {"total": 5, "private": 1, "pct": 20.0}}}, "Bowling_Girls": {"total": 7, "private": 2, "privatePct": 28.6, "byClass": {"3A": {"total": 0, "private": 0, "pct": 0}, "4A": {"total": 2, "private": 0, "pct": 0.0}, "5A": {"total": 5, "private": 2, "pct": 40.0}}}, "Debate": {"total": 27, "private": 8, "privatePct": 29.6, "byClass": {"3A": {"total": 7, "private": 5, "pct": 71.4}, "4A": {"total": 10, "private": 3, "pct": 30.0}, "5A": {"total": 10, "private": 0, "pct": 0.0}}}, "Football": {"total": 12, "private": 5, "privatePct": 41.7, "byClass": {"3A": {"total": 1, "private": 0, "pct": 0.0}, "4A": {"total": 5, "private": 1, "pct": 20.0}, "5A": {"total": 6, "private": 4, "pct": 66.7}}}, "GameDay": {"total": 18, "private": 7, "privatePct": 38.9, "byClass": {"3A": {"total": 2, "private": 0, "pct": 0.0}, "4A": {"total": 7, "private": 3, "pct": 42.9}, "5A": {"total": 9, "private": 4, "pct": 44.4}}}, "Golf_Boys": {"total": 12, "private": 6, "privatePct": 50.0, "byClass": {"3A": {"total": 3, "private": 1, "pct": 33.3}, "4A": {"total": 5, "private": 1, "pct": 20.0}, "5A": {"total": 4, "private": 4, "pct": 100.0}}}, "Golf_Girls": {"total": 12, "private": 8, "privatePct": 66.7, "byClass": {"3A": {"total": 2, "private": 0, "pct": 0.0}, "4A": {"total": 5, "private": 3, "pct": 60.0}, "5A": {"total": 5, "private": 5, "pct": 100.0}}}, "ScholarsBowl": {"total": 15, "private": 8, "privatePct": 53.3, "byClass": {"3A": {"total": 5, "private": 5, "pct": 100.0}, "4A": {"total": 5, "private": 0, "pct": 0.0}, "5A": {"total": 5, "private": 3, "pct": 60.0}}}, "Soccer_Boys": {"total": 10, "private": 4, "privatePct": 40.0, "byClass": {"3A": {"total": 0, "private": 0, "pct": 0}, "4A": {"total": 5, "private": 4, "pct": 80.0}, "5A": {"total": 5, "private": 0, "pct": 0.0}}}, "Soccer_Girls": {"total": 10, "private": 10, "privatePct": 100.0, "byClass": {"3A": {"total": 0, "private": 0, "pct": 0}, "4A": {"total": 5, "private": 5, "pct": 100.0}, "5A": {"total": 5, "private": 5, "pct": 100.0}}}, "Softball": {"total": 14, "private": 3, "privatePct": 21.4, "byClass": {"3A": {"total": 4, "private": 0, "pct": 0.0}, "4A": {"total": 5, "private": 0, "pct": 0.0}, "5A": {"total": 5, "private": 3, "pct": 60.0}}}, "SpeechDrama": {"total": 15, "private": 0, "privatePct": 0.0, "byClass": {"3A": {"total": 4, "private": 0, "pct": 0.0}, "4A": {"total": 6, "private": 0, "pct": 0.0}, "5A": {"total": 5, "private": 0, "pct": 0.0}}}, "Swim_Boys": {"total": 5, "private": 0, "privatePct": 0.0, "byClass": {"3A": {"total": 0, "private": 0, "pct": 0}, "4A": {"total": 0, "private": 0, "pct": 0}, "5A": {"total": 5, "private": 0, "pct": 0.0}}}, "Swim_Girls": {"total": 5, "private": 1, "privatePct": 20.0, "byClass": {"3A": {"total": 0, "private": 0, "pct": 0}, "4A": {"total": 0, "private": 0, "pct": 0}, "5A": {"total": 5, "private": 1, "pct": 20.0}}}, "Tennis_Boys": {"total": 14, "private": 5, "privatePct": 35.7, "byClass": {"3A": {"total": 4, "private": 4, "pct": 100.0}, "4A": {"total": 5, "private": 0, "pct": 0.0}, "5A": {"total": 5, "private": 1, "pct": 20.0}}}, "Tennis_Girls": {"total": 15, "private": 7, "privatePct": 46.7, "byClass": {"3A": {"total": 6, "private": 5, "pct": 83.3}, "4A": {"total": 4, "private": 2, "pct": 50.0}, "5A": {"total": 5, "private": 0, "pct": 0.0}}}, "Track_Boys": {"total": 13, "private": 4, "privatePct": 30.8, "byClass": {"3A": {"total": 5, "private": 1, "pct": 20.0}, "4A": {"total": 5, "private": 0, "pct": 0.0}, "5A": {"total": 3, "private": 3, "pct": 100.0}}}, "Track_Girls": {"total": 14, "private": 4, "privatePct": 28.6, "byClass": {"3A": {"total": 5, "private": 0, "pct": 0.0}, "4A": {"total": 5, "private": 0, "pct": 0.0}, "5A": {"total": 4, "private": 4, "pct": 100.0}}}, "Volleyball": {"total": 15, "private": 9, "privatePct": 60.0, "byClass": {"3A": {"total": 5, "private": 3, "pct": 60.0}, "4A": {"total": 5, "private": 3, "pct": 60.0}, "5A": {"total": 5, "private": 3, "pct": 60.0}}}, "Wrestling": {"total": 15, "private": 1, "privatePct": 6.7, "byClass": {"3A": {"total": 1, "private": 0, "pct": 0.0}, "4A": {"total": 9, "private": 0, "pct": 0.0}, "5A": {"total": 5, "private": 1, "pct": 20.0}}}, "XC_Boys": {"total": 15, "private": 4, "privatePct": 26.7, "byClass": {"3A": {"total": 5, "private": 3, "pct": 60.0}, "4A": {"total": 5, "private": 0, "pct": 0.0}, "5A": {"total": 5, "private": 1, "pct": 20.0}}}, "XC_Girls": {"total": 14, "private": 4, "privatePct": 28.6, "byClass": {"3A": {"total": 5, "private": 0, "pct": 0.0}, "4A": {"total": 5, "private": 0, "pct": 0.0}, "5A": {"total": 4, "private": 4, "pct": 100.0}}}}, "byGender": {"Boys": {"total": 132, "private": 44, "privatePct": 33.3}, "Girls": {"total": 121, "private": 56, "privatePct": 46.3}}, "byClassGender": {"3A": {"Boys": {"total": 28, "private": 13, "privatePct": 46.4}, "Girls": {"total": 32, "private": 8, "privatePct": 25.0}}, "4A": {"Boys": {"total": 52, "private": 11, "privatePct": 21.2}, "Girls": {"total": 41, "private": 17, "privatePct": 41.5}}, "5A": {"Boys": {"total": 52, "private": 20, "privatePct": 38.5}, "Girls": {"total": 48, "private": 31, "privatePct": 64.6}}}, "topSchools": [{"name": "Bishop Miege", "titles": 23, "pctOfAll": 7.0, "cls": 36}, {"name": "Wichita Collegiate", "titles": 22, "pctOfAll": 6.7, "cls": 64}, {"name": "St. Thomas Aquinas", "titles": 22, "pctOfAll": 6.7, "cls": 36}, {"name": "Kapaun Mt. Carmel", "titles": 17, "pctOfAll": 5.2, "cls": 36}, {"name": "Hayden", "titles": 11, "pctOfAll": 3.4, "cls": 36}, {"name": "St. James Academy", "titles": 10, "pctOfAll": 3.0, "cls": 36}, {"name": "Bishop Carroll", "titles": 9, "pctOfAll": 2.7, "cls": 36}, {"name": "Wichita-Trinity Academy", "titles": 5, "pctOfAll": 1.5, "cls": 64}, {"name": "Heritage Christian Academy", "titles": 4, "pctOfAll": 1.2, "cls": 64}], "yearByYear": {"2021": {"total": 62, "private": 24, "privatePct": 38.7}, "2022": {"total": 65, "private": 24, "privatePct": 36.9}, "2023": {"total": 64, "private": 25, "privatePct": 39.1}, "2024": {"total": 69, "private": 26, "privatePct": 37.7}, "2025": {"total": 68, "private": 24, "privatePct": 35.3}}}, "10yr": {"overall": {"total": 636, "private": 229, "public": 407, "privatePct": 36.0}, "byClass": {"3A": {"total": 168, "private": 49, "public": 119, "privatePct": 29.2, "privPerSchool": 9.8, "pubPerSchool": 2.0, "multiplier": 4.9}, "4A": {"total": 208, "private": 69, "public": 139, "privatePct": 33.2, "privPerSchool": 34.5, "pubPerSchool": 4.1, "multiplier": 8.4}, "5A": {"total": 260, "private": 111, "public": 149, "privatePct": 42.7, "privPerSchool": 27.8, "pubPerSchool": 4.7, "multiplier": 6.0}}, "bySport": {"Baseball": {"total": 28, "private": 9, "privatePct": 32.1, "byClass": {"3A": {"total": 10, "private": 3, "pct": 30.0}, "4A": {"total": 8, "private": 2, "pct": 25.0}, "5A": {"total": 10, "private": 4, "pct": 40.0}}}, "Basketball_Boys": {"total": 37, "private": 12, "privatePct": 32.4, "byClass": {"3A": {"total": 13, "private": 2, "pct": 15.4}, "4A": {"total": 11, "private": 6, "pct": 54.5}, "5A": {"total": 13, "private": 4, "pct": 30.8}}}, "Basketball_Girls": {"total": 42, "private": 17, "privatePct": 40.5, "byClass": {"3A": {"total": 14, "private": 0, "pct": 0.0}, "4A": {"total": 15, "private": 8, "pct": 53.3}, "5A": {"total": 13, "private": 9, "pct": 69.2}}}, "Bowling_Boys": {"total": 12, "private": 3, "privatePct": 25.0, "byClass": {"3A": {"total": 1, "private": 1, "pct": 100.0}, "4A": {"total": 1, "private": 1, "pct": 100.0}, "5A": {"total": 10, "private": 1, "pct": 10.0}}}, "Bowling_Girls": {"total": 12, "private": 3, "privatePct": 25.0, "byClass": {"3A": {"total": 0, "private": 0, "pct": 0}, "4A": {"total": 3, "private": 0, "pct": 0.0}, "5A": {"total": 9, "private": 3, "pct": 33.3}}}, "Debate": {"total": 49, "private": 15, "privatePct": 30.6, "byClass": {"3A": {"total": 10, "private": 7, "pct": 70.0}, "4A": {"total": 19, "private": 6, "pct": 31.6}, "5A": {"total": 20, "private": 2, "pct": 10.0}}}, "Football": {"total": 25, "private": 12, "privatePct": 48.0, "byClass": {"3A": {"total": 4, "private": 0, "pct": 0.0}, "4A": {"total": 12, "private": 5, "pct": 41.7}, "5A": {"total": 9, "private": 7, "pct": 77.8}}}, "GameDay": {"total": 30, "private": 7, "privatePct": 23.3, "byClass": {"3A": {"total": 7, "private": 0, "pct": 0.0}, "4A": {"total": 9, "private": 3, "pct": 33.3}, "5A": {"total": 14, "private": 4, "pct": 28.6}}}, "Golf_Boys": {"total": 24, "private": 10, "privatePct": 41.7, "byClass": {"3A": {"total": 8, "private": 2, "pct": 25.0}, "4A": {"total": 5, "private": 1, "pct": 20.0}, "5A": {"total": 11, "private": 7, "pct": 63.6}}}, "Golf_Girls": {"total": 24, "private": 16, "privatePct": 66.7, "byClass": {"3A": {"total": 5, "private": 1, "pct": 20.0}, "4A": {"total": 9, "private": 5, "pct": 55.6}, "5A": {"total": 10, "private": 10, "pct": 100.0}}}, "ScholarsBowl": {"total": 27, "private": 16, "privatePct": 59.3, "byClass": {"3A": {"total": 10, "private": 9, "pct": 90.0}, "4A": {"total": 7, "private": 1, "pct": 14.3}, "5A": {"total": 10, "private": 6, "pct": 60.0}}}, "Soccer_Boys": {"total": 20, "private": 11, "privatePct": 55.0, "byClass": {"3A": {"total": 0, "private": 0, "pct": 0}, "4A": {"total": 10, "private": 9, "pct": 90.0}, "5A": {"total": 10, "private": 2, "pct": 20.0}}}, "Soccer_Girls": {"total": 18, "private": 16, "privatePct": 88.9, "byClass": {"3A": {"total": 0, "private": 0, "pct": 0}, "4A": {"total": 9, "private": 9, "pct": 100.0}, "5A": {"total": 9, "private": 7, "pct": 77.8}}}, "Softball": {"total": 29, "private": 3, "privatePct": 10.3, "byClass": {"3A": {"total": 10, "private": 0, "pct": 0.0}, "4A": {"total": 7, "private": 0, "pct": 0.0}, "5A": {"total": 12, "private": 3, "pct": 25.0}}}, "SpeechDrama": {"total": 27, "private": 0, "privatePct": 0.0, "byClass": {"3A": {"total": 7, "private": 0, "pct": 0.0}, "4A": {"total": 9, "private": 0, "pct": 0.0}, "5A": {"total": 11, "private": 0, "pct": 0.0}}}, "Swim_Boys": {"total": 6, "private": 0, "privatePct": 0.0, "byClass": {"3A": {"total": 0, "private": 0, "pct": 0}, "4A": {"total": 0, "private": 0, "pct": 0}, "5A": {"total": 6, "private": 0, "pct": 0.0}}}, "Swim_Girls": {"total": 9, "private": 4, "privatePct": 44.4, "byClass": {"3A": {"total": 0, "private": 0, "pct": 0}, "4A": {"total": 1, "private": 1, "pct": 100.0}, "5A": {"total": 8, "private": 3, "pct": 37.5}}}, "Tennis_Boys": {"total": 22, "private": 9, "privatePct": 40.9, "byClass": {"3A": {"total": 7, "private": 7, "pct": 100.0}, "4A": {"total": 7, "private": 1, "pct": 14.3}, "5A": {"total": 8, "private": 1, "pct": 12.5}}}, "Tennis_Girls": {"total": 25, "private": 16, "privatePct": 64.0, "byClass": {"3A": {"total": 11, "private": 10, "pct": 90.9}, "4A": {"total": 4, "private": 2, "pct": 50.0}, "5A": {"total": 10, "private": 4, "pct": 40.0}}}, "Track_Boys": {"total": 25, "private": 9, "privatePct": 36.0, "byClass": {"3A": {"total": 8, "private": 1, "pct": 12.5}, "4A": {"total": 10, "private": 1, "pct": 10.0}, "5A": {"total": 7, "private": 7, "pct": 100.0}}}, "Track_Girls": {"total": 26, "private": 5, "privatePct": 19.2, "byClass": {"3A": {"total": 9, "private": 0, "pct": 0.0}, "4A": {"total": 9, "private": 0, "pct": 0.0}, "5A": {"total": 8, "private": 5, "pct": 62.5}}}, "Volleyball": {"total": 31, "private": 18, "privatePct": 58.1, "byClass": {"3A": {"total": 9, "private": 3, "pct": 33.3}, "4A": {"total": 12, "private": 8, "pct": 66.7}, "5A": {"total": 10, "private": 7, "pct": 70.0}}}, "Wrestling": {"total": 29, "private": 1, "privatePct": 3.4, "byClass": {"3A": {"total": 7, "private": 0, "pct": 0.0}, "4A": {"total": 11, "private": 0, "pct": 0.0}, "5A": {"total": 11, "private": 1, "pct": 9.1}}}, "XC_Boys": {"total": 30, "private": 9, "privatePct": 30.0, "byClass": {"3A": {"total": 9, "private": 3, "pct": 33.3}, "4A": {"total": 10, "private": 0, "pct": 0.0}, "5A": {"total": 11, "private": 6, "pct": 54.5}}}, "XC_Girls": {"total": 29, "private": 8, "privatePct": 27.6, "byClass": {"3A": {"total": 9, "private": 0, "pct": 0.0}, "4A": {"total": 10, "private": 0, "pct": 0.0}, "5A": {"total": 10, "private": 8, "pct": 80.0}}}}, "byGender": {"Boys": {"total": 258, "private": 85, "privatePct": 32.9}, "Girls": {"total": 245, "private": 106, "privatePct": 43.3}}, "byClassGender": {"3A": {"Boys": {"total": 67, "private": 19, "privatePct": 28.4}, "Girls": {"total": 67, "private": 14, "privatePct": 20.9}}, "4A": {"Boys": {"total": 85, "private": 26, "privatePct": 30.6}, "Girls": {"total": 79, "private": 33, "privatePct": 41.8}}, "5A": {"Boys": {"total": 106, "private": 40, "privatePct": 37.7}, "Girls": {"total": 99, "private": 59, "privatePct": 59.6}}}, "topSchools": [{"name": "Bishop Miege", "titles": 51, "pctOfAll": 8.0, "cls": 36}, {"name": "St. Thomas Aquinas", "titles": 49, "pctOfAll": 7.7, "cls": 36}, {"name": "Wichita Collegiate", "titles": 38, "pctOfAll": 6.0, "cls": 64}, {"name": "Kapaun Mt. Carmel", "titles": 24, "pctOfAll": 3.8, "cls": 36}, {"name": "St. James Academy", "titles": 21, "pctOfAll": 3.3, "cls": 36}, {"name": "Hayden", "titles": 18, "pctOfAll": 2.8, "cls": 36}, {"name": "Bishop Carroll", "titles": 17, "pctOfAll": 2.7, "cls": 36}, {"name": "Wichita-Trinity Academy", "titles": 7, "pctOfAll": 1.1, "cls": 64}, {"name": "Heritage Christian Academy", "titles": 4, "pctOfAll": 0.6, "cls": 64}], "yearByYear": {"2016": {"total": 61, "private": 21, "privatePct": 34.4}, "2017": {"total": 63, "private": 23, "privatePct": 36.5}, "2018": {"total": 66, "private": 22, "privatePct": 33.3}, "2019": {"total": 63, "private": 23, "privatePct": 36.5}, "2020": {"total": 55, "private": 17, "privatePct": 30.9}, "2021": {"total": 62, "private": 24, "privatePct": 38.7}, "2022": {"total": 65, "private": 24, "privatePct": 36.9}, "2023": {"total": 64, "private": 25, "privatePct": 39.1}, "2024": {"total": 69, "private": 26, "privatePct": 37.7}, "2025": {"total": 68, "private": 24, "privatePct": 35.3}}}, "15yr": {"overall": {"total": 923, "private": 333, "public": 590, "privatePct": 36.1}, "byClass": {"3A": {"total": 246, "private": 69, "public": 177, "privatePct": 28.0, "privPerSchool": 13.8, "pubPerSchool": 3.0, "multiplier": 4.6}, "4A": {"total": 296, "private": 92, "public": 204, "privatePct": 31.1, "privPerSchool": 46.0, "pubPerSchool": 6.0, "multiplier": 7.7}, "5A": {"total": 381, "private": 172, "public": 209, "privatePct": 45.1, "privPerSchool": 43.0, "pubPerSchool": 6.5, "multiplier": 6.6}}, "bySport": {"Baseball": {"total": 44, "private": 16, "privatePct": 36.4, "byClass": {"3A": {"total": 15, "private": 4, "pct": 26.7}, "4A": {"total": 11, "private": 4, "pct": 36.4}, "5A": {"total": 18, "private": 8, "pct": 44.4}}}, "Basketball_Boys": {"total": 52, "private": 13, "privatePct": 25.0, "byClass": {"3A": {"total": 19, "private": 2, "pct": 10.5}, "4A": {"total": 16, "private": 6, "pct": 37.5}, "5A": {"total": 17, "private": 5, "pct": 29.4}}}, "Basketball_Girls": {"total": 59, "private": 23, "privatePct": 39.0, "byClass": {"3A": {"total": 20, "private": 1, "pct": 5.0}, "4A": {"total": 21, "private": 10, "pct": 47.6}, "5A": {"total": 18, "private": 12, "pct": 66.7}}}, "Bowling_Boys": {"total": 17, "private": 3, "privatePct": 17.6, "byClass": {"3A": {"total": 1, "private": 1, "pct": 100.0}, "4A": {"total": 2, "private": 1, "pct": 50.0}, "5A": {"total": 14, "private": 1, "pct": 7.1}}}, "Bowling_Girls": {"total": 17, "private": 3, "privatePct": 17.6, "byClass": {"3A": {"total": 0, "private": 0, "pct": 0}, "4A": {"total": 6, "private": 0, "pct": 0.0}, "5A": {"total": 11, "private": 3, "pct": 27.3}}}, "Debate": {"total": 74, "private": 17, "privatePct": 23.0, "byClass": {"3A": {"total": 16, "private": 8, "pct": 50.0}, "4A": {"total": 27, "private": 6, "pct": 22.2}, "5A": {"total": 31, "private": 3, "pct": 9.7}}}, "Football": {"total": 37, "private": 16, "privatePct": 43.2, "byClass": {"3A": {"total": 8, "private": 0, "pct": 0.0}, "4A": {"total": 17, "private": 7, "pct": 41.2}, "5A": {"total": 12, "private": 9, "pct": 75.0}}}, "GameDay": {"total": 30, "private": 7, "privatePct": 23.3, "byClass": {"3A": {"total": 7, "private": 0, "pct": 0.0}, "4A": {"total": 9, "private": 3, "pct": 33.3}, "5A": {"total": 14, "private": 4, "pct": 28.6}}}, "Golf_Boys": {"total": 39, "private": 21, "privatePct": 53.8, "byClass": {"3A": {"total": 14, "private": 6, "pct": 42.9}, "4A": {"total": 8, "private": 3, "pct": 37.5}, "5A": {"total": 17, "private": 12, "pct": 70.6}}}, "Golf_Girls": {"total": 37, "private": 22, "privatePct": 59.5, "byClass": {"3A": {"total": 8, "private": 1, "pct": 12.5}, "4A": {"total": 13, "private": 6, "pct": 46.2}, "5A": {"total": 16, "private": 15, "pct": 93.8}}}, "ScholarsBowl": {"total": 36, "private": 20, "privatePct": 55.6, "byClass": {"3A": {"total": 12, "private": 11, "pct": 91.7}, "4A": {"total": 8, "private": 1, "pct": 12.5}, "5A": {"total": 16, "private": 8, "pct": 50.0}}}, "Soccer_Boys": {"total": 28, "private": 16, "privatePct": 57.1, "byClass": {"3A": {"total": 0, "private": 0, "pct": 0}, "4A": {"total": 15, "private": 12, "pct": 80.0}, "5A": {"total": 13, "private": 4, "pct": 30.8}}}, "Soccer_Girls": {"total": 28, "private": 26, "privatePct": 92.9, "byClass": {"3A": {"total": 1, "private": 1, "pct": 100.0}, "4A": {"total": 12, "private": 12, "pct": 100.0}, "5A": {"total": 15, "private": 13, "pct": 86.7}}}, "Softball": {"total": 45, "private": 8, "privatePct": 17.8, "byClass": {"3A": {"total": 15, "private": 0, "pct": 0.0}, "4A": {"total": 12, "private": 0, "pct": 0.0}, "5A": {"total": 18, "private": 8, "pct": 44.4}}}, "SpeechDrama": {"total": 41, "private": 0, "privatePct": 0.0, "byClass": {"3A": {"total": 10, "private": 0, "pct": 0.0}, "4A": {"total": 11, "private": 0, "pct": 0.0}, "5A": {"total": 20, "private": 0, "pct": 0.0}}}, "Swim_Boys": {"total": 7, "private": 1, "privatePct": 14.3, "byClass": {"3A": {"total": 0, "private": 0, "pct": 0}, "4A": {"total": 1, "private": 1, "pct": 100.0}, "5A": {"total": 6, "private": 0, "pct": 0.0}}}, "Swim_Girls": {"total": 12, "private": 4, "privatePct": 33.3, "byClass": {"3A": {"total": 0, "private": 0, "pct": 0}, "4A": {"total": 1, "private": 1, "pct": 100.0}, "5A": {"total": 11, "private": 3, "pct": 27.3}}}, "Tennis_Boys": {"total": 30, "private": 13, "privatePct": 43.3, "byClass": {"3A": {"total": 10, "private": 9, "pct": 90.0}, "4A": {"total": 9, "private": 2, "pct": 22.2}, "5A": {"total": 11, "private": 2, "pct": 18.2}}}, "Tennis_Girls": {"total": 38, "private": 23, "privatePct": 60.5, "byClass": {"3A": {"total": 17, "private": 15, "pct": 88.2}, "4A": {"total": 6, "private": 2, "pct": 33.3}, "5A": {"total": 15, "private": 6, "pct": 40.0}}}, "Track_Boys": {"total": 38, "private": 12, "privatePct": 31.6, "byClass": {"3A": {"total": 11, "private": 3, "pct": 27.3}, "4A": {"total": 15, "private": 1, "pct": 6.7}, "5A": {"total": 12, "private": 8, "pct": 66.7}}}, "Track_Girls": {"total": 39, "private": 10, "privatePct": 25.6, "byClass": {"3A": {"total": 12, "private": 0, "pct": 0.0}, "4A": {"total": 14, "private": 0, "pct": 0.0}, "5A": {"total": 13, "private": 10, "pct": 76.9}}}, "Volleyball": {"total": 47, "private": 28, "privatePct": 59.6, "byClass": {"3A": {"total": 12, "private": 3, "pct": 25.0}, "4A": {"total": 20, "private": 13, "pct": 65.0}, "5A": {"total": 15, "private": 12, "pct": 80.0}}}, "Wrestling": {"total": 44, "private": 2, "privatePct": 4.5, "byClass": {"3A": {"total": 14, "private": 0, "pct": 0.0}, "4A": {"total": 14, "private": 0, "pct": 0.0}, "5A": {"total": 16, "private": 2, "pct": 12.5}}}, "XC_Boys": {"total": 43, "private": 14, "privatePct": 32.6, "byClass": {"3A": {"total": 12, "private": 3, "pct": 25.0}, "4A": {"total": 15, "private": 0, "pct": 0.0}, "5A": {"total": 16, "private": 11, "pct": 68.8}}}, "XC_Girls": {"total": 41, "private": 15, "privatePct": 36.6, "byClass": {"3A": {"total": 12, "private": 1, "pct": 8.3}, "4A": {"total": 13, "private": 1, "pct": 7.7}, "5A": {"total": 16, "private": 13, "pct": 81.2}}}}, "byGender": {"Boys": {"total": 379, "private": 127, "privatePct": 33.5}, "Girls": {"total": 363, "private": 162, "privatePct": 44.6}}, "byClassGender": {"3A": {"Boys": {"total": 104, "private": 28, "privatePct": 26.9}, "Girls": {"total": 97, "private": 22, "privatePct": 22.7}}, "4A": {"Boys": {"total": 123, "private": 37, "privatePct": 30.1}, "Girls": {"total": 118, "private": 45, "privatePct": 38.1}}, "5A": {"Boys": {"total": 152, "private": 62, "privatePct": 40.8}, "Girls": {"total": 148, "private": 95, "privatePct": 64.2}}}, "topSchools": [{"name": "St. Thomas Aquinas", "titles": 73, "pctOfAll": 7.9, "cls": 36}, {"name": "Bishop Miege", "titles": 62, "pctOfAll": 6.7, "cls": 36}, {"name": "Wichita Collegiate", "titles": 53, "pctOfAll": 5.7, "cls": 64}, {"name": "Kapaun Mt. Carmel", "titles": 35, "pctOfAll": 3.8, "cls": 36}, {"name": "Bishop Carroll", "titles": 33, "pctOfAll": 3.6, "cls": 36}, {"name": "St. James Academy", "titles": 31, "pctOfAll": 3.4, "cls": 36}, {"name": "Hayden", "titles": 30, "pctOfAll": 3.3, "cls": 36}, {"name": "Wichita-Trinity Academy", "titles": 11, "pctOfAll": 1.2, "cls": 64}, {"name": "Heritage Christian Academy", "titles": 4, "pctOfAll": 0.4, "cls": 64}, {"name": "Bishop Ward", "titles": 1, "pctOfAll": 0.1, "cls": 64}], "yearByYear": {"2011": {"total": 47, "private": 19, "privatePct": 40.4}, "2012": {"total": 51, "private": 21, "privatePct": 41.2}, "2013": {"total": 58, "private": 19, "privatePct": 32.8}, "2014": {"total": 68, "private": 26, "privatePct": 38.2}, "2015": {"total": 63, "private": 19, "privatePct": 30.2}, "2016": {"total": 61, "private": 21, "privatePct": 34.4}, "2017": {"total": 63, "private": 23, "privatePct": 36.5}, "2018": {"total": 66, "private": 22, "privatePct": 33.3}, "2019": {"total": 63, "private": 23, "privatePct": 36.5}, "2020": {"total": 55, "private": 17, "privatePct": 30.9}, "2021": {"total": 62, "private": 24, "privatePct": 38.7}, "2022": {"total": 65, "private": 24, "privatePct": 36.9}, "2023": {"total": 64, "private": 25, "privatePct": 39.1}, "2024": {"total": 69, "private": 26, "privatePct": 37.7}, "2025": {"total": 68, "private": 24, "privatePct": 35.3}}}, "20yr": {"overall": {"total": 1183, "private": 428, "public": 755, "privatePct": 36.2}, "byClass": {"3A": {"total": 316, "private": 92, "public": 224, "privatePct": 29.1, "privPerSchool": 18.4, "pubPerSchool": 3.8, "multiplier": 4.8}, "4A": {"total": 375, "private": 111, "public": 264, "privatePct": 29.6, "privPerSchool": 55.5, "pubPerSchool": 7.8, "multiplier": 7.1}, "5A": {"total": 492, "private": 225, "public": 267, "privatePct": 45.7, "privPerSchool": 56.2, "pubPerSchool": 8.3, "multiplier": 6.7}}, "bySport": {"Baseball": {"total": 59, "private": 22, "privatePct": 37.3, "byClass": {"3A": {"total": 24, "private": 8, "pct": 33.3}, "4A": {"total": 12, "private": 5, "pct": 41.7}, "5A": {"total": 23, "private": 9, "pct": 39.1}}}, "Basketball_Boys": {"total": 64, "private": 18, "privatePct": 28.1, "byClass": {"3A": {"total": 23, "private": 5, "pct": 21.7}, "4A": {"total": 18, "private": 8, "pct": 44.4}, "5A": {"total": 23, "private": 5, "pct": 21.7}}}, "Basketball_Girls": {"total": 72, "private": 26, "privatePct": 36.1, "byClass": {"3A": {"total": 26, "private": 2, "pct": 7.7}, "4A": {"total": 25, "private": 12, "pct": 48.0}, "5A": {"total": 21, "private": 12, "pct": 57.1}}}, "Bowling_Boys": {"total": 21, "private": 5, "privatePct": 23.8, "byClass": {"3A": {"total": 1, "private": 1, "pct": 100.0}, "4A": {"total": 4, "private": 2, "pct": 50.0}, "5A": {"total": 16, "private": 2, "pct": 12.5}}}, "Bowling_Girls": {"total": 21, "private": 4, "privatePct": 19.0, "byClass": {"3A": {"total": 0, "private": 0, "pct": 0}, "4A": {"total": 6, "private": 0, "pct": 0.0}, "5A": {"total": 15, "private": 4, "pct": 26.7}}}, "Debate": {"total": 96, "private": 21, "privatePct": 21.9, "byClass": {"3A": {"total": 18, "private": 8, "pct": 44.4}, "4A": {"total": 39, "private": 8, "pct": 20.5}, "5A": {"total": 39, "private": 5, "pct": 12.8}}}, "Football": {"total": 48, "private": 19, "privatePct": 39.6, "byClass": {"3A": {"total": 12, "private": 1, "pct": 8.3}, "4A": {"total": 22, "private": 9, "pct": 40.9}, "5A": {"total": 14, "private": 9, "pct": 64.3}}}, "GameDay": {"total": 30, "private": 7, "privatePct": 23.3, "byClass": {"3A": {"total": 7, "private": 0, "pct": 0.0}, "4A": {"total": 9, "private": 3, "pct": 33.3}, "5A": {"total": 14, "private": 4, "pct": 28.6}}}, "Golf_Boys": {"total": 53, "private": 31, "privatePct": 58.5, "byClass": {"3A": {"total": 19, "private": 11, "pct": 57.9}, "4A": {"total": 9, "private": 4, "pct": 44.4}, "5A": {"total": 25, "private": 16, "pct": 64.0}}}, "Golf_Girls": {"total": 49, "private": 28, "privatePct": 57.1, "byClass": {"3A": {"total": 11, "private": 1, "pct": 9.1}, "4A": {"total": 16, "private": 8, "pct": 50.0}, "5A": {"total": 22, "private": 19, "pct": 86.4}}}, "ScholarsBowl": {"total": 45, "private": 26, "privatePct": 57.8, "byClass": {"3A": {"total": 13, "private": 12, "pct": 92.3}, "4A": {"total": 11, "private": 3, "pct": 27.3}, "5A": {"total": 21, "private": 11, "pct": 52.4}}}, "Soccer_Boys": {"total": 36, "private": 23, "privatePct": 63.9, "byClass": {"3A": {"total": 1, "private": 1, "pct": 100.0}, "4A": {"total": 16, "private": 12, "pct": 75.0}, "5A": {"total": 19, "private": 10, "pct": 52.6}}}, "Soccer_Girls": {"total": 33, "private": 31, "privatePct": 93.9, "byClass": {"3A": {"total": 1, "private": 1, "pct": 100.0}, "4A": {"total": 12, "private": 12, "pct": 100.0}, "5A": {"total": 20, "private": 18, "pct": 90.0}}}, "Softball": {"total": 56, "private": 9, "privatePct": 16.1, "byClass": {"3A": {"total": 18, "private": 0, "pct": 0.0}, "4A": {"total": 15, "private": 0, "pct": 0.0}, "5A": {"total": 23, "private": 9, "pct": 39.1}}}, "SpeechDrama": {"total": 54, "private": 1, "privatePct": 1.9, "byClass": {"3A": {"total": 11, "private": 0, "pct": 0.0}, "4A": {"total": 18, "private": 0, "pct": 0.0}, "5A": {"total": 25, "private": 1, "pct": 4.0}}}, "Swim_Boys": {"total": 8, "private": 1, "privatePct": 12.5, "byClass": {"3A": {"total": 0, "private": 0, "pct": 0}, "4A": {"total": 1, "private": 1, "pct": 100.0}, "5A": {"total": 7, "private": 0, "pct": 0.0}}}, "Swim_Girls": {"total": 13, "private": 5, "privatePct": 38.5, "byClass": {"3A": {"total": 0, "private": 0, "pct": 0}, "4A": {"total": 1, "private": 1, "pct": 100.0}, "5A": {"total": 12, "private": 4, "pct": 33.3}}}, "Tennis_Boys": {"total": 44, "private": 17, "privatePct": 38.6, "byClass": {"3A": {"total": 16, "private": 13, "pct": 81.2}, "4A": {"total": 12, "private": 2, "pct": 16.7}, "5A": {"total": 16, "private": 2, "pct": 12.5}}}, "Tennis_Girls": {"total": 49, "private": 29, "privatePct": 59.2, "byClass": {"3A": {"total": 20, "private": 17, "pct": 85.0}, "4A": {"total": 10, "private": 2, "pct": 20.0}, "5A": {"total": 19, "private": 10, "pct": 52.6}}}, "Track_Boys": {"total": 53, "private": 12, "privatePct": 22.6, "byClass": {"3A": {"total": 16, "private": 3, "pct": 18.8}, "4A": {"total": 20, "private": 1, "pct": 5.0}, "5A": {"total": 17, "private": 8, "pct": 47.1}}}, "Track_Girls": {"total": 49, "private": 12, "privatePct": 24.5, "byClass": {"3A": {"total": 13, "private": 0, "pct": 0.0}, "4A": {"total": 19, "private": 0, "pct": 0.0}, "5A": {"total": 17, "private": 12, "pct": 70.6}}}, "Volleyball": {"total": 62, "private": 38, "privatePct": 61.3, "byClass": {"3A": {"total": 17, "private": 4, "pct": 23.5}, "4A": {"total": 25, "private": 17, "pct": 68.0}, "5A": {"total": 20, "private": 17, "pct": 85.0}}}, "Wrestling": {"total": 57, "private": 5, "privatePct": 8.8, "byClass": {"3A": {"total": 18, "private": 0, "pct": 0.0}, "4A": {"total": 18, "private": 0, "pct": 0.0}, "5A": {"total": 21, "private": 5, "pct": 23.8}}}, "XC_Boys": {"total": 56, "private": 18, "privatePct": 32.1, "byClass": {"3A": {"total": 15, "private": 3, "pct": 20.0}, "4A": {"total": 20, "private": 0, "pct": 0.0}, "5A": {"total": 21, "private": 15, "pct": 71.4}}}, "XC_Girls": {"total": 55, "private": 20, "privatePct": 36.4, "byClass": {"3A": {"total": 16, "private": 1, "pct": 6.2}, "4A": {"total": 17, "private": 1, "pct": 5.9}, "5A": {"total": 22, "private": 18, "pct": 81.8}}}}, "byGender": {"Boys": {"total": 499, "private": 171, "privatePct": 34.3}, "Girls": {"total": 459, "private": 202, "privatePct": 44.0}}, "byClassGender": {"3A": {"Boys": {"total": 145, "private": 46, "privatePct": 31.7}, "Girls": {"total": 122, "private": 26, "privatePct": 21.3}}, "4A": {"Boys": {"total": 152, "private": 44, "privatePct": 28.9}, "Girls": {"total": 146, "private": 53, "privatePct": 36.3}}, "5A": {"Boys": {"total": 202, "private": 81, "privatePct": 40.1}, "Girls": {"total": 191, "private": 123, "privatePct": 64.4}}}, "topSchools": [{"name": "St. Thomas Aquinas", "titles": 105, "pctOfAll": 8.9, "cls": 36}, {"name": "Bishop Miege", "titles": 72, "pctOfAll": 6.1, "cls": 36}, {"name": "Wichita Collegiate", "titles": 70, "pctOfAll": 5.9, "cls": 64}, {"name": "Bishop Carroll", "titles": 44, "pctOfAll": 3.7, "cls": 36}, {"name": "Hayden", "titles": 39, "pctOfAll": 3.3, "cls": 36}, {"name": "Kapaun Mt. Carmel", "titles": 38, "pctOfAll": 3.2, "cls": 36}, {"name": "St. James Academy", "titles": 38, "pctOfAll": 3.2, "cls": 36}, {"name": "Wichita-Trinity Academy", "titles": 13, "pctOfAll": 1.1, "cls": 64}, {"name": "Bishop Ward", "titles": 5, "pctOfAll": 0.4, "cls": 64}, {"name": "Heritage Christian Academy", "titles": 4, "pctOfAll": 0.3, "cls": 64}], "yearByYear": {"2006": {"total": 48, "private": 17, "privatePct": 35.4}, "2007": {"total": 50, "private": 15, "privatePct": 30.0}, "2008": {"total": 53, "private": 21, "privatePct": 39.6}, "2009": {"total": 55, "private": 22, "privatePct": 40.0}, "2010": {"total": 54, "private": 20, "privatePct": 37.0}, "2011": {"total": 47, "private": 19, "privatePct": 40.4}, "2012": {"total": 51, "private": 21, "privatePct": 41.2}, "2013": {"total": 58, "private": 19, "privatePct": 32.8}, "2014": {"total": 68, "private": 26, "privatePct": 38.2}, "2015": {"total": 63, "private": 19, "privatePct": 30.2}, "2016": {"total": 61, "private": 21, "privatePct": 34.4}, "2017": {"total": 63, "private": 23, "privatePct": 36.5}, "2018": {"total": 66, "private": 22, "privatePct": 33.3}, "2019": {"total": 63, "private": 23, "privatePct": 36.5}, "2020": {"total": 55, "private": 17, "privatePct": 30.9}, "2021": {"total": 62, "private": 24, "privatePct": 38.7}, "2022": {"total": 65, "private": 24, "privatePct": 36.9}, "2023": {"total": 64, "private": 25, "privatePct": 39.1}, "2024": {"total": 69, "private": 26, "privatePct": 37.7}, "2025": {"total": 68, "private": 24, "privatePct": 35.3}}}, "25yr": {"overall": {"total": 1412, "private": 490, "public": 922, "privatePct": 34.7}, "byClass": {"3A": {"total": 385, "private": 110, "public": 275, "privatePct": 28.6, "privPerSchool": 22.0, "pubPerSchool": 4.7, "multiplier": 4.7}, "4A": {"total": 468, "private": 134, "public": 334, "privatePct": 28.6, "privPerSchool": 67.0, "pubPerSchool": 9.8, "multiplier": 6.8}, "5A": {"total": 559, "private": 246, "public": 313, "privatePct": 44.0, "privPerSchool": 61.5, "pubPerSchool": 9.8, "multiplier": 6.3}}, "bySport": {"Baseball": {"total": 74, "private": 28, "privatePct": 37.8, "byClass": {"3A": {"total": 33, "private": 12, "pct": 36.4}, "4A": {"total": 13, "private": 6, "pct": 46.2}, "5A": {"total": 28, "private": 10, "pct": 35.7}}}, "Basketball_Boys": {"total": 78, "private": 19, "privatePct": 24.4, "byClass": {"3A": {"total": 28, "private": 5, "pct": 17.9}, "4A": {"total": 24, "private": 9, "pct": 37.5}, "5A": {"total": 26, "private": 5, "pct": 19.2}}}, "Basketball_Girls": {"total": 86, "private": 31, "privatePct": 36.0, "byClass": {"3A": {"total": 31, "private": 2, "pct": 6.5}, "4A": {"total": 32, "private": 16, "pct": 50.0}, "5A": {"total": 23, "private": 13, "pct": 56.5}}}, "Bowling_Boys": {"total": 21, "private": 5, "privatePct": 23.8, "byClass": {"3A": {"total": 1, "private": 1, "pct": 100.0}, "4A": {"total": 4, "private": 2, "pct": 50.0}, "5A": {"total": 16, "private": 2, "pct": 12.5}}}, "Bowling_Girls": {"total": 22, "private": 5, "privatePct": 22.7, "byClass": {"3A": {"total": 0, "private": 0, "pct": 0}, "4A": {"total": 6, "private": 0, "pct": 0.0}, "5A": {"total": 16, "private": 5, "pct": 31.2}}}, "Debate": {"total": 114, "private": 22, "privatePct": 19.3, "byClass": {"3A": {"total": 20, "private": 8, "pct": 40.0}, "4A": {"total": 51, "private": 9, "pct": 17.6}, "5A": {"total": 43, "private": 5, "pct": 11.6}}}, "Football": {"total": 58, "private": 20, "privatePct": 34.5, "byClass": {"3A": {"total": 15, "private": 1, "pct": 6.7}, "4A": {"total": 25, "private": 10, "pct": 40.0}, "5A": {"total": 18, "private": 9, "pct": 50.0}}}, "GameDay": {"total": 30, "private": 7, "privatePct": 23.3, "byClass": {"3A": {"total": 7, "private": 0, "pct": 0.0}, "4A": {"total": 9, "private": 3, "pct": 33.3}, "5A": {"total": 14, "private": 4, "pct": 28.6}}}, "Golf_Boys": {"total": 66, "private": 38, "privatePct": 57.6, "byClass": {"3A": {"total": 24, "private": 14, "pct": 58.3}, "4A": {"total": 14, "private": 6, "pct": 42.9}, "5A": {"total": 28, "private": 18, "pct": 64.3}}}, "Golf_Girls": {"total": 55, "private": 29, "privatePct": 52.7, "byClass": {"3A": {"total": 12, "private": 1, "pct": 8.3}, "4A": {"total": 18, "private": 8, "pct": 44.4}, "5A": {"total": 25, "private": 20, "pct": 80.0}}}, "ScholarsBowl": {"total": 58, "private": 32, "privatePct": 55.2, "byClass": {"3A": {"total": 17, "private": 14, "pct": 82.4}, "4A": {"total": 15, "private": 5, "pct": 33.3}, "5A": {"total": 26, "private": 13, "pct": 50.0}}}, "Soccer_Boys": {"total": 43, "private": 26, "privatePct": 60.5, "byClass": {"3A": {"total": 3, "private": 3, "pct": 100.0}, "4A": {"total": 18, "private": 12, "pct": 66.7}, "5A": {"total": 22, "private": 11, "pct": 50.0}}}, "Soccer_Girls": {"total": 36, "private": 32, "privatePct": 88.9, "byClass": {"3A": {"total": 1, "private": 1, "pct": 100.0}, "4A": {"total": 13, "private": 13, "pct": 100.0}, "5A": {"total": 22, "private": 18, "pct": 81.8}}}, "Softball": {"total": 68, "private": 14, "privatePct": 20.6, "byClass": {"3A": {"total": 20, "private": 0, "pct": 0.0}, "4A": {"total": 21, "private": 3, "pct": 14.3}, "5A": {"total": 27, "private": 11, "pct": 40.7}}}, "SpeechDrama": {"total": 66, "private": 1, "privatePct": 1.5, "byClass": {"3A": {"total": 15, "private": 0, "pct": 0.0}, "4A": {"total": 26, "private": 0, "pct": 0.0}, "5A": {"total": 25, "private": 1, "pct": 4.0}}}, "Swim_Boys": {"total": 8, "private": 1, "privatePct": 12.5, "byClass": {"3A": {"total": 0, "private": 0, "pct": 0}, "4A": {"total": 1, "private": 1, "pct": 100.0}, "5A": {"total": 7, "private": 0, "pct": 0.0}}}, "Swim_Girls": {"total": 13, "private": 5, "privatePct": 38.5, "byClass": {"3A": {"total": 0, "private": 0, "pct": 0}, "4A": {"total": 1, "private": 1, "pct": 100.0}, "5A": {"total": 12, "private": 4, "pct": 33.3}}}, "Tennis_Boys": {"total": 56, "private": 21, "privatePct": 37.5, "byClass": {"3A": {"total": 18, "private": 15, "pct": 83.3}, "4A": {"total": 17, "private": 4, "pct": 23.5}, "5A": {"total": 21, "private": 2, "pct": 9.5}}}, "Tennis_Girls": {"total": 62, "private": 36, "privatePct": 58.1, "byClass": {"3A": {"total": 26, "private": 22, "pct": 84.6}, "4A": {"total": 12, "private": 2, "pct": 16.7}, "5A": {"total": 24, "private": 12, "pct": 50.0}}}, "Track_Boys": {"total": 62, "private": 13, "privatePct": 21.0, "byClass": {"3A": {"total": 19, "private": 3, "pct": 15.8}, "4A": {"total": 25, "private": 1, "pct": 4.0}, "5A": {"total": 18, "private": 9, "pct": 50.0}}}, "Track_Girls": {"total": 59, "private": 13, "privatePct": 22.0, "byClass": {"3A": {"total": 16, "private": 0, "pct": 0.0}, "4A": {"total": 25, "private": 1, "pct": 4.0}, "5A": {"total": 18, "private": 12, "pct": 66.7}}}, "Volleyball": {"total": 73, "private": 42, "privatePct": 57.5, "byClass": {"3A": {"total": 20, "private": 4, "pct": 20.0}, "4A": {"total": 29, "private": 20, "pct": 69.0}, "5A": {"total": 24, "private": 18, "pct": 75.0}}}, "Wrestling": {"total": 69, "private": 7, "privatePct": 10.1, "byClass": {"3A": {"total": 22, "private": 0, "pct": 0.0}, "4A": {"total": 22, "private": 0, "pct": 0.0}, "5A": {"total": 25, "private": 7, "pct": 28.0}}}, "XC_Boys": {"total": 67, "private": 21, "privatePct": 31.3, "byClass": {"3A": {"total": 17, "private": 3, "pct": 17.6}, "4A": {"total": 25, "private": 0, "pct": 0.0}, "5A": {"total": 25, "private": 18, "pct": 72.0}}}, "XC_Girls": {"total": 68, "private": 22, "privatePct": 32.4, "byClass": {"3A": {"total": 20, "private": 1, "pct": 5.0}, "4A": {"total": 22, "private": 2, "pct": 9.1}, "5A": {"total": 26, "private": 19, "pct": 73.1}}}}, "byGender": {"Boys": {"total": 602, "private": 199, "privatePct": 33.1}, "Girls": {"total": 542, "private": 229, "privatePct": 42.3}}, "byClassGender": {"3A": {"Boys": {"total": 180, "private": 57, "privatePct": 31.7}, "Girls": {"total": 146, "private": 31, "privatePct": 21.2}}, "4A": {"Boys": {"total": 188, "private": 51, "privatePct": 27.1}, "Girls": {"total": 179, "private": 66, "privatePct": 36.9}}, "5A": {"Boys": {"total": 234, "private": 91, "privatePct": 38.9}, "Girls": {"total": 217, "private": 132, "privatePct": 60.8}}}, "topSchools": [{"name": "St. Thomas Aquinas", "titles": 107, "pctOfAll": 7.6, "cls": 36}, {"name": "Bishop Miege", "titles": 85, "pctOfAll": 6.0, "cls": 36}, {"name": "Wichita Collegiate", "titles": 81, "pctOfAll": 5.7, "cls": 64}, {"name": "Bishop Carroll", "titles": 56, "pctOfAll": 4.0, "cls": 36}, {"name": "Hayden", "titles": 49, "pctOfAll": 3.5, "cls": 36}, {"name": "Kapaun Mt. Carmel", "titles": 45, "pctOfAll": 3.2, "cls": 36}, {"name": "St. James Academy", "titles": 38, "pctOfAll": 2.7, "cls": 36}, {"name": "Wichita-Trinity Academy", "titles": 14, "pctOfAll": 1.0, "cls": 64}, {"name": "Bishop Ward", "titles": 8, "pctOfAll": 0.6, "cls": 64}, {"name": "Heritage Christian Academy", "titles": 4, "pctOfAll": 0.3, "cls": 64}, {"name": "Maranatha Christian Academy", "titles": 3, "pctOfAll": 0.2, "cls": 64}], "yearByYear": {"2001": {"total": 46, "private": 15, "privatePct": 32.6}, "2002": {"total": 45, "private": 11, "privatePct": 24.4}, "2003": {"total": 45, "private": 9, "privatePct": 20.0}, "2004": {"total": 49, "private": 14, "privatePct": 28.6}, "2005": {"total": 44, "private": 13, "privatePct": 29.5}, "2006": {"total": 48, "private": 17, "privatePct": 35.4}, "2007": {"total": 50, "private": 15, "privatePct": 30.0}, "2008": {"total": 53, "private": 21, "privatePct": 39.6}, "2009": {"total": 55, "private": 22, "privatePct": 40.0}, "2010": {"total": 54, "private": 20, "privatePct": 37.0}, "2011": {"total": 47, "private": 19, "privatePct": 40.4}, "2012": {"total": 51, "private": 21, "privatePct": 41.2}, "2013": {"total": 58, "private": 19, "privatePct": 32.8}, "2014": {"total": 68, "private": 26, "privatePct": 38.2}, "2015": {"total": 63, "private": 19, "privatePct": 30.2}, "2016": {"total": 61, "private": 21, "privatePct": 34.4}, "2017": {"total": 63, "private": 23, "privatePct": 36.5}, "2018": {"total": 66, "private": 22, "privatePct": 33.3}, "2019": {"total": 63, "private": 23, "privatePct": 36.5}, "2020": {"total": 55, "private": 17, "privatePct": 30.9}, "2021": {"total": 62, "private": 24, "privatePct": 38.7}, "2022": {"total": 65, "private": 24, "privatePct": 36.9}, "2023": {"total": 64, "private": 25, "privatePct": 39.1}, "2024": {"total": 69, "private": 26, "privatePct": 37.7}, "2025": {"total": 68, "private": 24, "privatePct": 35.3}}}}}, "dynasties": [{"school": "Goddard", "sport": "Wrestling", "origClass": "5A", "currentClass": "5A", "startYear": 2015, "endYear": 2024, "count": 10, "isPrivate": false}, {"school": "Bishop Miege", "sport": "Soccer_Boys", "origClass": "4-1A", "currentClass": "4A", "startYear": 2016, "endYear": 2024, "count": 9, "isPrivate": true}, {"school": "Bishop Miege", "sport": "Soccer_Girls", "origClass": "4-1A", "currentClass": "4A", "startYear": 2016, "endYear": 2024, "count": 8, "isPrivate": true}, {"school": "St. Thomas Aquinas", "sport": "XC_Boys", "origClass": "5A", "currentClass": "5A", "startYear": 2014, "endYear": 2021, "count": 8, "isPrivate": true}, {"school": "Wichita Collegiate", "sport": "ScholarsBowl", "origClass": "3A", "currentClass": "3A", "startYear": 2019, "endYear": 2025, "count": 7, "isPrivate": true}, {"school": "Bishop Ward", "sport": "Baseball", "origClass": "4A", "currentClass": "3A", "startYear": 2003, "endYear": 2008, "count": 6, "isPrivate": true}, {"school": "Wichita Collegiate", "sport": "Golf_Boys", "origClass": "3A", "currentClass": "3A", "startYear": 2006, "endYear": 2011, "count": 6, "isPrivate": true}, {"school": "Kapaun Mt. Carmel", "sport": "Golf_Girls", "origClass": "5A", "currentClass": "5A", "startYear": 2020, "endYear": 2025, "count": 6, "isPrivate": true}, {"school": "St. Thomas Aquinas", "sport": "Soccer_Boys", "origClass": "5A", "currentClass": "5A", "startYear": 2005, "endYear": 2011, "count": 6, "isPrivate": true}, {"school": "St. Thomas Aquinas", "sport": "Soccer_Girls", "origClass": "5A", "currentClass": "5A", "startYear": 2011, "endYear": 2016, "count": 6, "isPrivate": true}, {"school": "Wichita Collegiate", "sport": "Tennis_Boys", "origClass": "3-1A", "currentClass": "3A", "startYear": 2001, "endYear": 2014, "count": 6, "isPrivate": true}, {"school": "Salina-Central", "sport": "Tennis_Boys", "origClass": "5A", "currentClass": "5A", "startYear": 2004, "endYear": 2009, "count": 6, "isPrivate": false}, {"school": "Wichita Collegiate", "sport": "Tennis_Girls", "origClass": "4A", "currentClass": "3A", "startYear": 2015, "endYear": 2020, "count": 6, "isPrivate": true}, {"school": "Andale", "sport": "Track_Girls", "origClass": "4A", "currentClass": "4A", "startYear": 2017, "endYear": 2023, "count": 6, "isPrivate": false}, {"school": "Baldwin", "sport": "XC_Boys", "origClass": "4A", "currentClass": "4A", "startYear": 2000, "endYear": 2005, "count": 6, "isPrivate": false}, {"school": "Bishop Miege", "sport": "Basketball_Girls", "origClass": "4A", "currentClass": "4A", "startYear": 2020, "endYear": 2024, "count": 5, "isPrivate": true}, {"school": "St. Thomas Aquinas", "sport": "Golf_Girls", "origClass": "5A", "currentClass": "5A", "startYear": 2008, "endYear": 2012, "count": 5, "isPrivate": true}, {"school": "Bishop Carroll", "sport": "Softball", "origClass": "5A", "currentClass": "5A", "startYear": 2011, "endYear": 2015, "count": 5, "isPrivate": true}, {"school": "Norton Community", "sport": "SpeechDrama", "origClass": "3A", "currentClass": "3A", "startYear": 2014, "endYear": 2018, "count": 5, "isPrivate": false}, {"school": "Sumner Academy", "sport": "SpeechDrama", "origClass": "4A", "currentClass": "5A", "startYear": 2012, "endYear": 2016, "count": 5, "isPrivate": false}, {"school": "Sumner Academy", "sport": "SpeechDrama", "origClass": "5A", "currentClass": "5A", "startYear": 2019, "endYear": 2024, "count": 5, "isPrivate": false}, {"school": "Wichita Collegiate", "sport": "Tennis_Boys", "origClass": "3-1A", "currentClass": "3A", "startYear": 2019, "endYear": 2025, "count": 5, "isPrivate": true}, {"school": "Andover", "sport": "Tennis_Girls", "origClass": "5A", "currentClass": "5A", "startYear": 2021, "endYear": 2025, "count": 5, "isPrivate": false}, {"school": "Concordia", "sport": "Track_Girls", "origClass": "4A", "currentClass": "4A", "startYear": 2005, "endYear": 2009, "count": 5, "isPrivate": false}, {"school": "Norton Community", "sport": "Wrestling", "origClass": "3-1A", "currentClass": "3A", "startYear": 2013, "endYear": 2017, "count": 5, "isPrivate": false}, {"school": "Bishop Carroll", "sport": "XC_Boys", "origClass": "5A", "currentClass": "5A", "startYear": 2009, "endYear": 2013, "count": 5, "isPrivate": true}, {"school": "Baldwin", "sport": "XC_Girls", "origClass": "4A", "currentClass": "4A", "startYear": 2007, "endYear": 2011, "count": 5, "isPrivate": false}, {"school": "St. Thomas Aquinas", "sport": "XC_Girls", "origClass": "5A", "currentClass": "5A", "startYear": 2012, "endYear": 2016, "count": 5, "isPrivate": true}, {"school": "Bishop Miege", "sport": "Basketball_Girls", "origClass": "4A DI", "currentClass": "4A", "startYear": 2014, "endYear": 2017, "count": 4, "isPrivate": true}, {"school": "St. Thomas Aquinas", "sport": "Basketball_Girls", "origClass": "5A", "currentClass": "5A", "startYear": 2016, "endYear": 2019, "count": 4, "isPrivate": true}, {"school": "Wichita Collegiate", "sport": "Debate", "origClass": "3-1A", "currentClass": "3A", "startYear": 2020, "endYear": 2022, "count": 4, "isPrivate": true}, {"school": "Tonganoxie", "sport": "Debate", "origClass": "4A", "currentClass": "4A", "startYear": 2000, "endYear": 2001, "count": 4, "isPrivate": false}, {"school": "Andale", "sport": "Football", "origClass": "3A", "currentClass": "4A", "startYear": 2019, "endYear": 2022, "count": 4, "isPrivate": false}, {"school": "Bishop Miege", "sport": "Football", "origClass": "4A DI", "currentClass": "4A", "startYear": 2014, "endYear": 2017, "count": 4, "isPrivate": true}, {"school": "Wichita Collegiate", "sport": "Golf_Boys", "origClass": "3A", "currentClass": "3A", "startYear": 2000, "endYear": 2003, "count": 4, "isPrivate": true}, {"school": "Kapaun Mt. Carmel", "sport": "Golf_Boys", "origClass": "5A", "currentClass": "5A", "startYear": 2012, "endYear": 2015, "count": 4, "isPrivate": true}, {"school": "Andover", "sport": "Golf_Girls", "origClass": "4-1A", "currentClass": "5A", "startYear": 2004, "endYear": 2007, "count": 4, "isPrivate": false}, {"school": "Kapaun Mt. Carmel", "sport": "Golf_Girls", "origClass": "5A", "currentClass": "5A", "startYear": 2013, "endYear": 2016, "count": 4, "isPrivate": true}, {"school": "St. Thomas Aquinas", "sport": "Soccer_Girls", "origClass": "5A", "currentClass": "5A", "startYear": 2021, "endYear": 2024, "count": 4, "isPrivate": true}, {"school": "Silver Lake", "sport": "SpeechDrama", "origClass": "3A", "currentClass": "3A", "startYear": 2001, "endYear": 2005, "count": 4, "isPrivate": false}, {"school": "Norton Community", "sport": "SpeechDrama", "origClass": "3A", "currentClass": "3A", "startYear": 2022, "endYear": 2025, "count": 4, "isPrivate": false}, {"school": "Salina-Central", "sport": "SpeechDrama", "origClass": "5A", "currentClass": "5A", "startYear": 2007, "endYear": 2010, "count": 4, "isPrivate": false}, {"school": "Blue Valley Southwest", "sport": "Swim_Girls", "origClass": "5-1A", "currentClass": "5A", "startYear": 2013, "endYear": 2016, "count": 4, "isPrivate": false}, {"school": "Wichita Collegiate", "sport": "Tennis_Girls", "origClass": "3-1A", "currentClass": "3A", "startYear": 2000, "endYear": 2007, "count": 4, "isPrivate": true}, {"school": "Wichita Collegiate", "sport": "Tennis_Girls", "origClass": "3-1A", "currentClass": "3A", "startYear": 2009, "endYear": 2014, "count": 4, "isPrivate": true}, {"school": "Wichita Collegiate", "sport": "Tennis_Girls", "origClass": "3-1A", "currentClass": "3A", "startYear": 2021, "endYear": 2024, "count": 4, "isPrivate": true}, {"school": "Andale", "sport": "Track_Boys", "origClass": "4A", "currentClass": "4A", "startYear": 2022, "endYear": 2025, "count": 4, "isPrivate": false}, {"school": "Hays", "sport": "Track_Boys", "origClass": "5A", "currentClass": "5A", "startYear": 2010, "endYear": 2013, "count": 4, "isPrivate": false}, {"school": "Baldwin", "sport": "Track_Girls", "origClass": "4A", "currentClass": "4A", "startYear": 2013, "endYear": 2016, "count": 4, "isPrivate": false}, {"school": "Silver Lake", "sport": "Volleyball", "origClass": "3A", "currentClass": "3A", "startYear": 2003, "endYear": 2007, "count": 4, "isPrivate": false}, {"school": "St. James Academy", "sport": "Volleyball", "origClass": "4A", "currentClass": "5A", "startYear": 2008, "endYear": 2011, "count": 4, "isPrivate": true}, {"school": "Bishop Miege", "sport": "Volleyball", "origClass": "5A", "currentClass": "4A", "startYear": 2008, "endYear": 2011, "count": 4, "isPrivate": true}, {"school": "Buhler", "sport": "XC_Boys", "origClass": "4A", "currentClass": "4A", "startYear": 2018, "endYear": 2021, "count": 4, "isPrivate": false}, {"school": "Riley County", "sport": "XC_Girls", "origClass": "3A", "currentClass": "3A", "startYear": 2005, "endYear": 2009, "count": 4, "isPrivate": false}, {"school": "Southeast of Saline", "sport": "XC_Girls", "origClass": "3A", "currentClass": "3A", "startYear": 2020, "endYear": 2023, "count": 4, "isPrivate": false}, {"school": "Seaman", "sport": "Baseball", "origClass": "5A", "currentClass": "5A", "startYear": 2008, "endYear": 2010, "count": 3, "isPrivate": false}, {"school": "Scott Community", "sport": "Basketball_Boys", "origClass": "3A", "currentClass": "3A", "startYear": 2011, "endYear": 2013, "count": 3, "isPrivate": false}, {"school": "Hesston", "sport": "Basketball_Boys", "origClass": "3A", "currentClass": "3A", "startYear": 2021, "endYear": 2023, "count": 3, "isPrivate": false}, {"school": "Bishop Miege", "sport": "Basketball_Boys", "origClass": "4A", "currentClass": "4A", "startYear": 2020, "endYear": 2022, "count": 3, "isPrivate": true}, {"school": "Bishop Miege", "sport": "Basketball_Boys", "origClass": "4A DI", "currentClass": "4A", "startYear": 2016, "endYear": 2018, "count": 3, "isPrivate": true}, {"school": "Highland Park", "sport": "Basketball_Boys", "origClass": "5A", "currentClass": "5A", "startYear": 2007, "endYear": 2009, "count": 3, "isPrivate": false}, {"school": "Bishop Miege", "sport": "Basketball_Girls", "origClass": "5A", "currentClass": "4A", "startYear": 2001, "endYear": 2003, "count": 3, "isPrivate": true}, {"school": "St. Thomas Aquinas", "sport": "Basketball_Girls", "origClass": "5A", "currentClass": "5A", "startYear": 2021, "endYear": 2023, "count": 3, "isPrivate": true}, {"school": "Tonganoxie", "sport": "Debate", "origClass": "4A", "currentClass": "4A", "startYear": 2003, "endYear": 2003, "count": 3, "isPrivate": false}, {"school": "Blue Valley Southwest", "sport": "Debate", "origClass": "5A", "currentClass": "5A", "startYear": 2017, "endYear": 2017, "count": 3, "isPrivate": false}, {"school": "Hutchinson", "sport": "Football", "origClass": "5A", "currentClass": "5A", "startYear": 2008, "endYear": 2011, "count": 3, "isPrivate": false}, {"school": "Bishop Carroll", "sport": "Football", "origClass": "5A", "currentClass": "5A", "startYear": 2012, "endYear": 2017, "count": 3, "isPrivate": true}, {"school": "Hayden", "sport": "GameDay", "origClass": "4A", "currentClass": "4A", "startYear": 2022, "endYear": 2023, "count": 3, "isPrivate": true}, {"school": "Shawnee Heights", "sport": "GameDay", "origClass": "5A", "currentClass": "5A", "startYear": 2017, "endYear": 2019, "count": 3, "isPrivate": false}, {"school": "St. Thomas Aquinas", "sport": "Golf_Boys", "origClass": "5A", "currentClass": "5A", "startYear": 2016, "endYear": 2018, "count": 3, "isPrivate": true}, {"school": "Caney Valley", "sport": "Golf_Girls", "origClass": "3-1A", "currentClass": "3A", "startYear": 2014, "endYear": 2018, "count": 3, "isPrivate": false}, {"school": "Hayden", "sport": "Golf_Girls", "origClass": "4A", "currentClass": "4A", "startYear": 2023, "endYear": 2025, "count": 3, "isPrivate": true}, {"school": "St. Thomas Aquinas", "sport": "Golf_Girls", "origClass": "5A", "currentClass": "5A", "startYear": 2017, "endYear": 2019, "count": 3, "isPrivate": true}, {"school": "Wichita Collegiate", "sport": "ScholarsBowl", "origClass": "3A", "currentClass": "3A", "startYear": 2009, "endYear": 2017, "count": 3, "isPrivate": true}, {"school": "De Soto", "sport": "ScholarsBowl", "origClass": "4A", "currentClass": "5A", "startYear": 2011, "endYear": 2013, "count": 3, "isPrivate": false}, {"school": "Blue Valley Southwest", "sport": "Soccer_Boys", "origClass": "5A", "currentClass": "5A", "startYear": 2017, "endYear": 2019, "count": 3, "isPrivate": false}, {"school": "Silver Lake", "sport": "Softball", "origClass": "3A", "currentClass": "3A", "startYear": 2004, "endYear": 2009, "count": 3, "isPrivate": false}, {"school": "Silver Lake", "sport": "Softball", "origClass": "3A", "currentClass": "3A", "startYear": 2013, "endYear": 2015, "count": 3, "isPrivate": false}, {"school": "Frontenac", "sport": "Softball", "origClass": "3A", "currentClass": "3A", "startYear": 2022, "endYear": 2025, "count": 3, "isPrivate": false}, {"school": "Shawnee Heights", "sport": "Softball", "origClass": "5A", "currentClass": "5A", "startYear": 2017, "endYear": 2020, "count": 3, "isPrivate": false}, {"school": "Rock Creek", "sport": "SpeechDrama", "origClass": "3A", "currentClass": "4A", "startYear": 2007, "endYear": 2012, "count": 3, "isPrivate": false}, {"school": "Fort Scott", "sport": "SpeechDrama", "origClass": "4A", "currentClass": "4A", "startYear": 2009, "endYear": 2011, "count": 3, "isPrivate": false}, {"school": "McPherson", "sport": "SpeechDrama", "origClass": "4A", "currentClass": "4A", "startYear": 2021, "endYear": 2023, "count": 3, "isPrivate": false}, {"school": "McPherson", "sport": "SpeechDrama", "origClass": "5A", "currentClass": "4A", "startYear": 2001, "endYear": 2005, "count": 3, "isPrivate": false}, {"school": "Andover", "sport": "Swim_Boys", "origClass": "5-1A", "currentClass": "5A", "startYear": 2023, "endYear": 2025, "count": 3, "isPrivate": false}, {"school": "Independence", "sport": "Tennis_Boys", "origClass": "4A", "currentClass": "4A", "startYear": 2006, "endYear": 2008, "count": 3, "isPrivate": false}, {"school": "Independence", "sport": "Tennis_Boys", "origClass": "4A", "currentClass": "4A", "startYear": 2021, "endYear": 2023, "count": 3, "isPrivate": false}, {"school": "Independence", "sport": "Tennis_Girls", "origClass": "4A", "currentClass": "4A", "startYear": 2006, "endYear": 2009, "count": 3, "isPrivate": false}, {"school": "Salina-Central", "sport": "Tennis_Girls", "origClass": "5A", "currentClass": "5A", "startYear": 2002, "endYear": 2004, "count": 3, "isPrivate": false}, {"school": "Kapaun Mt. Carmel", "sport": "Tennis_Girls", "origClass": "5A", "currentClass": "5A", "startYear": 2005, "endYear": 2007, "count": 3, "isPrivate": true}, {"school": "Andover", "sport": "Tennis_Girls", "origClass": "5A", "currentClass": "5A", "startYear": 2013, "endYear": 2015, "count": 3, "isPrivate": false}, {"school": "Andale", "sport": "Track_Boys", "origClass": "4A", "currentClass": "4A", "startYear": 2013, "endYear": 2015, "count": 3, "isPrivate": false}, {"school": "Nemaha Central", "sport": "Track_Girls", "origClass": "3A", "currentClass": "3A", "startYear": 2017, "endYear": 2020, "count": 3, "isPrivate": false}, {"school": "Newton", "sport": "Track_Girls", "origClass": "5A", "currentClass": "5A", "startYear": 2016, "endYear": 2018, "count": 3, "isPrivate": false}, {"school": "St. James Academy", "sport": "Track_Girls", "origClass": "5A", "currentClass": "5A", "startYear": 2023, "endYear": 2025, "count": 3, "isPrivate": true}, {"school": "Heritage Christian Academy", "sport": "Volleyball", "origClass": "3A", "currentClass": "3A", "startYear": 2021, "endYear": 2023, "count": 3, "isPrivate": true}, {"school": "Bishop Miege", "sport": "Volleyball", "origClass": "4A", "currentClass": "4A", "startYear": 2022, "endYear": 2024, "count": 3, "isPrivate": true}, {"school": "Bishop Miege", "sport": "Volleyball", "origClass": "4A DI", "currentClass": "4A", "startYear": 2013, "endYear": 2015, "count": 3, "isPrivate": true}, {"school": "Hayden", "sport": "Volleyball", "origClass": "4A DII", "currentClass": "4A", "startYear": 2015, "endYear": 2017, "count": 3, "isPrivate": true}, {"school": "Bishop Miege", "sport": "Volleyball", "origClass": "5A", "currentClass": "4A", "startYear": 2002, "endYear": 2005, "count": 3, "isPrivate": true}, {"school": "Norton Community", "sport": "Wrestling", "origClass": "3-1A", "currentClass": "3A", "startYear": 2004, "endYear": 2006, "count": 3, "isPrivate": false}, {"school": "Southeast of Saline", "sport": "XC_Boys", "origClass": "3A", "currentClass": "3A", "startYear": 2018, "endYear": 2020, "count": 3, "isPrivate": false}, {"school": "Wichita-Trinity Academy", "sport": "XC_Boys", "origClass": "3A", "currentClass": "3A", "startYear": 2021, "endYear": 2023, "count": 3, "isPrivate": true}, {"school": "Mulvane", "sport": "XC_Boys", "origClass": "4A", "currentClass": "4A", "startYear": 2007, "endYear": 2009, "count": 3, "isPrivate": false}, {"school": "Baldwin", "sport": "XC_Boys", "origClass": "4A", "currentClass": "4A", "startYear": 2013, "endYear": 2015, "count": 3, "isPrivate": false}, {"school": "Bishop Carroll", "sport": "XC_Boys", "origClass": "5A", "currentClass": "5A", "startYear": 2002, "endYear": 2005, "count": 3, "isPrivate": true}, {"school": "Eudora", "sport": "XC_Girls", "origClass": "4A", "currentClass": "4A", "startYear": 2021, "endYear": 2023, "count": 3, "isPrivate": false}, {"school": "St. James Academy", "sport": "XC_Girls", "origClass": "5A", "currentClass": "5A", "startYear": 2022, "endYear": 2024, "count": 3, "isPrivate": true}], "dynastySummary": {"total": 108, "private": 50, "public": 58, "avgLenPrivate": 4.3, "avgLenPublic": 3.8}};
+
+let currentCat = 'main';
+let currentPeriod = '25yr';
+
+function getResults() {
+  return DATA.results[currentCat][currentPeriod];
+}
+
+function pct(n, d) { return d > 0 ? (n/d*100).toFixed(1) : '0.0'; }
+function fmt(n) { return n.toLocaleString(); }
+function multiple(p) { return (parseFloat(p) / 8.1).toFixed(1); }
+
+function updateBanner() {
+  const r = getResults();
+  const p = r.overall.privatePct;
+  document.getElementById('bannerPct').textContent = p + '%';
+  document.getElementById('bannerMultiple').textContent = multiple(p) + '×';
+}
+
+function renderHeadline() {
+  const r = getResults();
+  const o = r.overall;
+  const html = `
+    <div class="card"><div class="big-stat">
+      <div class="number">${o.privatePct}%</div>
+      <div class="label">Private Title Share</div>
+      <div class="sub">8.1% of schools → ${o.privatePct}% of titles</div>
+    </div></div>
+    <div class="card"><div class="big-stat gold">
+      <div class="number">${multiple(o.privatePct)}×</div>
+      <div class="label">Overrepresentation</div>
+      <div class="sub">vs. expected 8.1% share</div>
+    </div></div>
+    <div class="card"><div class="big-stat">
+      <div class="number">${o.private}</div>
+      <div class="label">Private Titles</div>
+      <div class="sub">of ${o.total} total championships</div>
+    </div></div>
+    <div class="card"><div class="big-stat blue">
+      <div class="number">${o.public}</div>
+      <div class="label">Public Titles</div>
+      <div class="sub">shared among 125 schools</div>
+    </div></div>
+  `;
+  document.getElementById('headlineGrid').innerHTML = html;
+}
+
+function renderClassCards() {
+  const r = getResults();
+  const cs = DATA.classStructure;
+  let html = '';
+  for (const cls of ['3A', '4A', '5A']) {
+    const d = r.byClass[cls];
+    const s = cs[cls];
+    if (!d) continue;
+    html += `
+      <div class="card">
+        <div class="card-title">Class ${cls} <span class="context">${s.privateSchools} private / ${s.totalSchools} total (${s.privatePct}%)</span></div>
+        <div class="big-stat" style="margin-bottom:12px;">
+          <div class="number">${d.privatePct}%</div>
+          <div class="label">${s.privatePct}% of schools → ${d.privatePct}% of titles</div>
+          <div class="sub">${multiple(d.privatePct)}× overrepresentation</div>
+        </div>
+        <div style="font-size:13px;color:var(--text-dim);margin-top:8px;">
+          <div style="display:flex;justify-content:space-between;margin:4px 0;">
+            <span>Private: ${d.private} titles (${d.privPerSchool}/school)</span>
+            <span class="tag red">${d.multiplier}× per school</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;margin:4px 0;">
+            <span>Public: ${d.public} titles (${d.pubPerSchool}/school)</span>
+          </div>
+        </div>
+        <div style="margin-top:12px;">
+          <div class="bar-track">
+            <div class="bar-fill private" style="width:${d.privatePct}%">
+              ${d.privatePct > 15 ? `<span class="bar-value">${d.privatePct}%</span>` : ''}
+            </div>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text-muted);margin-top:4px;">
+            <span>🟡 Private ${d.private}</span>
+            <span>🔵 Public ${d.public}</span>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+  document.getElementById('classCards').innerHTML = html;
+}
+
+function renderTalentPool() {
+  const cs = DATA.classStructure;
+  let html = '';
+  
+  for (const cls of ['3A', '4A', '5A']) {
+    const s = cs[cls];
+    const maxPool = Math.max(s.avgPoolPrivate, s.avgPoolPublic);
+    const privW = (s.avgPoolPrivate / maxPool) * 100;
+    const pubW = (s.avgPoolPublic / maxPool) * 100;
+    const ratio = s.poolRatio;
+    
+    html += `
+      <div style="margin-bottom:32px;">
+        <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:12px;">
+          <span style="font-family:var(--mono);font-size:20px;font-weight:700;color:var(--text);">Class ${cls}</span>
+          <span style="font-family:var(--mono);font-size:28px;font-weight:700;color:var(--accent);">${ratio}×</span>
+          <span style="font-size:13px;color:var(--text-muted);">talent pool advantage</span>
+        </div>
+        
+        <div style="margin-bottom:6px;">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:4px;">
+            <span style="width:70px;font-size:12px;color:var(--accent);font-weight:600;text-align:right;">PRIVATE</span>
+            <div style="flex:1;position:relative;">
+              <div style="height:36px;background:linear-gradient(90deg, var(--accent), var(--accent-bright));border-radius:4px;width:${privW}%;display:flex;align-items:center;justify-content:flex-end;padding-right:12px;min-width:120px;">
+                <span style="font-family:var(--mono);font-size:15px;font-weight:700;color:#0b1120;">${fmt(s.avgPoolPrivate)}</span>
+              </div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;">
+            <span style="width:70px;font-size:12px;color:var(--public);font-weight:600;text-align:right;">PUBLIC</span>
+            <div style="flex:1;position:relative;">
+              <div style="height:36px;background:var(--public);border-radius:4px;width:${pubW}%;display:flex;align-items:center;padding-left:12px;min-width:80px;">
+                <span style="font-family:var(--mono);font-size:15px;font-weight:700;color:#fff;">${fmt(s.avgPoolPublic)}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">
+          ${s.privateSchools} private school${s.privateSchools > 1 ? 's' : ''} avg ${fmt(s.avgPoolPrivate)} people &nbsp;vs.&nbsp; ${s.publicSchools} public schools avg ${fmt(s.avgPoolPublic)} people
+        </div>
+      </div>
+    `;
+  }
+  
+  // Summary callout
+  html += `
+    <div class="callout" style="margin-top:8px;">
+      <strong>The visual tells the story.</strong> Private schools in 3A draw from talent pools <strong>98×</strong> larger than public schools in the same class. In 4A: <strong>39×</strong>. In 5A: <strong>28×</strong>. KSHSAA classifies by enrollment. The actual competitive advantage is measured in population access — and it's not close.
+    </div>
+  `;
+  
+  document.getElementById('talentPoolBars').innerHTML = html;
+}
+
+function renderSportTable() {
+  const r = getResults();
+  const sports = Object.keys(r.bySport).sort((a, b) => r.bySport[b].privatePct - r.bySport[a].privatePct);
+  
+  let rows = '';
+  for (const sport of sports) {
+    const s = r.bySport[sport];
+    if (s.total === 0) continue;
+    const colorClass = s.privatePct >= 50 ? 'hot' : s.privatePct >= 25 ? 'warm' : 'cool';
+    const sportName = sport.replace(/_/g, ' ').replace(/([A-Z])/g, ' $1').trim();
+    
+    let classCells = '';
+    for (const cls of ['3A', '4A', '5A']) {
+      const c = s.byClass[cls];
+      if (c && c.total > 0) {
+        const cc = c.pct >= 50 ? 'hot' : c.pct >= 25 ? 'warm' : 'cool';
+        classCells += `<td class="num ${cc}">${c.pct}% <span style="color:var(--text-muted);font-size:11px;">(${c.private}/${c.total})</span></td>`;
+      } else {
+        classCells += `<td class="num" style="color:var(--text-muted);">—</td>`;
+      }
+    }
+    
+    rows += `<tr>
+      <td>${sportName}</td>
+      <td class="num ${colorClass}">${s.privatePct}%</td>
+      <td class="num" style="color:var(--text-muted)">${s.private}/${s.total}</td>
+      ${classCells}
+    </tr>`;
+  }
+  
+  document.getElementById('sportTable').innerHTML = `
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Sport</th>
+          <th style="text-align:right;">Private %</th>
+          <th style="text-align:right;">Record</th>
+          <th style="text-align:right;">3A</th>
+          <th style="text-align:right;">4A</th>
+          <th style="text-align:right;">5A</th>
+        </tr>
+      </thead>
+      <tbody>${rows}</tbody>
+    </table>
+    <div style="margin-top:8px;font-size:11px;color:var(--text-muted);">
+      🟡 Gold = 50%+ private (>6× expected) &nbsp; 🟠 Orange = 25-49% (>3× expected) &nbsp; 🟢 Green = <25%
+    </div>
+  `;
+}
+
+function renderGender() {
+  const r = getResults();
+  let html = '';
+  
+  // Overall gender
+  for (const gender of ['Boys', 'Girls']) {
+    const g = r.byGender[gender];
+    if (!g) continue;
+    html += `
+      <div class="card">
+        <div class="card-title">${gender} — Overall</div>
+        <div class="big-stat" style="margin-bottom:8px;">
+          <div class="number">${g.privatePct}%</div>
+          <div class="label">8.1% of schools → ${g.privatePct}% of ${gender.toLowerCase()} titles</div>
+        </div>
+        <div style="font-size:13px;">
+          ${['3A','4A','5A'].map(cls => {
+            const cg = r.byClassGender[cls]?.[gender];
+            return cg ? `<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);">
+              <span style="color:var(--text-dim)">${cls}</span>
+              <span class="tag ${cg.privatePct >= 40 ? 'red' : 'blue'}">${cg.privatePct}% (${cg.private}/${cg.total})</span>
+            </div>` : '';
+          }).join('')}
+        </div>
+      </div>
+    `;
+  }
+  
+  // Gender gap card
+  const boys = r.byGender['Boys'];
+  const girls = r.byGender['Girls'];
+  if (boys && girls) {
+    const gap = (girls.privatePct - boys.privatePct).toFixed(1);
+    html += `
+      <div class="card">
+        <div class="card-title">Gender Gap</div>
+        <div class="big-stat gold" style="margin-bottom:8px;">
+          <div class="number">+${gap}%</div>
+          <div class="label">Girls' sports hit harder</div>
+        </div>
+        <div class="callout" style="font-size:13px;">
+          Girls' sports: <strong>${girls.privatePct}%</strong> private title share<br>
+          Boys' sports: <strong>${boys.privatePct}%</strong> private title share<br><br>
+          The structural advantage disproportionately harms girls' athletics, where private schools dominate even more heavily.
+        </div>
+      </div>
+    `;
+  }
+  
+  document.getElementById('genderCards').innerHTML = html;
+}
+
+function renderYearChart() {
+  const r = getResults();
+  const years = Object.keys(r.yearByYear).sort();
+  if (years.length === 0) return;
+  
+  const maxTotal = Math.max(...years.map(y => r.yearByYear[y].total));
+  
+  let bars = '';
+  for (const yr of years) {
+    const d = r.yearByYear[yr];
+    const barH = maxTotal > 0 ? (d.privatePct / 100) * 150 : 0;
+    const totalH = maxTotal > 0 ? (d.total / maxTotal) * 150 : 0;
+    bars += `
+      <div class="year-col" title="${yr}: ${d.privatePct}% private (${d.private}/${d.total})">
+        <div style="font-family:var(--mono);font-size:9px;color:${d.privatePct > 40 ? 'var(--accent)' : 'var(--text-dim)'};margin-bottom:2px;">${d.privatePct > 0 ? Math.round(d.privatePct) : ''}</div>
+        <div class="yc-bar" style="height:${Math.max(barH, 2)}px;background:${d.privatePct > 40 ? 'var(--accent)' : d.privatePct > 20 ? 'rgba(200,168,78,0.6)' : 'rgba(200,168,78,0.3)'};"></div>
+        <div class="yc-label">${yr.slice(2)}</div>
+      </div>
+    `;
+  }
+  
+  document.getElementById('yearChart').innerHTML = `
+    <div style="position:relative;">
+      <div style="position:absolute;left:0;right:0;bottom:${(8.1/100)*150 + 30}px;border-top:2px dashed var(--public);z-index:1;">
+        <span style="position:absolute;right:0;top:-16px;font-size:10px;font-family:var(--mono);color:var(--public);">8.1% fair share</span>
+      </div>
+      <div class="year-chart">${bars}</div>
+    </div>
+  `;
+}
+
+function renderTopSchools() {
+  const r = getResults();
+  const cs = DATA.classStructure;
+  
+  // Build data for all 11 private schools
+  const schoolData = {};
+  for (const cls of ['3A','4A','5A']) {
+    for (const name of cs[cls].privateNames) {
+      schoolData[name] = { cls, titles: 0, pctOfAll: 0 };
+    }
+  }
+  for (const s of r.topSchools) {
+    if (schoolData[s.name] !== undefined) {
+      schoolData[s.name].titles = s.titles;
+      schoolData[s.name].pctOfAll = s.pctOfAll;
+    }
+  }
+  
+  const sorted = Object.entries(schoolData).sort((a, b) => b[1].titles - a[1].titles);
+  
+  let rows = '';
+  for (const [name, d] of sorted) {
+    const sch = DATA.schools[name];
+    rows += `<tr>
+      <td>${name}</td>
+      <td><span class="tag ${d.cls === '5A' ? 'red' : 'blue'}">${d.cls}</span></td>
+      <td class="num">${sch ? fmt(sch.enrollment) : '—'}</td>
+      <td class="num">${sch ? fmt(sch.talentPool) : '—'}</td>
+      <td class="num hot">${d.titles}</td>
+      <td class="num">${d.pctOfAll}%</td>
+    </tr>`;
+  }
+  
+  const totalPriv = sorted.reduce((a, b) => a + b[1].titles, 0);
+  const totalAll = r.overall.total;
+  
+  document.getElementById('topSchoolsTable').innerHTML = `
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>School</th>
+          <th>Class</th>
+          <th style="text-align:right;">Enrollment</th>
+          <th style="text-align:right;">Talent Pool</th>
+          <th style="text-align:right;">Titles</th>
+          <th style="text-align:right;">% of All</th>
+        </tr>
+      </thead>
+      <tbody>${rows}</tbody>
+      <tfoot>
+        <tr style="border-top:2px solid var(--border);">
+          <td colspan="2" style="font-weight:600;">Total (11 schools = 8.1%)</td>
+          <td></td>
+          <td></td>
+          <td class="num hot" style="font-weight:700;">${totalPriv}</td>
+          <td class="num" style="font-weight:700;">${pct(totalPriv, totalAll)}%</td>
+        </tr>
+      </tfoot>
+    </table>
+  `;
+}
+
+function renderDynasties() {
+  const ds = DATA.dynastySummary;
+  const dynasties = DATA.dynasties;
+  
+  document.getElementById('dynastyStats').innerHTML = `
+    <div class="card">
+      <div class="card-title">Dynasty Comparison</div>
+      <div style="display:flex;gap:20px;">
+        <div class="big-stat" style="flex:1;">
+          <div class="number">${ds.private}</div>
+          <div class="label">Private Dynasties</div>
+          <div class="sub">Avg ${ds.avgLenPrivate} years</div>
+        </div>
+        <div class="big-stat blue" style="flex:1;">
+          <div class="number">${ds.public}</div>
+          <div class="label">Public Dynasties</div>
+          <div class="sub">Avg ${ds.avgLenPublic} years</div>
+        </div>
+      </div>
+      <div class="callout" style="margin-top:12px;">
+        <strong>${((ds.private / ds.total) * 100).toFixed(1)}%</strong> of all dynasties are private schools — 8.1% of schools create nearly half of all championship dynasties.
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">What This Means</div>
+      <div style="font-size:14px;color:var(--text-dim);line-height:1.7;">
+        A "dynasty" is 3+ consecutive titles in the same sport and class. Private schools don't just win occasionally — they <em>lock out</em> public schools for years at a time. When Bishop Miege wins 9 straight boys soccer titles, that's 9 consecutive years where every 4A public school — no matter how talented their players or how good their coaching — has <strong>zero chance</strong> at a championship.
+      </div>
+    </div>
+  `;
+  
+  // Top 15 dynasties table
+  const top = dynasties.slice(0, 20);
+  let rows = '';
+  for (const d of top) {
+    const tag = d.isPrivate ? '<span class="tag red">Private</span>' : '<span class="tag blue">Public</span>';
+    const sportName = d.sport.replace(/_/g, ' ');
+    rows += `<tr>
+      <td>${d.school} ${tag}</td>
+      <td>${sportName}</td>
+      <td>${d.currentClass}</td>
+      <td class="num">${d.startYear}–${d.endYear}</td>
+      <td class="num ${d.isPrivate ? 'hot' : ''}">${d.count} yrs</td>
+    </tr>`;
+  }
+  
+  document.getElementById('dynastyTable').innerHTML = `
+    <div class="card-title">Longest Championship Dynasties (3A–5A)</div>
+    <table class="data-table">
+      <thead><tr><th>School</th><th>Sport</th><th>Class</th><th style="text-align:right;">Years</th><th style="text-align:right;">Streak</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
+  `;
+}
+
+function renderAll() {
+  updateBanner();
+  renderHeadline();
+  renderClassCards();
+  renderTalentPool();
+  renderSportTable();
+  renderGender();
+  renderYearChart();
+  renderTopSchools();
+  renderDynasties();
+}
+
+// Event handlers
+function setupButtons(groupId, callback) {
+  const btns = document.querySelectorAll(`#${groupId} button`);
+  btns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      btns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      callback(btn.dataset.val);
+    });
+  });
+}
+
+setupButtons('catBtns', val => { currentCat = val; renderAll(); });
+setupButtons('periodBtns', val => { currentPeriod = val; renderAll(); });
+
+renderAll();
+</script>
+</body>
+</html>
